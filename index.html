@@ -439,12 +439,14 @@ const NAME_PHRASE = ["Don't Tell Mama", 'Two Dollar Hat', 'Bet the Farm', 'Grand
 const FIRST_N = ['Jim', 'Linda', 'Carlos', 'Wesley', 'Ana', 'Brad', 'Kiaran', 'Tom', 'Rudy', 'Dale', 'Shug', 'Mark', 'Joe', 'Steve', 'Brittany', 'Ray', 'Graham', 'Cherie', 'Dallas', 'Wayne', 'Saffie', 'Bob', 'Hector', 'Phil', 'Ken', 'Mike', 'Danny', 'Juan', 'Nick', 'Rick'];
 const LAST_N = ['Hollister', 'Duval', 'McCray', 'Baines', 'Ortiz', 'Pelletier', 'Whitcomb', 'Greer', 'Stanton', 'Varga', 'Kessler', 'Talbot', 'Merritt', 'Calloway', 'Rourke', 'Delacroix', 'Ashby', 'Fennimore', 'Galvan', 'Huxley', 'Lockhart', 'Moreau', 'Nash', 'Pruitt', 'Quintero', 'Sheffield', 'Tremont', 'Vance', 'Winslow', 'Yates', 'Boudreaux', 'Castellano', 'Dunmore', 'Ellery'];
 
+// look = weeks ahead they plan; reach = circuits they'll ship to (0 home, 1 neighbours, 2 anywhere);
+// opt = how much they overrate their own horse (figure points); jit = randomness of their choice; risk = how much they guard against losing a horse for a tag
 const TRAINER_TIERS = [
-  { n: 'Claiming barn', rate: 75, dev: -2.5, vet: 1.3, fit: 7, read: 0.5, jock: 0 },
-  { n: 'Regional', rate: 95, dev: -1, vet: 1.15, fit: 8, read: 0.7, jock: 0.5 },
-  { n: 'Established', rate: 120, dev: 0, vet: 1.0, fit: 9, read: 0.85, jock: 1 },
-  { n: 'Leading', rate: 150, dev: 1, vet: 0.9, fit: 10, read: 1, jock: 2, rep: 15, val: 150000 },
-  { n: 'Elite', rate: 185, dev: 2, vet: 0.8, fit: 11, read: 1.15, jock: 3, rep: 35, val: 400000 },
+  { n: 'Claiming barn', rate: 75, dev: -2.5, vet: 1.3, fit: 7, read: 0.5, jock: 0, look: 2, reach: 0, opt: 3.5, jit: 0.45, risk: 0.2 },
+  { n: 'Regional', rate: 95, dev: -1, vet: 1.15, fit: 8, read: 0.7, jock: 0.5, look: 3, reach: 0, opt: 2.5, jit: 0.32, risk: 0.4 },
+  { n: 'Established', rate: 120, dev: 0, vet: 1.0, fit: 9, read: 0.85, jock: 1, look: 4, reach: 1, opt: 2, jit: 0.25, risk: 0.7 },
+  { n: 'Leading', rate: 150, dev: 1, vet: 0.9, fit: 10, read: 1, jock: 2, rep: 15, val: 150000, look: 5, reach: 2, opt: 0.5, jit: 0.08, risk: 0.9 },
+  { n: 'Elite', rate: 185, dev: 2, vet: 0.8, fit: 11, read: 1.15, jock: 3, rep: 35, val: 400000, look: 6, reach: 2, opt: 0, jit: 0.03, risk: 1 },
 ];
 const JOCKEY_TIERS = [
   { n: 'Apprentice ("bug")', skill: 0.6, need: 0, bug: 1 },
@@ -569,7 +571,7 @@ function horse(id) { return G.horses.find(h => h.id === id); }
 
 // ===================== HORSES =====================
 // Breeding-scale merit g sits POP_OFF above the Beyer scale, so the median starter's career-best fig lands in the low 60s
-const POP_OFF = 9;
+const POP_OFF = 12;
 function makeHorse(o) {
   // o: {foal, sex, sire(stallion obj), dam (horse obj) | damG, damLine, bred, luck}
   // Genetics: g = genetic merit (breeding value). Foal g = mid-parent + Mendelian noise; racing ceiling = g + environment.
@@ -627,7 +629,7 @@ function recentFig(h) { const f = h.pp.slice(0, 3).map(p => p.fig); return f.len
 function mareQ(m) {
   // perceived quality of a mare as a producer (what the market sees)
   const b = bestFig(m, 30) ?? m.retFig ?? null, r = recentFig(m);
-  let q = b != null ? (0.65 * b + 0.35 * (r ?? b)) * 0.8 + 22 : 68 + (m.dq - 72) * 0.4;
+  let q = b != null ? (0.65 * b + 0.35 * (r ?? b)) * 0.8 + 24.4 : 68 + (m.dq - 72) * 0.4;
   q += m.gw[1] * 2.5 + m.gw[2] * 1.2 + m.gw[3] * 0.8 + Math.min(m.sw, 3) * 0.6;
   if (m.blackType === 'SW') q += 2; else if (m.blackType === 'SP') q += 1;
   q += 0.4 * (impliedG(curFee(m)) - 72) + 0.12 * (m.dq - 74);
@@ -659,7 +661,7 @@ function pedValue(h, breeze, fe = 0.85) {
 }
 function raceValue(h) {
   const b = bestFig(h, 8), r = recentFig(h); if (b == null) return pedValue(h);
-  const fig = 0.6 * b + 0.4 * r; let v = 12000 * Math.pow(10, (fig - 62) / 17);
+  const fig = 0.6 * b + 0.4 * r; let v = 12000 * Math.pow(10, (fig - 59) / 17);
   const a = ageOf(h); v *= a <= 3 ? 1 : a === 4 ? 0.85 : a === 5 ? 0.65 : a === 6 ? 0.45 : 0.3;
   if (h.inj) v *= h.inj.sev >= 2 ? 0.35 : 0.75; if (h.surg) v *= 0.8;
   return Math.max(2000, v);
@@ -857,6 +859,8 @@ function mustTag(h, r) {
   if (r.type === 'MOC') return !(h.boughtFor != null && h.boughtFor <= r.cap) && h.breeder !== 'me';
   return false;
 }
+// chance a rival drops a slip on your horse: ~10% when the tag is fair, much higher when the horse is worth more than the tag
+function claimProb(h, r) { const ratio = raceValue(h) / Math.max(1000, r.clm); return 0.03 + 0.4 / (1 + Math.exp(-(ratio - 1.4) * 3)); }
 function claimable(r, e) { return (r.type === 'CLM' || r.type === 'MCL') || (['AOC', 'SOC', 'MOC'].includes(r.type) && e && e.optClm); }
 function entryFees(h, r) {
   let fee = 0, notes = [];
@@ -888,7 +892,7 @@ function jockeyOptions(h, r) {
 function aiRunner(r, rr) {
   // par = typical WINNER's figure, so the field averages well below it (avg field 7.5, figs vary ~5 pts race to race)
   const sd = r.g ? 4 : 5;
-  const rating = r.par - (r.g ? 4.5 : 7) + gauss(0, sd, rr);
+  const rating = r.par - (r.g ? 6.5 : 10) + fieldSoft(r) + gauss(0, sd, rr); // with class droppers on top, the winner's figure averages ≈ par
   const age = r.age === '2' ? 2 : r.age === '3' ? 3 : (r.age === '4U' ? rint(4, 7) : (rr() < 0.3 ? 3 : 3 + Math.floor(rr() * 4) + 1));
   const style = wpick(['E', 'P', 'S', 'C'], r.dist <= 7 ? [4, 3, 2, 1] : [2, 3, 3, 2], rr);
   const sire = pick(G.stallions, rr);
@@ -904,6 +908,10 @@ function getField(r) {
   if (r.tags && (r.tags.includes('KD') || r.tags.includes('KO'))) return roadField(r, rr);
   let n = r.intl ? rint(10, 13) : r.bc ? rint(8, 13) : r.g === 1 ? rint(6, 11) : r.g ? rint(5, 9) : r.type === 'STK' ? rint(5, 9) : rint(5, 10);
   const runners = []; for (let i = 0; i < n; i++) runners.push(aiRunner(r, rr));
+  // class droppers: rival barns are hunting soft spots too, so cheap claimers and maiden claimers often get a horse
+  // dropping down from a higher level (the reason no spot is ever truly easy)
+  if (!r.name) { const p = r.type === 'CLM' || r.type === 'MCL' ? 0.4 : r.type === 'STR' || r.type === 'SOC' || r.type === 'MOC' ? 0.3 : 0.2;
+    for (let i = 0; i < runners.length && i < 3; i++) if (rr() < p * (i === 0 ? 1 : 0.5)) { const x = runners[i]; const lift = 6 + gauss(2, 3, rr); x.rating += lift; x.figs = x.figs.map(f => Math.round(f + lift)); x.dropper = 1; } }
   G.fields[r.id] = { runners, mine: [] };
   return G.fields[r.id];
 }
@@ -1025,7 +1033,7 @@ function runRace(r) {
       raceInjury(h, r);
       // claim check
       if (claimable(r, e) && !G.noClaim) {
-        const ratio = raceValue(h) / r.clm; const p = 0.05 + 0.45 / (1 + Math.exp(-(ratio - 1.3) * 3));
+        const p = claimProb(h, r);
         if (rnd() < p * (h.inj ? 0.3 : 1)) { res.claims.push({ hid: h.id, name: h.name, price: r.clm }); }
       }
       if (horse(h.id) && !h.inj) raceFatal(h, r);
@@ -1168,12 +1176,12 @@ function genSaleLots(sale) {
     }
     h.conf = h.looks > 1.0 ? 4 : h.looks > 0.05 ? 3 : h.looks > -0.9 ? 2 : 1;
     h.lotKind = kind; hip += 1 + Math.floor(rnd() * (sale.n0 > 30 ? 9 : 5)); h.hip = hip;
-    if (kind === '2') { const z = (h.ceil - 62) / 10; h.breeze = clamp(Math.round((10.24 - 0.21 * (0.6 * z + 0.8 * gauss(0, 1))) * 5) / 5, 9.4, 11.2); h.breezeDist = '1/8'; h.pre = true; h.know = 0.15; }
+    if (kind === '2') { const z = (h.ceil - 59) / 10; h.breeze = clamp(Math.round((10.24 - 0.21 * (0.6 * z + 0.8 * gauss(0, 1))) * 5) / 5, 9.4, 11.2); h.breezeDist = '1/8'; h.pre = true; h.know = 0.15; }
     if (kind === 'R' || kind === 'M') {
       const st = kind === 'M' ? rint(0, 18) : rint(2, 14); h.starts = st; h.name = genName();
       const ab = h.ceil * devFactor(h, G.yr, G.wk);
       for (let k = 0; k < Math.min(st, 6); k++) h.pp.push({ aw: AW() - 5 * (k + 1), yr: G.yr, wk: G.wk, trk: pick(Object.keys(TRACKS)), race: 'prior', g: 0, dist: 7, surf: 'D', cond: 'Fast', fin: rint(1, 7), n: 9, fig: Math.round(ab + gauss(-2, 4)), odds: 5, btn: 3, note: '', won: 0, age: ageOf(h) });
-      h.wins = Math.round(st * clamp(0.1 + (ab - 63) * 0.012, 0.03, 0.45)); h.alw = Math.max(0, h.wins - 1); h.earn = Math.round(st * 9000 * Math.pow(10, (ab - 63) / 25));
+      h.wins = Math.round(st * clamp(0.1 + (ab - 60) * 0.012, 0.03, 0.45)); h.alw = Math.max(0, h.wins - 1); h.earn = Math.round(st * 9000 * Math.pow(10, (ab - 60) / 25));
       if (ab > 90 && rnd() < 0.6) { h.blackType = rnd() < 0.5 ? 'SW' : 'SP'; if (h.blackType === 'SW') h.sw = 1; }
       if (kind === 'M') { h.status = 'mare'; h.retFig = bestFig(h); if (rnd() < 0.7) { const cp = G.stallions.filter(s => s.yrStart <= G.yr && s.fee <= Math.max(10000, (sale.elite ? 250000 : sale.tier >= 1 ? 40000 : 10000))); const cs = cp.length ? pickSire(cp) : pick(G.stallions); h.preg = { sid: cs.id, due: awOf(G.yr + (G.wk > 30 ? 1 : 0), rint(5, 16)) }; } }
       else { h.status = 'race'; h.fit = 80; h.know = 0.4; h.lastRace = AW() - 5; fixPriorPP(h); }
@@ -1246,7 +1254,7 @@ function saleLiftFor(sale) {
 }
 function resolveConsign(c, sale) {
   const h = horse(c.hid); if (!h) return;
-  if (sale.kind === '2yo' && ageOf(h) === 2) { const z = (h.ceil - 62) / 10 + (h.pre ? 0.15 : -0.3); h.breeze = clamp(Math.round((10.2 - 0.21 * (0.6 * z + 0.8 * gauss(0, 1))) * 5) / 5, 9.4, 11.2); }
+  if (sale.kind === '2yo' && ageOf(h) === 2) { const z = (h.ceil - 59) / 10 + (h.pre ? 0.15 : -0.3); h.breeze = clamp(Math.round((10.2 - 0.21 * (0.6 * z + 0.8 * gauss(0, 1))) * 5) / 5, 9.4, 11.2); }
   const base = h.starts ? marketValue(h) : h.status === 'mare' ? mareValue(h) : pedValue(h, undefined, sale.fe ?? 0.85);
   const M = base * saleLiftFor(sale); const lot = { h: { ...h, mkt: M }, hid: h.id + 'c' };
   const v = aiVals(lot, sale); const R = c.res ? roundBid(M * c.res) : 0;
@@ -1266,7 +1274,7 @@ function refreshMarket() {
     h.name = genName(); h.status = 'race'; h.fit = 75; h.know = 0.35;
     const st = age === 2 ? rint(0, 2) : rint(2, 12); h.starts = st; const ab = h.ceil * devFactor(h);
     for (let k = 0; k < Math.min(st, 6); k++) h.pp.push({ aw: AW() - 4 * (k + 1), yr: G.yr, wk: G.wk, trk: pick(Object.keys(TRACKS)), race: 'prior', g: 0, dist: Math.round(h.dist * 2) / 2, surf: h.turf > 0.4 ? 'T' : 'D', cond: 'Fast', fin: rint(1, 8), n: 9, fig: Math.round(ab + gauss(-1.5, 4)), odds: 5, btn: 3, note: '', won: 0, age });
-    h.wins = Math.round(st * clamp(0.1 + (ab - 66) * 0.012, 0.03, 0.45)); h.alw = Math.max(0, h.wins - 1); h.earn = Math.round(st * 8000 * Math.pow(10, (ab - 66) / 25));
+    h.wins = Math.round(st * clamp(0.1 + (ab - 63) * 0.012, 0.03, 0.45)); h.alw = Math.max(0, h.wins - 1); h.earn = Math.round(st * 8000 * Math.pow(10, (ab - 63) / 25));
     h.ask = Math.round(marketValue(h) * (1 + rnd() * 0.25) / 500) * 500;
     if (h.starts) { h.lastRace = AW() - 4; fixPriorPP(h); }
     G.market.push(h);
@@ -1402,14 +1410,64 @@ function prepWeek() {
   // auto entries for next week
   autoEnter();
 }
-function autoScore(h, r, est, k) {
+// ---------- RACE PLACEMENT (trainer quality matters) ----------
+// Every barn estimates the horse's figure (better barns read it more accurately), then values each race by expected purse
+// money: win chance from the horse's edge over the race's par, the share of the purse it can actually collect (state-bred-only
+// money), claim risk and costs. Weaker barns plan fewer weeks ahead, stay on their home circuit, overrate their horses
+// (so they overmatch them), ignore fine print and choose more erratically. Elite barns find the soft spots.
+const REG_NEAR = { NY: ['MA', 'FL'], KY: ['S', 'MA', 'FL'], FL: ['NY', 'KY'], CA: [], MA: ['NY', 'KY'], S: ['KY'], INTL: [] };
+function trainerReach(t, r) {
+  const T = TRAINER_TIERS[t.tier]; const trg = TRACKS[r.trk].rg; if (trg === 'INTL') return T.reach >= 2;
+  let home = t.rg; if ((home === 'NY' || home === 'KY') && r.wk <= 13) home = 'FL'; // NY & KY barns winter in Florida
+  if (trg === home || trg === t.rg) return true; if (T.reach >= 2) return true; return T.reach >= 1 && (REG_NEAR[t.rg] || []).includes(trg);
+}
+// Each race's field is a little stronger or weaker than its class par (who happens to enter). Good barns watch the
+// entries and know who's pointing where, so they see much of this; small barns don't.
+function fieldSoft(r) { return r.name ? gauss(0, 2, srng('soft' + r.id)) : gauss(0, 4, srng('soft' + r.id)); }
+const SOFT_SEE = [0, 0.1, 0.25, 0.6, 0.9];
+const winChance = (m) => 1 / (1 + Math.exp(-(m - 0.6) / 4.3)); // simulated: horse running par wins ~45% (par = typical winner's fig)
+function spotValue(h, r, est, k, t) {
+  const T = TRAINER_TIERS[t.tier]; const skill = clamp(t.tier + (t.bonus || 0) * 2, 0, 5);
   const fitE = est + (k > 0.25 ? distAdj(h, r.dist) + surfAdj(h, r.surf) : -Math.abs(r.dist - 7.5) * 0.4 - (r.surf === 'T' ? 2 : 0));
-  const margin = fitE - r.par; if (margin < -6 - Math.min(h.noSpot || 0, 6) * 0.6) return null;
-  let sc = Math.log(r.purse) * 3 - Math.abs(margin + 1) * 0.6 + (claimable(r, { optClm: mustTag(h, r) }) ? -2 : 0) + (r.mdn && h.wins === 0 ? 4 : 0) + (r.sb ? 1 : 0);
-  if (k > 0.25) sc -= Math.max(0, Math.abs(r.dist - h.dist) - 1) * 2 + ((r.surf === 'T') !== (h.turf > 0.3) ? 3 : 0);
-  if (r.tags && r.tags.includes('BIG')) sc += 4; if (r.tags && /[po]\d/.test(r.tags) && ageOf(h) <= 3) sc += 2;
-  if (entryFees(h, r).fee > 0) sc -= 1;
-  return sc;
+  const margin = fitE - r.par - fieldSoft(r) * SOFT_SEE[t.tier];
+  if (margin < -6 - T.opt - Math.min(h.noSpot || 0, 6) * 0.6) return null;
+  const seen = margin + T.opt; // weaker barns think their horse is better than it is
+  const pW = winChance(seen), pI = Math.min(0.92, pW * 2.3);
+  let purse = r.purse;
+  if (skill >= 2 && r.fund && r.fund.kind === 'incl' && h.bred !== r.fund.st) purse *= 1 - (((['MSW', 'ALW', 'AOC'].includes(r.type) ? r.fund[r.type] : r.fund.other) || 0));
+  if (skill >= 2 && r.fund && r.fund.kind === 'plus' && h.bred === r.fund.st && !(r.fund.open != null && r.sb)) purse *= 1 + (r.fund.open ?? ((['MSW', 'ALW', 'AOC'].includes(r.type) ? r.fund[r.type] : r.fund.other) || 0)) * 0.5;
+  let ev = purse * (0.6 * pW + 0.3 * (pI - pW));
+  if (r.mdn && h.wins === 0) ev += purse * pW * 0.5; // breaking the maiden opens up the condition book
+  if (r.tags && r.tags.includes('BIG')) ev *= 1.15; if (r.tags && /[po]\d/.test(r.tags) && ageOf(h) <= 3) ev *= 1.1;
+  if (r.g) ev *= 1 + (4 - r.g) * 0.12; // black type adds residual value
+  const claim = claimable(r, { optClm: mustTag(h, r) });
+  if (claim) { const val = raceValue(h); ev -= Math.max(0.2 * val, val - r.clm) * claimProb(h, r) * T.risk; } // losing a useful horse costs more than the gap to the tag
+  ev -= entryFees(h, r).fee;
+  { const trg = TRACKS[r.trk].rg; let home = t.rg; if ((home === 'NY' || home === 'KY') && r.wk <= 13) home = 'FL';
+    if (trg !== home && trg !== t.rg && trg !== 'INTL') ev *= (REG_NEAR[t.rg] || []).includes(trg) ? 0.85 : 0.72; } // shipping is a hassle: trainers ship for a real edge
+  if (k > 0.25 && skill >= 1) ev *= Math.exp(-Math.max(0, Math.abs(r.dist - h.dist) - 1) * 0.15 - ((r.surf === 'T') !== (h.turf > 0.3) && Math.abs(h.turf) > 0.3 ? 0.2 : 0));
+  return { sc: Math.log(Math.max(200, ev)) + gauss(0, T.jit, srng('jit' + h.id + r.id)), pW: winChance(margin), margin, claim, ev, soft: fieldSoft(r) * SOFT_SEE[t.tier] };
+}
+function autoScore(h, r, est, k) { const t = trainer(h.trainer); if (!t || !trainerReach(t, r)) return null; const v = spotValue(h, r, est, k, t); return v ? v.sc * 10 : null; }
+// The trainer's own shortlist for a horse (used by the auto-entry, the race planner and the advisor)
+function trainerSpots(h, opts = {}) {
+  const t = trainer(h.trainer); if (!t) return [];
+  const T = TRAINER_TIERS[t.tier]; const k = clamp(h.know * T.read, 0, 1);
+  const est = ability(h) + gauss(0, 6 * (1 - k) + 1.5, srng('ae' + h.id + Math.floor(AW() / 4)));
+  const pref = opts.pref ?? (35 - (h.sound < 0.85 ? 7 : 0) + (h.sound > 1.2 ? 7 : 0));
+  const out = []; const weeks = opts.weeks ?? T.look;
+  for (let off = 0; off < weeks; off++) {
+    const aw = AW() + off; if (h.starts && (aw - h.lastRace) * 7 < pref) continue; const [yy, ww] = awToYW(aw);
+    if (opts.auto && off === 0 && (h.fit < 85 || (h.restUntil && h.restUntil > AW()))) continue;
+    for (const r of weekRaces(yy, ww)) {
+      if (!eligible(h, r)[0] || !trainerReach(t, r)) continue;
+      if (r.tags && r.tags.includes('TC') && !h.tcNom) continue; if (r.bc && !h.bcNom && !(h.wayi || []).includes(r.bcName)) continue;
+      if (opts.auto && (((r.g || r.type === 'STK') && !h.auto.stk) || (claimable(r, { optClm: mustTag(h, r) }) && !h.auto.clm))) continue;
+      const v = spotValue(h, r, est, k, t); if (!v) continue;
+      out.push({ r, sc: v.sc - off * 0.1, off, claim: v.claim, pW: v.pW, ev: v.ev, est, k, soft: v.soft, margin: v.margin });
+    }
+  }
+  return out.sort((a, b) => b.sc - a.sc);
 }
 function autoEnter() {
   for (const h of G.horses) {
@@ -1417,21 +1475,8 @@ function autoEnter() {
     if (G.entries.some(e => e.hid === h.id && raceById(e.rid) && awOf(raceById(e.rid).yr, raceById(e.rid).wk) >= AW())) continue;
     const t = trainer(h.trainer);
     const pref = 35 - (h.sound < 0.85 ? 7 : 0) + (h.sound > 1.2 ? 7 : 0); // ~5.8 starts a year (Jockey Club)
-    const k = clamp(h.know * TRAINER_TIERS[t.tier].read, 0, 1);
-    const est = ability(h) + gauss(0, 6 * (1 - k) + 1.5, srng('ae' + h.id + Math.floor(AW() / 4)));
-    let best = null, bs = -1e9, bw = 0;
-    for (let off = 0; off < 6; off++) {
-      const [yy, ww] = awToYW(AW() + off); const aw = AW() + off;
-      if ((aw - h.lastRace) * 7 < pref) continue;
-      if (off === 0 && (h.fit < 85 || (h.restUntil && h.restUntil > AW()))) continue;
-      for (const r of weekRaces(yy, ww)) {
-        if (!eligible(h, r)[0]) continue; if ((r.g || r.type === 'STK') && !h.auto.stk) continue; if (claimable(r, { optClm: mustTag(h, r) }) && !h.auto.clm) continue;
-        if (r.tags && r.tags.includes('TC') && !h.tcNom) continue; if (r.bc && !h.bcNom && !(h.wayi || []).includes(r.bcName)) continue;
-        const sc = autoScore(h, r, est, k); if (sc == null) continue;
-        const adj = sc - off * 0.4;
-        if (adj > bs) { bs = adj; best = r; bw = off; }
-      }
-    }
+    const spots = trainerSpots(h, { auto: 1, pref }); const best = spots[0]?.r || null; const bw = spots[0]?.off || 0;
+    const k = spots[0]?.k ?? 0; const est = spots[0]?.est ?? ability(h);
     const idle = (AW() - h.lastRace) > 10 && h.starts > 0;
     if (!best) { h.noSpot = (h.noSpot || 0) + 1; if (h.noSpot === 4) news(`Trainer ${t.n}: "I can't find a spot where ${h.name} fits.${h.auto.clm ? '' : ' Let me drop into a claimer?'}" (Allow claiming races, pick a race yourself, or sell.)`, 'bad'); continue; }
     h.noSpot = 0;
@@ -1801,15 +1846,7 @@ function weeklyBurn() {
   return t * m;
 }
 function trainerEst(h) { const t = trainer(h.trainer); const k = clamp(h.know * TRAINER_TIERS[t.tier].read, 0, 1); return { est: ability(h) + gauss(0, 6 * (1 - k) + 1.5, srng('ae' + h.id + Math.floor(AW() / 4))), k }; }
-function bestSpots(h, weeks = 4) {
-  const { est, k } = trainerEst(h); const pref = 21; const out = [];
-  for (let off = 0; off < weeks; off++) {
-    const aw = AW() + off; if ((aw - h.lastRace) * 7 < pref) continue; const [yy, ww] = awToYW(aw);
-    for (const r of weekRaces(yy, ww)) { if (!eligible(h, r)[0]) continue; if (r.tags && r.tags.includes('TC') && !h.tcNom) continue;
-      const sc = autoScore(h, r, est, k); if (sc != null) out.push({ r, sc: sc - off * 0.4, off, claim: claimable(r, { optClm: mustTag(h, r) }) }); }
-  }
-  return out.sort((a, b) => b.sc - a.sc);
-}
+function bestSpots(h, weeks) { return trainerSpots(h, { weeks, pref: 21 }); }
 function advise() {
   const out = []; const add = (pri, icon, t, act) => out.push({ pri, icon, t, act });
   const burn = weeklyBurn(); const runway = burn > 0 ? G.cash / burn : 999;
@@ -2592,8 +2629,10 @@ function vEntries() {
 
 // ---------- RACE PLANNER (per horse) ----------
 function spotWhy(h, sp, est, k) {
-  const r = sp.r; const m = Math.round(est - r.par); const out = [];
+  const r = sp.r; const m = Math.round(sp.margin ?? (est - r.par)); const out = [];
+  if (sp.pW != null) out.push([sp.pW >= 0.4 ? 'good' : sp.pW >= 0.2 ? 'ok' : 'warn', `~${Math.round(sp.pW * 100)}% to win`]);
   out.push(m >= 3 ? [`good`, `Class edge +${m}`] : m >= -1 ? ['ok', 'Right at par'] : m >= -4 ? ['warn', `Stretch ${m}`] : ['bad', `Overmatched ${m}`]);
+  if (sp.soft != null && Math.abs(sp.soft) >= 1.5) out.push(sp.soft < 0 ? ['good', 'Soft field expected'] : ['warn', 'Tough field expected']);
   const rest = (awOf(r.yr, r.wk) - h.lastRace) * 7; if (h.starts) out.push([rest < 28 ? 'warn' : 'ok', `${rest} days rest`]);
   if (sp.claim) out.push(['warn', `Claimable for ${fmtK(r.clm)}`]);
   if (r.surf === 'T' && k > 0.35) out.push([h.turf > 0.3 ? 'good' : h.turf < -0.3 ? 'bad' : 'ok', h.turf > 0.3 ? 'Should like turf' : h.turf < -0.3 ? 'Turf a question' : 'Turf unknown']);
@@ -2607,10 +2646,10 @@ function openPlanner(hid, re) {
   const t = trainer(h.trainer); const { est, k } = trainerEst(h); const unc = Math.round(6 * (1 - k) + 2);
   const days = h.starts ? (AW() - h.lastRace) * 7 : null;
   let o = `<div class="plan-h"><div><b>${esc(dispName(h))}</b><span>${ageOf(h)}yo ${sexLabel(h)} · ${rec(h)} · ${t ? esc(t.n) : 'no trainer'}</span></div>${fitBar(h.fit)}</div>
-  <div class="facts"><div><b>${Math.round(est - unc)}–${Math.round(est + unc)}</b><span>trainer's figure read</span></div><div><b>${recentFig(h) ?? '—'}</b><span>last figure</span></div><div><b>${Math.round(h.fit)}%</b><span>fitness</span></div><div><b>${days != null ? days + 'd' : '—'}</b><span>since last race</span></div></div>
-  <div class="note">${t ? `${esc(t.n)} reads ${esc(h.name || 'the horse')} as a <b>${classLevel(est).toLowerCase()}</b> type right now${k < 0.4 ? ' — still learning about this one, so the read is loose' : ''}.` : 'Hire a trainer to get race recommendations.'}</div>`;
+  <div class="facts"><div><b>${Math.round(est - unc)}–${Math.round(est + unc)}</b><span>trainer's figure read</span></div><div><b>${h.pp[0]?.fig ?? '—'}</b><span>last figure</span></div><div><b>${Math.round(h.fit)}%</b><span>fitness</span></div><div><b>${days != null ? days + 'd' : '—'}</b><span>since last race</span></div></div>
+  <div class="note">${t ? `${esc(t.n)} reads ${esc(h.name || 'the horse')} as a <b>${classLevel(est).toLowerCase()}</b> type right now${k < 0.4 ? ' — still learning about this one, so the read is loose' : ''}. ${TRAINER_TIERS[t.tier].n} barn: plans ${TRAINER_TIERS[t.tier].look} weeks ahead and ships ${['only on its home circuit', 'on its home circuit only', 'to neighbouring circuits', 'anywhere in the country', 'anywhere in the country'][t.tier]}.${t.tier <= 1 ? ' Barns at this level tend to overrate their horses and miss the easier spots.' : t.tier >= 3 ? ' Barns at this level find the soft spots and protect horses from the claim box.' : ''}` : 'Hire a trainer to get race recommendations.'}</div>`;
   if (h.inj) o += `<div class="warnbox">${esc(h.inj.n)} — can't race until it heals.</div>`;
-  const spots = h.trainer && !h.inj ? bestSpots(h, 6) : [];
+  const spots = h.trainer && !h.inj ? bestSpots(h) : [];
   const seen = new Set(); const picks = spots.filter(s => { if (seen.has(s.r.id)) return false; seen.add(s.r.id); return true; }).slice(0, 4);
   o += `<h3 class="sub">Recommended by ${t ? esc(t.n.split(' ').slice(-1)[0].replace(',', '')) : 'the trainer'}</h3>`;
   o += picks.length ? picks.map((sp, i) => { const r = sp.r; return `<div class="pick ${i === 0 ? 'top' : ''}">${i === 0 ? '<div class="pk-k">Best spot</div>' : ''}<div class="pk-t" data-a="race" data-rid="${r.id}">${raceNum(r)}<div><b>${esc(raceShort(r))}</b><span>${shortDate(r.yr, r.wk)} · ${TRACKS[r.trk].n} · ${distStr(r.dist)} ${SURF_N[r.surf].toLowerCase()} · ${fmtK(r.purse)} · par ${Math.round(r.par)}</span></div></div><div class="why">${spotWhy(h, sp, est, k).map(([c, x]) => `<span class="w-${c}">${x}</span>`).join('')}</div><div class="btnrow">${G.entries.some(e => e.rid === r.id && e.hid === h.id) ? '<span class="ok">Entered</span>' : `<button class="btn sm" data-a="enterForm" data-id="${h.id}" data-rid="${r.id}">Enter</button>`}<button class="btn sm ghost" data-a="race" data-rid="${r.id}">See field</button></div></div>`; }).join('')
@@ -2846,7 +2885,7 @@ function openAdvice() {
 function advItem(x, hot) {
   // racing items for a horse: expand with the trainer's top 3 spots
   let extra = '';
-  if (x.icon === '🏁' && x.act && x.act.id) { const h = horse(x.act.id); if (h) { const { est, k } = trainerEst(h); const seen = new Set(); const sp = bestSpots(h, 5).filter(s => !seen.has(s.r.id) && seen.add(s.r.id)).slice(0, 3); extra = `<div class="adv-sp">${sp.map(s => `<div data-a="race" data-rid="${s.r.id}">${raceNum(s.r)}<span><b>${esc(raceShort(s.r))}</b> ${shortDate(s.r.yr, s.r.wk)} · ${TRACKS[s.r.trk].n} · ${fmtK(s.r.purse)}<br><i>${spotWhy(h, s, est, k).slice(0, 3).map(w => w[1]).join(' · ')}</i></span></div>`).join('')}</div>`; } }
+  if (x.icon === '🏁' && x.act && x.act.id) { const h = horse(x.act.id); if (h) { const { est, k } = trainerEst(h); const seen = new Set(); const sp = bestSpots(h).filter(s => !seen.has(s.r.id) && seen.add(s.r.id)).slice(0, 3); extra = `<div class="adv-sp">${sp.map(s => `<div data-a="race" data-rid="${s.r.id}">${raceNum(s.r)}<span><b>${esc(raceShort(s.r))}</b> ${shortDate(s.r.yr, s.r.wk)} · ${TRACKS[s.r.trk].n} · ${fmtK(s.r.purse)}<br><i>${spotWhy(h, s, est, k).slice(0, 3).map(w => w[1]).join(' · ')}</i></span></div>`).join('')}</div>`; } }
   return `<div class="adv-i ${hot ? 'hot' : ''}"><div class="adv-ic">${x.icon}</div><div class="adv-t">${esc(x.t)}${extra}${x.act ? `<div class="btnrow">${advBtn(x.act)}${x.icon === '🏁' && x.act.id ? `<button class="btn xs ghost" data-a="planner" data-id="${x.act.id}">All options</button>` : ''}</div>` : ''}</div></div>`;
 }
 
