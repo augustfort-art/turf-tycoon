@@ -134,7 +134,7 @@ const INTL_SPLIT = { 'Saudi Cup': [10e6, 3.5e6, 2e6, 1.5e6, 1e6, 0.6e6, 0.5e6, 0
 // meets: [startWk, endWk, tier]  tier 0 low .. 3 elite
 const TRACKS = {
   BEL: { n: 'Belmont Park', st: 'NY', rg: 'NY', turf: 1, m: [[1, 13, 1, 'BELW', 1], [14, 27, 2, 'BEL', 1.1], [37, 44, 2, 'BEL', 1.1], [45, 52, 1, 'BELW', 1]] },
-  SAR: { n: 'Saratoga', st: 'NY', rg: 'NY', turf: 1, m: [[28, 36, 3, 'BEL', 1.35]] },
+  SAR: { n: 'Saratoga', st: 'NY', rg: 'NY', turf: 1, m: [[28, 36, 3, 'SAR', 1]] },
   CD: { n: 'Churchill Downs', st: 'KY', rg: 'KY', turf: 1, m: [[17, 26, 2, 'CD', 1], [37, 39, 2, 'CD', 0.95], [45, 48, 2, 'CD', 1]] },
   KEE: { n: 'Keeneland', st: 'KY', rg: 'KY', turf: 1, m: [[14, 17, 3, 'KEE', 1], [40, 43, 3, 'KEE', 1]] },
   ELP: { n: 'Ellis Park', st: 'KY', rg: 'KY', turf: 1, m: [[27, 35, 1, 'CD', 0.6]] },
@@ -249,6 +249,11 @@ const PROFILES = {
     mix: { CLM: 30, MSW: 19, AOC: 18, MCL: 17, ALW: 5, STR: 5, SOC: 3, MOC: 2 }, turf: 0, syn: 1, sb: 0.21, sbMult: 1, fund: { st: 'NY', kind: 'plus', open: 0.174 } },
   BEL: { msw: 85000, alw: 93000, aoc: 87000, str: 70000, soc: 70000, moc: 75000, clm: [24200, 0.72], mcl: [23600, 0.56], cp: [16000, 20000, 25000, 30000, 40000, 50000, 62500, 80000], mp: [30000, 40000, 50000, 75000],
     mix: { CLM: 28, MSW: 19, AOC: 18, MCL: 15, ALW: 8, STR: 5, SOC: 4, MOC: 3 }, turf: 0.38, sb: 0.2, sbMult: 1, fund: { st: 'NY', kind: 'plus', open: 0.174 } },
+  // Saratoga 2026 overnight purses (NYRA purse-increase announcement): MSW $115k, 1X $120k, 2X $125k, maiden auction $90k,
+  // NY-bred MSW $100k (2yo NY-bred MSW $115k), NY-bred 1X $105k, 2X $110k, starter 1X $78k. Claiming scaled from Belmont.
+  SAR: { msw: 115000, alw: 120000, alw2: 125000, aoc: 120000, str: 78000, soc: 78000, moc: 90000, clm: [31000, 0.9], mcl: [30000, 0.7], cp: [16000, 20000, 25000, 30000, 40000, 50000, 62500, 80000], mp: [30000, 40000, 50000, 75000],
+    sbP: { MSW: 100000, MSW2: 115000, ALW: 105000, ALW2: 110000 },
+    mix: { CLM: 26, MSW: 22, AOC: 14, MCL: 12, ALW: 12, STR: 6, MOC: 5, SOC: 3 }, turf: 0.42, sb: 0.22, sbMult: 0.9, fund: { st: 'NY', kind: 'plus', open: 0.174 } },
   GPC: { msw: 57000, alw: 60000, aoc: 58000, str: 32000, soc: 30000, moc: 31000, clm: [19900, 0.48], mcl: [17600, 0.5], cp: [6250, 10000, 10000, 12500, 17500, 17500, 25000, 35000, 50000], mp: [12500, 17500, 25000, 35000, 50000],
     mix: { CLM: 35, MCL: 18, SOC: 14, MOC: 13, AOC: 10, MSW: 10 }, turf: 0.33, syn: 0.25, sb: 0.07, sbMult: 0.85, fund: { st: 'FL', kind: 'incl', MSW: 0.15, ALW: 0.15, AOC: 0.15, other: 0.15 } },
   GPN: { msw: 50000, alw: 54000, aoc: 54000, str: 33500, soc: 33500, moc: 31750, clm: [19700, 0.48], mcl: [17600, 0.5], cp: [6250, 10000, 12500, 17500, 25000, 35000, 50000], mp: [12500, 17500, 25000, 35000, 50000],
@@ -622,10 +627,13 @@ function weekRaces(yr, wk) {
       // purse
       let purse;
       const lin = (ab, price) => ab[0] + ab[1] * price;
-      if (type === 'MSW') purse = P.msw; else if (type === 'ALW') purse = P.alw * ({ N1X: 1, N2X: 1.06, N3X: 1.1, OPEN: 1.14 }[race.sub]);
+      if (type === 'MSW') purse = P.msw; else if (type === 'ALW') purse = race.sub === 'N2X' && P.alw2 ? P.alw2 : P.alw * ({ N1X: 1, N2X: 1.06, N3X: 1.1, OPEN: 1.14 }[race.sub]);
       else if (type === 'AOC') purse = P.aoc * ({ N1X: 1, N2X: 1.05, N3X: 1.1 }[race.sub]); else if (type === 'STR') purse = P.str; else if (type === 'SOC') purse = P.soc; else if (type === 'MOC') purse = P.moc;
       else if (type === 'MCL') purse = lin(P.mcl, race.clm); else purse = lin(P.clm, race.clm);
-      purse *= scale; if (race.sb) purse *= P.sbMult || 1;
+      purse *= scale;
+      if (race.sb && P.sbP && type === 'MSW') purse = race.age === '2' ? P.sbP.MSW2 : P.sbP.MSW;
+      else if (race.sb && P.sbP && type === 'ALW' && (race.sub === 'N1X' || race.sub === 'N2X')) purse = race.sub === 'N1X' ? P.sbP.ALW : P.sbP.ALW2;
+      else if (race.sb) purse *= P.sbMult || 1;
       race.purse = Math.round(purse / 500) * 500;
       race.lvl = (P.msw * scale) / 85000;
       race.fund = P.fund && P.fund.st === t.st ? P.fund : null;
