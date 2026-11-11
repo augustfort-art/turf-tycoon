@@ -104,6 +104,11 @@ input[type=checkbox],input[type=radio]{accent-color:var(--g)}
 .cutline{text-align:center;color:var(--red);font-size:11px;letter-spacing:2px;background:#fbeaea}
 .bt.own{background:var(--blue)}
 .bk{display:flex;flex-direction:column;gap:4px;align-items:flex-end}
+
+#advbar{gap:8px}
+.advice{pointer-events:auto;border:0;border-radius:14px;background:#fff8e3;box-shadow:inset 0 0 0 1.5px var(--brass),0 6px 18px rgba(14,59,44,.25);font-size:22px;width:64px;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:4px 0}
+.advice small{font-size:10.5px;font-weight:700;color:var(--g)}
+.adv-i{display:flex;gap:10px;padding:10px 2px;border-bottom:1px solid var(--line)}.adv-ic{font-size:20px;min-width:26px}.adv-t{font-size:14px}.adv-t .btn{margin-top:6px}
 </style>
 </head>
 <body>
@@ -128,32 +133,32 @@ const INTL_SPLIT = { 'Saudi Cup': [10e6, 3.5e6, 2e6, 1.5e6, 1e6, 0.6e6, 0.5e6, 0
 
 // meets: [startWk, endWk, tier]  tier 0 low .. 3 elite
 const TRACKS = {
-  BEL: { n: 'Belmont Park', st: 'NY', rg: 'NY', turf: 1, m: [[1, 15, 1], [16, 27, 2], [37, 44, 2], [45, 52, 1]] },
-  SAR: { n: 'Saratoga', st: 'NY', rg: 'NY', turf: 1, m: [[28, 36, 3]] },
-  CD: { n: 'Churchill Downs', st: 'KY', rg: 'KY', turf: 1, m: [[17, 26, 2], [37, 39, 2], [45, 48, 2]] },
-  KEE: { n: 'Keeneland', st: 'KY', rg: 'KY', turf: 1, m: [[14, 17, 3], [40, 43, 3]] },
-  ELP: { n: 'Ellis Park', st: 'KY', rg: 'KY', turf: 1, m: [[27, 35, 1]] },
-  KD: { n: 'Kentucky Downs', st: 'KY', rg: 'KY', turf: 1, allTurf: 1, rich: 1.8, m: [[36, 37, 3]] },
-  TP: { n: 'Turfway Park', st: 'KY', rg: 'KY', turf: 0, syn: 1, m: [[1, 13, 1], [49, 52, 1]] },
-  IND: { n: 'Indiana Grand', st: 'IN', rg: 'KY', turf: 1, m: [[17, 44, 1]] },
-  GP: { n: 'Gulfstream Park', st: 'FL', rg: 'FL', turf: 1, m: [[1, 13, 2], [14, 48, 1], [49, 52, 2]] },
-  TAM: { n: 'Tampa Bay Downs', st: 'FL', rg: 'FL', turf: 1, m: [[1, 18, 0], [47, 52, 0]] },
-  SA: { n: 'Santa Anita', st: 'CA', rg: 'CA', turf: 1, m: [[1, 25, 2], [39, 44, 2], [52, 52, 2]] },
-  DMR: { n: 'Del Mar', st: 'CA', rg: 'CA', turf: 1, m: [[29, 36, 3], [45, 48, 2]] },
-  LRC: { n: 'Los Alamitos', st: 'CA', rg: 'CA', turf: 0, m: [[26, 28, 1], [49, 51, 1]] },
-  FG: { n: 'Fair Grounds', st: 'LA', rg: 'S', turf: 1, m: [[1, 13, 2], [47, 52, 2]] },
-  OP: { n: 'Oaklawn Park', st: 'AR', rg: 'S', turf: 0, m: [[3, 18, 2]] },
-  EVD: { n: 'Evangeline Downs', st: 'LA', rg: 'S', turf: 1, m: [[16, 34, 0]] },
-  DED: { n: 'Delta Downs', st: 'LA', rg: 'S', turf: 0, m: [[42, 52, 0]] },
-  LAD: { n: 'Louisiana Downs', st: 'LA', rg: 'S', turf: 1, m: [[22, 40, 0]] },
-  LRL: { n: 'Laurel Park', st: 'MD', rg: 'MA', turf: 1, m: [[1, 15, 1], [24, 52, 1]] },
-  PIM: { n: 'Pimlico', st: 'MD', rg: 'MA', turf: 1, m: [[16, 23, 1]] },
-  PRX: { n: 'Parx Racing', st: 'PA', rg: 'MA', turf: 1, m: [[1, 52, 1]] },
-  PEN: { n: 'Penn National', st: 'PA', rg: 'MA', turf: 1, m: [[1, 52, 0]] },
-  MTH: { n: 'Monmouth Park', st: 'NJ', rg: 'MA', turf: 1, m: [[20, 37, 1]] },
-  CNL: { n: 'Colonial Downs', st: 'VA', rg: 'MA', turf: 1, m: [[29, 36, 1]] },
-  DEL: { n: 'Delaware Park', st: 'DE', rg: 'MA', turf: 1, m: [[22, 40, 1]] },
-  CT: { n: 'Charles Town', st: 'WV', rg: 'MA', turf: 0, m: [[1, 52, 0]] },
+  BEL: { n: 'Belmont Park', st: 'NY', rg: 'NY', turf: 1, m: [[1, 13, 1, 'BELW', 1], [14, 27, 2, 'BEL', 1.1], [37, 44, 2, 'BEL', 1.1], [45, 52, 1, 'BELW', 1]] },
+  SAR: { n: 'Saratoga', st: 'NY', rg: 'NY', turf: 1, m: [[28, 36, 3, 'BEL', 1.35]] },
+  CD: { n: 'Churchill Downs', st: 'KY', rg: 'KY', turf: 1, m: [[17, 26, 2, 'CD', 1], [37, 39, 2, 'CD', 0.95], [45, 48, 2, 'CD', 1]] },
+  KEE: { n: 'Keeneland', st: 'KY', rg: 'KY', turf: 1, m: [[14, 17, 3, 'KEE', 1], [40, 43, 3, 'KEE', 1]] },
+  ELP: { n: 'Ellis Park', st: 'KY', rg: 'KY', turf: 1, m: [[27, 35, 1, 'CD', 0.6]] },
+  KD: { n: 'Kentucky Downs', st: 'KY', rg: 'KY', turf: 1, allTurf: 1, m: [[36, 37, 3, 'KD', 1]] },
+  TP: { n: 'Turfway Park', st: 'KY', rg: 'KY', turf: 0, syn: 1, m: [[1, 13, 1, 'CD', 0.45], [49, 52, 1, 'CD', 0.45]] },
+  IND: { n: 'Indiana Grand', st: 'IN', rg: 'KY', turf: 1, m: [[17, 44, 1, 'CD', 0.5]] },
+  GP: { n: 'Gulfstream Park', st: 'FL', rg: 'FL', turf: 1, m: [[1, 13, 2, 'GPC', 1], [14, 48, 1, 'GPN', 1], [49, 52, 2, 'GPC', 1]] },
+  TAM: { n: 'Tampa Bay Downs', st: 'FL', rg: 'FL', turf: 1, m: [[1, 18, 0, 'GPN', 0.7], [47, 52, 0, 'GPN', 0.7]] },
+  SA: { n: 'Santa Anita', st: 'CA', rg: 'CA', turf: 1, m: [[1, 25, 2, 'DMR', 1.05], [39, 44, 2, 'DMR', 1], [52, 52, 2, 'DMR', 1.05]] },
+  DMR: { n: 'Del Mar', st: 'CA', rg: 'CA', turf: 1, m: [[29, 36, 3, 'DMR', 1.35], [45, 48, 2, 'DMR', 1]] },
+  LRC: { n: 'Los Alamitos', st: 'CA', rg: 'CA', turf: 0, m: [[26, 28, 1, 'DMR', 0.7], [49, 51, 1, 'DMR', 0.7]] },
+  FG: { n: 'Fair Grounds', st: 'LA', rg: 'S', turf: 1, m: [[1, 13, 2, 'FG', 1], [47, 52, 2, 'FG', 1]] },
+  OP: { n: 'Oaklawn Park', st: 'AR', rg: 'S', turf: 0, m: [[3, 18, 2, 'CD', 0.85]] },
+  EVD: { n: 'Evangeline Downs', st: 'LA', rg: 'S', turf: 1, m: [[16, 34, 0, 'DED', 0.9]] },
+  DED: { n: 'Delta Downs', st: 'LA', rg: 'S', turf: 0, m: [[42, 52, 0, 'DED', 1]] },
+  LAD: { n: 'Louisiana Downs', st: 'LA', rg: 'S', turf: 1, m: [[22, 40, 0, 'DED', 0.85]] },
+  LRL: { n: 'Laurel Park', st: 'MD', rg: 'MA', turf: 1, m: [[1, 15, 1, 'PRX', 0.85], [24, 52, 1, 'PRX', 0.85]] },
+  PIM: { n: 'Pimlico', st: 'MD', rg: 'MA', turf: 1, m: [[16, 23, 1, 'PRX', 0.95]] },
+  PRX: { n: 'Parx Racing', st: 'PA', rg: 'MA', turf: 1, m: [[1, 52, 1, 'PRX', 1]] },
+  PEN: { n: 'Penn National', st: 'PA', rg: 'MA', turf: 1, m: [[1, 52, 0, 'PRX', 0.6]] },
+  MTH: { n: 'Monmouth Park', st: 'NJ', rg: 'MA', turf: 1, m: [[20, 37, 1, 'PRX', 0.9]] },
+  CNL: { n: 'Colonial Downs', st: 'VA', rg: 'MA', turf: 1, m: [[29, 36, 1, 'CD', 0.65]] },
+  DEL: { n: 'Delaware Park', st: 'DE', rg: 'MA', turf: 1, m: [[22, 40, 1, 'PRX', 0.7]] },
+  CT: { n: 'Charles Town', st: 'WV', rg: 'MA', turf: 0, m: [[1, 52, 0, 'DED', 0.8]] },
   RP: { n: 'Remington Park', st: 'OK', rg: 'S', turf: 1, m: [] }, PRM: { n: 'Prairie Meadows', st: 'IA', rg: 'S', turf: 1, m: [] },
   TDN: { n: 'Thistledown', st: 'OH', rg: 'MA', turf: 0, m: [] }, MNR: { n: 'Mountaineer', st: 'WV', rg: 'MA', turf: 1, m: [] },
   HOU: { n: 'Sam Houston', st: 'TX', rg: 'S', turf: 1, m: [] }, LS: { n: 'Lone Star Park', st: 'TX', rg: 'S', turf: 1, m: [] },
@@ -231,6 +236,33 @@ const WAYI = {
   'Forego': 'Sprint', 'Bing Crosby': 'Sprint', 'Ballerina': 'Filly & Mare Sprint', 'Madison': 'Filly & Mare Sprint',
   'Diana': 'Filly & Mare Turf', 'First Lady': 'Filly & Mare Turf', 'Jenny Wiley': 'Filly & Mare Turf', 'Pegasus World Cup Invitational': 'Saudi Cup',
 };
+// Overnight race profiles, from fall/winter 2026 condition books (open purses in $; claiming purse = a + b * claim price)
+// mix: share of card by race type. fund: state-bred money — incl = part of the purse only that state's breds collect; plus = extra paid on top.
+const PROFILES = {
+  CD: { msw: 120000, alw: 127000, aoc: 134000, str: 83000, soc: 85000, moc: 70000, clm: [44700, 0.6], mcl: [50000, 0.2], cp: [12500, 16000, 20000, 25000, 30000, 32000, 40000, 50000, 62500, 80000], mp: [20000, 30000, 40000, 50000, 75000, 100000],
+    mix: { CLM: 44, MSW: 20, MCL: 12, STR: 9, AOC: 9, ALW: 6 }, turf: 0.25, sb: 0, fund: { st: 'KY', kind: 'incl', MSW: 0.39, ALW: 0.38, AOC: 0.37, other: 0.12 } },
+  KEE: { msw: 110000, alw: 120000, aoc: 130000, str: 63000, soc: 70000, moc: 70000, clm: [40100, 0.6], mcl: [47000, 0.25], cp: [16000, 20000, 25000, 30000, 32000, 40000, 50000, 62500, 80000, 100000], mp: [20000, 25000, 30000, 50000, 75000, 100000],
+    mix: { CLM: 27, ALW: 21, MSW: 16, MCL: 15, AOC: 12, STR: 9 }, turf: 0.35, sb: 0, fund: { st: 'KY', kind: 'incl', MSW: 0.3, ALW: 0.31, AOC: 0.31, other: 0.33 } },
+  KD: { msw: 170000, alw: 190000, aoc: 200000, str: 80000, soc: 80000, moc: 90000, clm: [60000, 0.6], mcl: [60000, 0.3], cp: [30000, 50000], mp: [50000],
+    mix: { MSW: 38, AOC: 32, ALW: 19, STR: 11 }, turf: 1, sb: 0, fund: { st: 'KY', kind: 'incl', MSW: 0.47, ALW: 0.47, AOC: 0.48, other: 0.4 } },
+  BELW: { msw: 85000, alw: 93000, aoc: 87000, str: 70000, soc: 70000, moc: 75000, clm: [24200, 0.72], mcl: [23600, 0.56], cp: [12500, 16000, 17500, 20000, 30000, 30000, 40000, 40000, 50000, 55000], mp: [16000, 30000, 40000, 50000],
+    mix: { CLM: 30, MSW: 19, AOC: 18, MCL: 17, ALW: 5, STR: 5, SOC: 3, MOC: 2 }, turf: 0, syn: 1, sb: 0.21, sbMult: 1, fund: { st: 'NY', kind: 'plus', open: 0.174 } },
+  BEL: { msw: 85000, alw: 93000, aoc: 87000, str: 70000, soc: 70000, moc: 75000, clm: [24200, 0.72], mcl: [23600, 0.56], cp: [16000, 20000, 25000, 30000, 40000, 50000, 62500, 80000], mp: [30000, 40000, 50000, 75000],
+    mix: { CLM: 28, MSW: 19, AOC: 18, MCL: 15, ALW: 8, STR: 5, SOC: 4, MOC: 3 }, turf: 0.38, sb: 0.2, sbMult: 1, fund: { st: 'NY', kind: 'plus', open: 0.174 } },
+  GPC: { msw: 57000, alw: 60000, aoc: 58000, str: 32000, soc: 30000, moc: 31000, clm: [19900, 0.48], mcl: [17600, 0.5], cp: [6250, 10000, 10000, 12500, 17500, 17500, 25000, 35000, 50000], mp: [12500, 17500, 25000, 35000, 50000],
+    mix: { CLM: 35, MCL: 18, SOC: 14, MOC: 13, AOC: 10, MSW: 10 }, turf: 0.33, syn: 0.25, sb: 0.07, sbMult: 0.85, fund: { st: 'FL', kind: 'incl', MSW: 0.15, ALW: 0.15, AOC: 0.15, other: 0.15 } },
+  GPN: { msw: 50000, alw: 54000, aoc: 54000, str: 33500, soc: 33500, moc: 31750, clm: [19700, 0.48], mcl: [17600, 0.5], cp: [6250, 10000, 12500, 17500, 25000, 35000, 50000], mp: [12500, 17500, 25000, 35000, 50000],
+    mix: { CLM: 38, MCL: 28, SOC: 11, MSW: 11, MOC: 7, AOC: 5 }, turf: 0.2, syn: 0.45, sb: 0.07, sbMult: 0.85, fund: { st: 'FL', kind: 'incl', MSW: 0.15, ALW: 0.15, AOC: 0.15, other: 0.15 } },
+  DMR: { msw: 65000, alw: 69000, aoc: 67000, str: 35000, soc: 35000, moc: 45000, clm: [15000, 0.68], mcl: [12300, 0.43], cp: [8000, 12500, 16000, 16000, 20000, 25000, 25000, 32000, 40000, 50000], mp: [16000, 32000, 40000, 50000],
+    mix: { CLM: 26, MSW: 24, AOC: 23, MCL: 14, SOC: 7, MOC: 6 }, turf: 0.35, sb: 0.43, sbMult: 0.95, fund: { st: 'CA', kind: 'plus', MSW: 0.3, ALW: 0.3, AOC: 0.3, other: 0.12 } },
+  FG: { msw: 52000, alw: 53000, aoc: 54000, str: 18000, soc: 18000, moc: 30000, clm: [15100, 0.31], mcl: [10800, 0.38], cp: [5000, 5000, 7500, 10000, 12500, 15000, 20000, 30000], mp: [12500, 15000, 30000],
+    mix: { CLM: 45, MSW: 15, MCL: 12, AOC: 10, ALW: 10, SOC: 4, MOC: 3 }, turf: 0.18, sb: 0.35, sbMult: 0.9, fund: { st: 'LA', kind: 'incl', MSW: 0.03, ALW: 0.03, AOC: 0.03, other: 0.03 } },
+  DED: { msw: 35000, alw: 37000, aoc: 36000, str: 24000, soc: 21000, moc: 23000, clm: [12100, 0.58], mcl: [11800, 0.43], cp: [4000, 5000, 5000, 7500, 10000, 10000, 20000, 25000, 30000, 50000], mp: [5000, 10000, 20000, 25000, 32000, 50000],
+    mix: { CLM: 49, MCL: 20, ALW: 10, MSW: 9, STR: 6, SOC: 5, AOC: 1 }, turf: 0.15, sb: 0.37, sbMult: 1.25, fund: { st: 'LA', kind: 'incl', MSW: 0.04, ALW: 0.04, AOC: 0.04, other: 0.04 } },
+  PRX: { msw: 50000, alw: 55000, aoc: 52000, str: 30000, soc: 40000, moc: 26000, clm: [14000, 0.42], mcl: [12000, 0.4], cp: [5000, 7500, 7500, 10000, 12500, 16000, 16000, 25000, 40000, 75000], mp: [12500, 16000, 25000, 40000],
+    mix: { CLM: 55, SOC: 8, MSW: 9, MOC: 7, AOC: 7, MCL: 8, ALW: 6 }, turf: 0.2, sb: 0.22, sbMult: 1.08, fund: { st: 'PA', kind: 'plus', open: 0.4 } },
+};
+const RACE_TYPE_N = { MSW: 'Maiden Special Weight', MCL: 'Maiden Claiming', MOC: 'Maiden Optional Claiming', CLM: 'Claiming', STR: 'Starter Allowance', SOC: 'Starter Optional Claiming', ALW: 'Allowance', AOC: 'Allowance Optional Claiming', STK: 'Stakes' };
 const SALES = [
   { wk: 2, id: 'KJAN', n: 'Keeneland January Horses of All Ages', loc: 'Lexington, KY', kind: 'mixed', tier: 1, st: 'KY' },
   { wk: 3, id: 'OBSJ', n: 'OBS Winter Mixed Sale', loc: 'Ocala, FL', kind: 'mixed', tier: 0, st: 'FL' },
@@ -341,7 +373,7 @@ function hashStr(s) { let h = 2166136261; for (let i = 0; i < s.length; i++) { h
 function srng(seed) { let a = typeof seed === 'string' ? hashStr(seed) : seed >>> 0; return function () { a |= 0; a = a + 0x6D2B79F5 | 0; let t = Math.imul(a ^ a >>> 15, 1 | a); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; }; }
 function wpick(items, weights, r = rnd) { let s = weights.reduce((a, b) => a + b, 0), x = r() * s; for (let i = 0; i < items.length; i++) { x -= weights[i]; if (x <= 0) return items[i]; } return items[items.length - 1]; }
 const fmt$ = (n) => { const neg = n < 0; n = Math.abs(Math.round(n)); return (neg ? '-$' : '$') + n.toLocaleString('en-US'); };
-const fmtK = (n) => { const a = Math.abs(n); const s = n < 0 ? '-' : ''; if (a >= 1e6) return s + '$' + (a / 1e6).toFixed(a >= 1e7 ? 1 : 2).replace(/\.?0+$/, '') + 'M'; if (a >= 1e4) return s + '$' + Math.round(a / 1000) + 'k'; if (a >= 1000) return s + '$' + (a / 1000).toFixed(1).replace(/\.0$/, '') + 'k'; return s + '$' + Math.round(a); };
+const fmtK = (n) => { const a = Math.abs(n); const s = n < 0 ? '-' : ''; if (a >= 1e6) return s + '$' + (a / 1e6).toFixed(a >= 1e7 ? 1 : 2).replace(/\.?0+$/, '') + 'M'; if (a >= 1e4) return s + '$' + (a % 1000 === 500 && a < 2e5 ? (a / 1000).toFixed(1) : Math.round(a / 1000)) + 'k'; if (a >= 1000) return s + '$' + (a % 250 === 0 ? (a / 1000).toFixed(2).replace(/0+$/, '').replace(/\.$/, '') : (a / 1000).toFixed(1).replace(/\.0$/, '')) + 'k'; return s + '$' + Math.round(a); };
 function distStr(f) { const map = { 4.5: '4½f', 5: '5f', 5.5: '5½f', 6: '6f', 6.5: '6½f', 7: '7f', 7.5: '7½f', 8: '1 mile', 8.5: '1 1/16 mi', 9: '1⅛ mi', 9.5: '1 3/16 mi', 10: '1¼ mi', 11: '1⅜ mi', 12: '1½ mi' }; return map[f] || f + 'f'; }
 function lenStr(l) { if (l < 0.05) return 'dh'; if (l < 0.15) return 'nose'; if (l < 0.3) return 'head'; if (l < 0.45) return 'neck'; const w = Math.floor(l), fr = l - w; let f = ''; if (fr >= 0.875) return (w + 1) + ''; if (fr >= 0.625) f = '¾'; else if (fr >= 0.375) f = '½'; else if (fr >= 0.125) f = '¼'; return (w ? w : '') + f; }
 function timeStr(s) { const m = Math.floor(s / 60), r = s - m * 60; return (m ? m + ':' : ':') + (r < 10 && m ? '0' : '') + r.toFixed(2); }
@@ -375,7 +407,7 @@ function newGame(opts) {
     diff: opts.diff, stable: opts.stable || 'My Stable', silks: opts.silks, home: opts.home || 'KY',
     cash: DIFF[opts.diff].cash, yr: START_YEAR, wk: 1, rep: 3, horses: [], stallions: [], trainers: [], news: [], fin: {},
     offers: [], entries: [], fields: {}, claims: [], consign: [], trophies: [], nextId: 1, market: [], mktAw: 0,
-    shares: [], road: null, v: 2, saleLots: null, saleId: null, lastRep: null, history: [], pinned: {}
+    shares: [], road: null, v: 3, saleLots: null, saleId: null, lastRep: null, history: [], pinned: {}
   };
   initTrainers(); initStallions();
   if (opts.diff === 'easy') {
@@ -435,7 +467,7 @@ function makeHorse(o) {
     id: nid(), name: '', sex: o.sex || (rnd() < 0.5 ? 'C' : 'F'), foal: o.foal, sireId: sire.id, sireName: sire.name, sireLine: sire.line, sireFee: sire.fee,
     damName: dam ? dam.name : (o.damName || genName()), damId: dam ? dam.id : null, damsireName: dam ? dam.sireName : (o.damsire || pick(OLD_SIRES)[0]), damsireLine,
     bred: o.bred || 'KY', g, ceil, dist, turf, mud: clamp(gauss(0, 0.45), -1, 1), style, sound, temper, green: temper > 0.6 && rnd() < 0.6, mat,
-    bleeder: rnd() < (dam && dam.bleeder ? 0.15 : 0.06), conf: 0, status: 'young', trainer: null, tSince: 0, fit: 20, lastRace: -99,
+    syn: clamp(0.5 * turf + gauss(0, 0.3), -1, 1), bleeder: rnd() < (dam && dam.bleeder ? 0.15 : 0.06), conf: 0, status: 'young', trainer: null, tSince: 0, fit: 20, lastRace: -99,
     inj: null, starts: 0, wins: 0, pl: 0, sh: 0, earn: 0, alw: 0, pp: [], works: [], know: 0, gw: [0, 0, 0, 0], sw: 0, big: 0,
     kdPts: 0, koPts: 0, tcNom: null, bcNom: false, lasix: false, blinkers: false, gelded: false, auto: { on: false, clm: false, stk: false },
     breeder: o.breeder || 'other', dq: 0, color: pick(['Bay', 'Dark Bay', 'Chestnut', 'Gray', 'Bay', 'Chestnut', 'Dark Bay', 'Roan', 'Black']), ys: { st: 0, w: 0, e: 0 }, surg: 0, farm: o.bred || 'KY'
@@ -524,13 +556,24 @@ const OWN = h => h.own ?? 1;
 // ===================== RACES =====================
 const RC = {};
 function tierAt(t, wk) { for (const m of t.m) if (wk >= m[0] && wk <= m[1]) return m[2]; return -1; }
+function meetAt(t, wk) { for (const m of t.m) if (wk >= m[0] && wk <= m[1]) return m; return null; }
 function trackCond(trk, yr, wk, surf) { const r = srng('c' + trk + yr + wk + surf)(); if (surf === 'T') return r < 0.8 ? 'Firm' : r < 0.95 ? 'Good' : 'Yielding'; if (surf === 'S') return 'Fast'; return r < 0.8 ? 'Fast' : r < 0.88 ? 'Good' : r < 0.94 ? 'Muddy' : 'Sloppy'; }
+const clmPar = (p) => 58 + 7 * Math.log2(p / 10000);
+const mclPar = (p) => 50 + 6 * Math.log2(p / 10000);
 function parFor(r) {
   let p;
-  if (r.type === 'MCL') p = 50 + 6 * Math.log2(r.clm / 10000);
-  else if (r.type === 'CLM') p = 58 + 7 * Math.log2(r.clm / 10000);
-  else p = { MSW: 78, ALW1: 82, ALW2: 86, AOC: 89, STK: 92 }[r.type] ?? [0, 102, 98, 95][r.g];
-  if (r.g == null || r.g === 0) { if (r.type === 'MCL' || r.type === 'CLM') p += [-2, -1, 0, 1][r.tier]; else p += [-8, -4, 0, 3][r.tier]; }
+  const sub = r.sub || 'OPEN';
+  if (r.type === 'MCL') p = mclPar(r.clm);
+  else if (r.type === 'MOC') p = mclPar(r.clm) + 6;
+  else if (r.type === 'CLM') p = clmPar(r.clm) + ({ N2L: -5, N3L: -3, NWS: -2 }[sub] || 0);
+  else if (r.type === 'STR') p = clmPar(r.cap) + 4;
+  else if (r.type === 'SOC') p = clmPar(r.clm) + 4;
+  else if (r.type === 'ALW') p = { N1X: 82, N2X: 86, N3X: 89, OPEN: 92 }[sub];
+  else if (r.type === 'AOC') p = { N1X: 84, N2X: 87, N3X: 90, OPEN: 92 }[sub];
+  else if (r.type === 'MSW') p = 78;
+  else if (r.type === 'STK') p = r.g ? [0, 102, 98, 95][r.g] : 92;
+  else p = [0, 102, 98, 95][r.g] ?? 92;
+  if (!r.name && r.lvl != null) { if (['MCL', 'CLM', 'SOC', 'STR'].includes(r.type)) p += clamp(2 * Math.log2(r.lvl), -3, 2); else p += clamp(9 * Math.log2(r.lvl), -12, 5); }
   if (r.tags && r.tags.includes('BIG')) p += 2; if (r.intl) p += 4; if (r.bc) p += r.name.includes('Classic') ? 3 : 1;
   if (r.sb) p -= 7;
   if (r.age === '2') p += -14 + clamp((r.wk - 14) / 38, 0, 1) * 6;
@@ -542,51 +585,52 @@ function weekRaces(yr, wk) {
   const key = yr + '-' + wk; if (RC[key]) return RC[key];
   const list = [];
   for (const [code, t] of Object.entries(TRACKS)) {
-    const tier = tierAt(t, wk); if (tier < 0) continue;
+    const mt = meetAt(t, wk); if (!mt || !mt[3]) continue;
+    const tier = mt[2], P = PROFILES[mt[3]], scale = mt[4] || 1;
     const r = srng('card' + code + yr + '-' + wk);
-    const sb = SB_STATES.includes(t.st) ? t.st : null;
-    let tpl;
-    if (tier === 3) tpl = ['MSW', 'MSW', 'MCL', 'ALW1', 'ALW2', 'AOC', 'CLM', 'STK'];
-    else if (tier === 2) tpl = ['MSW', 'MCL', 'ALW1', 'ALW2', 'AOC', 'CLM', 'CLM'];
-    else if (tier === 1) tpl = ['MSW', 'MCL', 'MCL', 'ALW1', 'CLM', 'CLM', 'CLM'];
-    else tpl = ['MSW', 'MCL', 'MCL', 'CLM', 'CLM', 'CLM', 'CLM', 'ALW1'];
-    if (sb) { tpl.push('SBMSW'); tpl.push(tier >= 1 ? 'SBALW' : 'SBMCL'); if (r() < 0.5) tpl.push('SBALW2'); }
-    if (tier === 2 && r() < 0.35) tpl.push('STK');
-    let n = 1;
-    for (const ty of tpl) {
-      const race = { id: `${yr}-${wk}-${code}-${n}`, yr, wk, trk: code, rn: n++, tier, g: null };
-      let type = ty; if (ty.startsWith('SB')) { race.sb = sb; type = ty.slice(2); if (type === 'ALW2') type = 'ALW2'; }
-      if (type === 'ALW') type = 'ALW1';
-      race.type = type;
-      // age
-      const p2 = wk < 14 ? 0 : wk < 27 ? 0.3 : 0.45;
-      if ((type === 'MSW' || type === 'MCL') && r() < p2) race.age = '2';
-      else if (type === 'STK') race.age = r() < 0.4 && wk < 40 ? '3' : '3U';
-      else race.age = (wk <= 26 && r() < 0.45) ? '3' : (r() < 0.12 ? '4U' : '3U');
-      race.f = r() < 0.4 ? 1 : 0;
-      race.mdn = type === 'MSW' || type === 'MCL';
-      if (type === 'MCL') race.clm = [[5000, 10000, 12500], [16000, 25000, 30000], [30000, 40000, 50000], [50000, 75000]][tier][Math.floor(r() * [3, 3, 3, 2][tier])];
-      if (type === 'CLM') { const P = [[5000, 7500, 10000, 16000], [10000, 16000, 25000], [16000, 25000, 40000, 62500], [40000, 50000, 80000]][tier]; race.clm = P[Math.floor(r() * P.length)]; }
-      if (type === 'AOC') race.clm = [0, 40000, 62500, 80000][tier];
+    const sbSt = SB_STATES.includes(t.st) && P.sb ? t.st : null;
+    const nRaces = [9, 11, 14, 16][tier];
+    const types = Object.keys(P.mix), wts = types.map(k => P.mix[k]);
+    const p2 = wk < 14 ? 0 : wk < 27 ? 0.25 : 0.35;
+    for (let n = 1; n <= nRaces; n++) {
+      const race = { id: `${yr}-${wk}-${code}-${n}`, yr, wk, trk: code, rn: n, tier, g: null, prof: mt[3] };
+      const type = n === 1 ? 'MSW' : n === 2 ? 'CLM' : wpick(types, wts, r);
+      race.type = type; race.mdn = ['MSW', 'MCL', 'MOC'].includes(type);
+      if (sbSt && r() < P.sb) race.sb = sbSt;
+      if (race.mdn && r() < p2) race.age = '2';
+      else if (!race.mdn && wk >= 30 && r() < p2 * 0.3 && type !== 'CLM') race.age = '2';
+      else race.age = (wk <= 26 && r() < 0.4) ? '3' : (r() < 0.1 ? '4U' : '3U');
+      race.f = r() < 0.48 ? 1 : 0;
+      const pick1 = (arr) => arr[Math.floor(r() * arr.length)];
+      if (type === 'CLM') { race.clm = pick1(P.cp); race.sub = wpick(['OPEN', 'N2L', 'N3L', 'NWS'], [40, 28, 22, 10], r); }
+      if (type === 'MCL') race.clm = pick1(P.mp);
+      if (type === 'MOC') { race.clm = pick1(P.mp.slice(-3)); race.cap = race.clm; }
+      if (type === 'STR') { race.cap = pick1(P.cp.slice(0, Math.ceil(P.cp.length * 0.6))); race.sub = 'OPEN'; }
+      if (type === 'SOC') { race.cap = pick1(P.cp.slice(0, Math.ceil(P.cp.length * 0.6))); race.clm = Math.max(race.cap, pick1(P.cp)); }
+      if (type === 'ALW') race.sub = wpick(['N1X', 'N2X', 'N3X', 'OPEN'], [40, 30, 15, 15], r);
+      if (type === 'AOC') { race.sub = wpick(['N1X', 'N2X', 'N3X'], [45, 40, 15], r); race.clm = pick1(P.cp.slice(-4)); }
       // surface & distance
       const warm = ['FL', 'CA', 'LA'].includes(t.st) || (wk >= 14 && wk <= 47);
-      const turfOK = warm && (t.turf && race.age !== '2' || (t.turf && wk > 28));
-      race.surf = t.syn ? 'S' : (turfOK && r() < 0.32 ? 'T' : 'D'); if (t.allTurf) race.surf = 'T';
-      if (race.age === '2') race.dist = wk < 22 ? pick([4.5, 5], r) : wk < 30 ? pick([5, 5.5, 6], r) : wk < 40 ? pick([6, 6.5, 7, 8], r) : pick([6, 7, 8, 8.5], r);
-      else if (race.surf === 'T') race.dist = r() < 0.25 ? pick([5, 5.5], r) : pick([8, 8.5, 9, 9.5, 11], r);
-      else race.dist = r() < 0.58 ? pick([5.5, 6, 6, 6.5, 7], r) : pick([8, 8.5, 8.5, 9], r);
+      const ru = r();
+      if (t.syn || (P.syn && ru < P.syn)) race.surf = 'S';
+      else if (t.allTurf || (t.turf && warm && ru < (P.syn || 0) + P.turf && !(race.age === '2' && wk < 28))) race.surf = 'T';
+      else race.surf = 'D';
+      if (race.age === '2') race.dist = wk < 22 ? pick([4.5, 5], r) : wk < 30 ? pick([5, 5.5, 6], r) : wk < 40 ? pick([5.5, 6, 6.5, 7, 8], r) : pick([6, 7, 8, 8.5], r);
+      else if (race.surf === 'T') race.dist = r() < 0.3 ? pick([5, 5.5, 6.5], r) : pick([8, 8, 8.5, 9, 9.5, 11], r);
+      else if (race.surf === 'S') race.dist = r() < 0.5 ? pick([5.5, 6, 6.5, 7], r) : pick([8, 8, 8.5], r);
+      else race.dist = r() < 0.55 ? pick([5, 5.5, 6, 6, 6.5, 7], r) : pick([8, 8, 8.5, 9], r);
       // purse
-      const tm = [0.38, 0.62, 1, 1.25][tier] * (t.rich || 1);
       let purse;
-      if (type === 'MSW') purse = 90000 * tm; else if (type === 'ALW1') purse = 95000 * tm; else if (type === 'ALW2') purse = 100000 * tm; else if (type === 'AOC') purse = 110000 * tm;
-      else if (type === 'STK') purse = (tier === 3 ? 200000 : 150000) * (r() < 0.5 ? 1 : 0.8);
-      else if (type === 'MCL') purse = Math.min(90000 * tm * 0.6, 12000 + race.clm * 0.6) * Math.sqrt(tm);
-      else purse = (12000 + race.clm * 0.8) * Math.sqrt(tm);
-      if (race.sb) purse *= ({ PA: 1.0, NY: 0.9 })[race.sb] || 0.82;
-      race.purse = Math.round(purse / 1000) * 1000;
-      if (type === 'STK') race.name = genStakesName(r) + (race.sb ? ` (${race.sb}-bred)` : '');
+      const lin = (ab, price) => ab[0] + ab[1] * price;
+      if (type === 'MSW') purse = P.msw; else if (type === 'ALW') purse = P.alw * ({ N1X: 1, N2X: 1.06, N3X: 1.1, OPEN: 1.14 }[race.sub]);
+      else if (type === 'AOC') purse = P.aoc * ({ N1X: 1, N2X: 1.05, N3X: 1.1 }[race.sub]); else if (type === 'STR') purse = P.str; else if (type === 'SOC') purse = P.soc; else if (type === 'MOC') purse = P.moc;
+      else if (type === 'MCL') purse = lin(P.mcl, race.clm); else purse = lin(P.clm, race.clm);
+      purse *= scale; if (race.sb) purse *= P.sbMult || 1;
+      race.purse = Math.round(purse / 500) * 500;
+      race.lvl = (P.msw * scale) / 85000;
+      race.fund = P.fund && P.fund.st === t.st ? P.fund : null;
       race.cond = trackCond(code, yr, wk, race.surf);
-      if (race.surf === 'T' && race.cond === 'Yielding' && r() < 0.5) { race.surf = 'D'; race.cond = 'Sloppy'; race.offTurf = 1; if (race.dist > 9) race.dist = 9; if (race.dist < 6) race.dist = 6; }
+      if (race.surf === 'T' && race.cond === 'Yielding' && r() < 0.5) { race.surf = t.syn ? 'S' : 'D'; race.cond = 'Sloppy'; race.offTurf = 1; if (race.dist > 9) race.dist = 9; if (race.dist < 6) race.dist = 6; }
       race.par = parFor(race);
       list.push(race);
     }
@@ -611,14 +655,23 @@ function weekRaces(yr, wk) {
 }
 function genStakesName(r) { return pick(['Lady', 'Gallant', 'Bold', 'Native', 'Mister', 'Northern', 'Spring', 'Autumn', 'Harvest', 'Gold Cup', 'Governor\'s', 'Mayor\'s', 'Old Hickory', 'Riverboat', 'Smart', 'True', 'Dixie', 'Hilltop'], r) + ' ' + pick(['Stakes', 'Handicap', 'Classic', 'Cup', 'Mile', 'Sprint', 'Invitational'], r); }
 function raceById(id) { const [yr, wk] = id.split('-').map(Number); return weekRaces(yr, wk).find(r => r.id === id); }
+function condText(r) {
+  const s = r.sub;
+  if (r.type === 'CLM') return { N2L: 'never won 2 races', N3L: 'never won 3 races', NWS: 'no win in 6 months' }[s] || '';
+  if (r.type === 'ALW' || r.type === 'AOC') return { N1X: 'N1X', N2X: 'N2X', N3X: 'N3X', OPEN: 'open' }[s] || '';
+  if (r.type === 'STR' || r.type === 'SOC') return `started for ${fmtK(r.cap)} or less`;
+  if (r.type === 'MOC') return `sold/RNA ${fmtK(r.cap)} or less`;
+  return '';
+}
 function raceLabel(r) {
   if (r.name) return (r.g ? `${r.name} (G${r.g})` : r.listed ? `${r.name} (Listed)` : r.name);
   const ag = { '2': '2yo', '3': '3yo', '3U': '3&up', '4U': '4&up' }[r.age] + (r.f ? (r.age === '2' || r.age === '3' ? ' fillies' : ' F&M') : '');
   const sb = r.sb ? r.sb + '-bred ' : '';
-  const t = { MSW: 'Maiden Special Weight', MCL: `Maiden Claiming ${fmtK(r.clm)}`, CLM: `Claiming ${fmtK(r.clm)}`, ALW1: 'Allowance N1X', ALW2: 'Allowance N2X', AOC: `Allowance Optional Claiming ${fmtK(r.clm)}`, STK: 'Stakes' }[r.type];
-  return `${sb}${t} · ${ag}`;
+  let t = RACE_TYPE_N[r.type] || r.type; if (r.clm && r.type !== 'STR') t += ' ' + fmtK(r.clm);
+  const c = condText(r);
+  return `${sb}${t}${c ? ' (' + c + ')' : ''} · ${ag}`;
 }
-function raceShort(r) { if (r.name) return r.g ? `${r.name.replace("Breeders' Cup", 'BC')} G${r.g}` : r.listed ? r.name + ' (L)' : r.name; return (r.sb ? r.sb + '-bred ' : '') + ({ MSW: 'Mdn Sp Wt', MCL: 'Md Clm ' + fmtK(r.clm), CLM: 'Clm ' + fmtK(r.clm), ALW1: 'Alw N1X', ALW2: 'Alw N2X', AOC: 'AOC ' + fmtK(r.clm), STK: 'Stakes' }[r.type]); }
+function raceShort(r) { if (r.name) return r.g ? `${r.name.replace("Breeders' Cup", 'BC')} G${r.g}` : r.listed ? r.name + ' (L)' : r.name; return (r.sb ? r.sb + '-bred ' : '') + ({ MSW: 'Mdn Sp Wt', MCL: 'Md Clm ' + fmtK(r.clm), MOC: 'Md Opt Clm ' + fmtK(r.clm), CLM: 'Clm ' + fmtK(r.clm) + (r.sub && r.sub !== 'OPEN' ? ' ' + r.sub : ''), STR: 'Str Alw ' + fmtK(r.cap), SOC: 'Str Opt ' + fmtK(r.clm), ALW: 'Alw ' + (r.sub || ''), AOC: 'AOC ' + fmtK(r.clm) + ' ' + (r.sub || ''), STK: 'Stakes' }[r.type] || r.type); }
 function classLevel(par) { if (par >= 100) return 'Grade 1 level'; if (par >= 96) return 'Graded stakes level'; if (par >= 91) return 'Stakes level'; if (par >= 85) return 'Allowance level'; if (par >= 77) return 'Maiden special / N1X level'; if (par >= 68) return 'Mid-level claimer'; return 'Bottom-level claimer'; }
 
 function eligible(h, r) {
@@ -633,10 +686,14 @@ function eligible(h, r) {
   if (r.f && h.sex !== 'F') return [false, 'Fillies/mares only'];
   if (r.sb) { if (r.sb === 'MD' && r.name && r.name.startsWith('Maryland Million')) { const s = stallion(h.sireId); if (!s || s.st !== 'MD') return [false, 'Must be by a Maryland stallion']; } else if (h.bred !== r.sb) return [false, r.sb + '-breds only']; }
   if (r.mdn && h.wins > 0) return [false, 'Maidens only'];
-  if (r.type === 'ALW1' && h.alw >= 1) return [false, 'Already won an allowance'];
-  if (r.type === 'ALW2' && h.alw >= 2) return [false, 'Won 2+ allowances'];
-  if (r.type === 'AOC' && h.alw >= 3 && !h.wins) return [false, 'Conditions'];
-  if (h.jail && h.jail.until > AW() && r.clm && r.type !== 'AOC' && r.clm < h.jail.price) return [false, `Claim jail: ${fmtK(h.jail.price)}+ only`];
+  if (!r.mdn && !r.name && h.wins === 0 && (r.type === 'ALW' && r.sub !== 'N1X')) return [false, 'Needs a win first'];
+  const lim = { N1X: 1, N2X: 2, N3X: 3 }[r.sub];
+  if (r.type === 'ALW' && lim && h.alw >= lim) return [false, `Won ${h.alw} allowance+ race${h.alw > 1 ? 's' : ''}`];
+  if (r.type === 'CLM' && r.sub === 'N2L' && h.wins >= 2) return [false, 'Never-won-2 condition'];
+  if (r.type === 'CLM' && r.sub === 'N3L' && h.wins >= 3) return [false, 'Never-won-3 condition'];
+  if (r.type === 'CLM' && r.sub === 'NWS' && h.pp.some(p => p.fin === 1 && awOf(r.yr, r.wk) - p.aw < 26)) return [false, 'Won within 6 months'];
+  if (r.type === 'STR' && !(lowClm(h) <= r.cap)) return [false, `Must have started for ${fmtK(r.cap)} or less`];
+  if (h.jail && h.jail.until > AW() && r.clm && r.clm < h.jail.price && !['AOC', 'SOC', 'MOC'].includes(r.type)) return [false, `Claim jail: ${fmtK(h.jail.price)}+ only`];
   if (r.tags && r.tags.includes('KD')) { const rk = roadRank(h, 'kd'); if (rk > 18) return [false, `Derby points rank #${rk} (top 18 get in)`]; }
   if (r.tags && r.tags.includes('KO')) { const rk = roadRank(h, 'ko'); if (rk > 14) return [false, `Oaks points rank #${rk} (top 14 get in)`]; }
   if (r.intl && !inviteOK(h, r)) return [false, 'Invitation only — needs Grade 1 form'];
@@ -646,6 +703,15 @@ function eligible(h, r) {
   if (!ent) { const pf = prefCheck(h, r); if (pf) return [false, pf]; }
   return [true, ''];
 }
+function lowClm(h) { let m = Infinity; for (const p of h.pp) if (p.clmP) m = Math.min(m, p.clmP); return m; }
+// does this horse have to run 'for the tag' (claimable) in an optional claimer?
+function mustTag(h, r) {
+  if (r.type === 'AOC') { const lim = { N1X: 1, N2X: 2, N3X: 3 }[r.sub] || 9; return h.alw >= lim || h.wins === 0; }
+  if (r.type === 'SOC') return !(lowClm(h) <= r.cap);
+  if (r.type === 'MOC') return !(h.boughtFor != null && h.boughtFor <= r.cap) && h.breeder !== 'me';
+  return false;
+}
+function claimable(r, e) { return (r.type === 'CLM' || r.type === 'MCL') || (['AOC', 'SOC', 'MOC'].includes(r.type) && e && e.optClm); }
 function entryFees(h, r) {
   let fee = 0, notes = [];
   if (r.intl) return { fee: 0, notes: [['Invited: travel & entry paid by the organizers', 0]] };
@@ -704,7 +770,7 @@ function enterRace(h, r, opts) {
   if (f.mine.includes(h.id)) return 'Already entered';
   if (r.tags && (r.tags.includes('KD') || r.tags.includes('KO'))) f.runners.length = Math.max(0, (r.tags.includes('KD') ? 20 : 14) - f.mine.length - 1);
   f.mine.push(h.id); drawPosts(r);
-  G.entries.push({ hid: h.id, rid: r.id, jk: opts.jk, jkName: opts.jkName, lasix: !!opts.lasix, bet: opts.bet || 0, fee, auto: !!opts.auto });
+  G.entries.push({ hid: h.id, rid: r.id, jk: opts.jk, jkName: opts.jkName, lasix: !!opts.lasix, bet: opts.bet || 0, fee, auto: !!opts.auto, optClm: !!opts.optClm || mustTag(h, r) });
   spend('Entry fees & shipping', fee);
   return null;
 }
@@ -734,7 +800,8 @@ function fieldList(r) {
 // ---------- race simulation ----------
 const STYLE_E = { E: 0.13, P: 0.06, S: -0.02, C: -0.1 };
 function distAdj(h, d) { return -Math.max(0, Math.abs(d - h.dist) - 0.75) * 2.4; }
-function surfAdj(h, s) { if (s === 'T') return -4.5 * Math.max(0, -h.turf) + 1 * Math.max(0, h.turf); if (s === 'D') return -4 * Math.max(0, h.turf - 0.2); return -1.5 * Math.abs(h.turf); }
+function synOf(h) { if (h.syn == null) h.syn = clamp(0.5 * h.turf + (srng('syn' + h.id)() - 0.5) * 0.9, -1, 1); return h.syn; }
+function surfAdj(h, s) { if (s === 'T') return -4.5 * Math.max(0, -h.turf) + 1 * Math.max(0, h.turf); if (s === 'D') return -4 * Math.max(0, h.turf - 0.2); const y = synOf(h); return -3 * Math.max(0, -y) + 1.2 * Math.max(0, y); }
 function condAdj(h, c) { if (c === 'Sloppy' || c === 'Muddy') return 4 * h.mud; if (c === 'Yielding') return 2 * h.turf + 2 * h.mud; if (c === 'Good') return h.mud; return 0; }
 function runRace(r) {
   const list = fieldList(r);
@@ -770,10 +837,13 @@ function runRace(r) {
   list.forEach((x, i) => { x.btn = i === 0 ? 0 : (x.time - list[0].time) * 5.5; x.mrg = i < list.length - 1 ? (list[i + 1].time - x.time) * 5.5 : 0; x.fig = Math.round(x.P); });
   // final odds (public tweak)
   list.forEach(x => { x.odds = oddsLadder(Math.max(0.2, x.ml * Math.exp(gauss(0, 0.2)))); });
-  const split = r.split ? r.split.map(x => x / r.purse) : [0.6, 0.2, 0.12, 0.05, 0.03];
+  const split = payShares(r, list.length);
   const res = { rid: r.id, label: raceLabel(r), trk: r.trk, dist: r.dist, surf: r.surf, cond: r.cond, purse: r.purse, runners: [], mine: [], claims: [] };
   for (const x of list) {
-    const share = x.fin <= split.length ? r.purse * split[x.fin - 1] : 0;
+    let share = x.fin <= split.length ? r.purse * split[x.fin - 1] : 0;
+    let fundNote = '';
+    if (!x.ai && r.fund && share) { const F = r.fund; const k = ['MSW', 'ALW', 'AOC'].includes(r.type) ? r.type : 'other';
+      if (F.kind === 'incl' && x.h.bred !== F.st) { share *= 1 - (F[k] || F.other); fundNote = `${F.st === 'KY' ? 'KTDF' : F.st + '-bred fund'} share not paid (not ${F.st}-bred)`; } }
     const comment = x.notes.length ? x.notes.join(', ') : tripComment(x, n);
     res.runners.push({ name: x.name, post: x.post, fin: x.fin, btn: x.btn, mrg: x.mrg, odds: x.odds, fig: x.fig, time: x.time, eF: x.eF, style: x.style, mine: !x.ai, hid: x.h?.id, comment, jockey: x.ai ? x.x.jockeyName : x.jockey, sire: x.ai ? x.x.sireName : x.h.sireName });
     if (!x.ai) {
@@ -783,10 +853,10 @@ function runRace(r) {
       const o = OWN(h); const trainerCut = share * 0.1, jockCut = x.fin === 1 ? share * 0.1 : x.fin <= 3 ? share * 0.05 : 110;
       earn('Purses', share * o); spend('Trainer & jockey %', (trainerCut + jockCut) * o);
       let bonus = 0; if (x.fin === 1 && h.breeder === 'me' && SB_STATES.includes(h.bred)) { bonus = Math.round(share * 0.15); earn('Breeder awards', bonus); }
-      const ob = Math.round(ownerBonus(h, r, x.fin, share) * o); if (ob) earn('State-bred owner bonuses', ob); bonus += ob;
+      const ob = Math.round(fundBonus(h, r, share) * o); if (ob) earn('State-bred owner bonuses', ob); bonus += ob;
       let betRet = 0; if (e.bet) { spend('Wagering', e.bet); if (x.fin === 1) { betRet = Math.round(e.bet * (x.odds + 1)); earn('Wagering', betRet); } }
       if (x.fin === 1) {
-        if (!r.mdn && r.type !== 'CLM') h.alw++;
+        if (!r.mdn && !['CLM', 'STR', 'SOC'].includes(r.type) && !(r.type === 'AOC' && e.optClm)) h.alw++;
         if (r.g) h.gw[r.g]++; if (r.g || r.type === 'STK') { h.sw++; h.blackType = 'SW'; }
         if (r.tags && r.tags.includes('BIG')) h.big++;
         if (r.g && WAYI[r.name]) { h.wayi = h.wayi || []; h.wayi.push(WAYI[r.name]); }
@@ -796,7 +866,7 @@ function runRace(r) {
       if (r.bc && x.fin <= 5) h.koPts += r.bcName === 'Juvenile Fillies' ? [30, 15, 8, 5, 3][x.fin - 1] : 0;
       const rp = x.fin === 1 ? (r.g === 1 ? 5 : r.g === 2 ? 3 : r.g === 3 ? 2 : r.type === 'STK' ? (r.sb ? 0.8 : 1) : 0.25) + (r.tags?.includes('BIG') ? 4 : 0) + (r.bc ? 3 : 0) : (x.fin <= 3 && r.g === 1 ? 1 : 0);
       G.rep = clamp(G.rep + rp, 0, 100);
-      h.pp.unshift({ aw: AW(), yr: r.yr, wk: r.wk, trk: r.trk, race: raceShort(r), g: r.g || 0, dist: r.dist, surf: r.surf, cond: r.cond, fin: x.fin, n, fig: x.fig, odds: x.odds, btn: x.btn, note: comment, won: share, age: ageOf(h), purse: r.purse, rid: r.id, big: r.tags?.includes('BIG') ? 1 : 0, bc: r.bc ? 1 : 0, sprint: r.dist <= 7 ? 1 : 0 });
+      h.pp.unshift({ par: r.par, type: r.type, clmP: claimable(r, e) ? r.clm : undefined, aw: AW(), yr: r.yr, wk: r.wk, trk: r.trk, race: raceShort(r), g: r.g || 0, dist: r.dist, surf: r.surf, cond: r.cond, fin: x.fin, n, fig: x.fig, odds: x.odds, btn: x.btn, note: comment, won: share, age: ageOf(h), purse: r.purse, rid: r.id, big: r.tags?.includes('BIG') ? 1 : 0, bc: r.bc ? 1 : 0, sprint: r.dist <= 7 ? 1 : 0 });
       if (h.pp.length > 40) h.pp.length = 40;
       if (r.intl) { h.restUntil = AW() + 4; h.fit = Math.max(50, h.fit - 20); news(`${h.name} is on the plane home from ${TRACKS[r.trk].n} — a month off to recover from the trip.`, 'info'); }
       if (x.bled) { h.bleedKnown = true; news(`${h.name} bled (EIPH) — vet recommends Lasix and two weeks off.`, 'bad'); h.restUntil = AW() + 2; }
@@ -804,12 +874,12 @@ function runRace(r) {
       // injury check in race
       raceInjury(h, r);
       // claim check
-      if (r.clm && r.type !== 'AOC' || (r.type === 'AOC' && e.optClm)) {
+      if (claimable(r, e)) {
         const ratio = raceValue(h) / r.clm; const p = 0.05 + 0.45 / (1 + Math.exp(-(ratio - 1.3) * 3));
         if (rnd() < p * (h.inj ? 0.3 : 1)) { res.claims.push({ hid: h.id, name: h.name, price: r.clm }); }
       }
       if (horse(h.id) && !h.inj) raceFatal(h, r);
-      res.mine.push({ hid: h.id, name: h.name, fin: x.fin, share, btn: x.btn, fig: x.fig, odds: x.odds, bonus, betRet, bet: e.bet, comment, bled: x.bled });
+      res.mine.push({ fundNote, hid: h.id, name: h.name, fin: x.fin, share, btn: x.btn, fig: x.fig, odds: x.odds, bonus, betRet, bet: e.bet, comment, bled: x.bled });
     }
   }
   // claims of my horses
@@ -894,6 +964,7 @@ function trainerTake(h) {
   if (k > 0.25) out.push(h.dist <= 6.5 ? 'Pure sprinter — keep it short.' : h.dist <= 7.8 ? 'Seven-eighths to a mile is the sweet spot.' : h.dist <= 9.3 ? 'Wants two turns — a mile and an eighth suits.' : 'The farther the better. Real stayer.');
   else if (h.starts + h.works.length > 0) out.push(h.dist <= 7.5 ? 'Pedigree and works say sprinter, but not sure yet.' : 'Breeding suggests going long eventually.');
   if (k > 0.35 || (h.turf > 0.45 && k > 0.15)) out.push(h.turf > 0.4 ? 'Trains beautifully on the grass. Should be a turf horse.' : h.turf < -0.4 ? 'Dirt only — no business on turf.' : 'Handles dirt or turf about the same.');
+  if (k > 0.45 && Math.abs(synOf(h)) > 0.45) out.push(synOf(h) > 0 ? 'Loves the Tapeta — synthetic suits this one.' : "Doesn't care for synthetic tracks.");
   if (k > 0.5 && Math.abs(h.mud) > 0.4) out.push(h.mud > 0 ? 'Loves an off track.' : 'Hates the slop — scratch if it rains.');
   if (k > 0.2 && h.green) out.push(h.blinkers ? 'Blinkers have helped focus.' : "Gets distracted and green — I'd like to add blinkers.");
   if (k > 0.4 && h.sound > 1.2) out.push('Needs managing physically — I would space the races out.');
@@ -1103,7 +1174,7 @@ function prepWeek() {
 function autoScore(h, r, est, k) {
   const fitE = est + (k > 0.25 ? distAdj(h, r.dist) + surfAdj(h, r.surf) : -Math.abs(r.dist - 7.5) * 0.4 - (r.surf === 'T' ? 2 : 0));
   const margin = fitE - r.par; if (margin < -1.5 - Math.min(h.noSpot || 0, 6) * 0.6) return null;
-  let sc = Math.log(r.purse) * 3 - Math.abs(margin - 3) * 0.6 + (r.clm && r.type !== 'AOC' ? -2 : 0) + (r.mdn && h.wins === 0 ? 4 : 0) + (r.sb ? 1 : 0);
+  let sc = Math.log(r.purse) * 3 - Math.abs(margin - 3) * 0.6 + (claimable(r, { optClm: mustTag(h, r) }) ? -2 : 0) + (r.mdn && h.wins === 0 ? 4 : 0) + (r.sb ? 1 : 0);
   if (k > 0.25) sc -= Math.max(0, Math.abs(r.dist - h.dist) - 1) * 2 + ((r.surf === 'T') !== (h.turf > 0.3) ? 3 : 0);
   if (r.tags && r.tags.includes('BIG')) sc += 4; if (r.tags && /[po]\d/.test(r.tags) && ageOf(h) <= 3) sc += 2;
   if (entryFees(h, r).fee > 0) sc -= 1;
@@ -1123,7 +1194,7 @@ function autoEnter() {
       if ((aw - h.lastRace) * 7 < pref) continue;
       if (off === 0 && (h.fit < 85 || (h.restUntil && h.restUntil > AW()))) continue;
       for (const r of weekRaces(yy, ww)) {
-        if (!eligible(h, r)[0]) continue; if ((r.g || r.type === 'STK') && !h.auto.stk) continue; if (r.clm && r.type !== 'AOC' && !h.auto.clm) continue;
+        if (!eligible(h, r)[0]) continue; if ((r.g || r.type === 'STK') && !h.auto.stk) continue; if (claimable(r, { optClm: mustTag(h, r) }) && !h.auto.clm) continue;
         if (r.tags && r.tags.includes('TC') && !h.tcNom) continue; if (r.bc && !h.bcNom && !(h.wayi || []).includes(r.bcName)) continue;
         const sc = autoScore(h, r, est, k); if (sc == null) continue;
         const adj = sc - off * 0.4;
@@ -1136,7 +1207,7 @@ function autoEnter() {
     if (bw > 0 && !idle) { if (h.target !== best.id) { h.target = best.id; news(`Trainer ${t.n} is pointing ${h.name} to the ${raceShort(best)} at ${TRACKS[best.trk].n} on ${shortDate(best.yr, best.wk)}.`, 'info'); } continue; }
     let r = best;
     if (bw > 0) { // idle too long: take the best race this week instead
-      let b2 = null, s2 = -1e9; for (const x of weekRaces(G.yr, G.wk)) { if (!eligible(h, x)[0] || ((x.g || x.type === 'STK') && !h.auto.stk) || (x.clm && x.type !== 'AOC' && !h.auto.clm)) continue; const sc = autoScore(h, x, est, k); if (sc != null && sc > s2) { s2 = sc; b2 = x; } }
+      let b2 = null, s2 = -1e9; for (const x of weekRaces(G.yr, G.wk)) { if (!eligible(h, x)[0] || ((x.g || x.type === 'STK') && !h.auto.stk) || (claimable(x, { optClm: mustTag(h, x) }) && !h.auto.clm)) continue; const sc = autoScore(h, x, est, k); if (sc != null && sc > s2) { s2 = sc; b2 = x; } }
       if (!b2 || h.fit < 85) continue; r = b2;
     }
     h.target = null;
@@ -1147,6 +1218,7 @@ function autoEnter() {
 function advanceWeek() {
   const rep = { yr: G.yr, wk: G.wk, races: [], news: [] }; G._rep = rep; G.lastResults = [];
   // 1. races
+  for (const e of [...G.entries]) { const h = horse(e.hid); if (!h || h.status !== 'race' || !h.trainer || h.inj) scratch(e.hid, e.rid); }
   const now = weekRaces(G.yr, G.wk);
   const runIds = new Set([...G.entries.map(e => e.rid), ...G.claims.map(c => c.rid)]);
   const resById = {};
@@ -1291,15 +1363,27 @@ function migrate() {
     G.entries = []; G.fields = {}; G.claims = []; G.shares = G.shares || []; G.v = 2; G.road = null;
     news('🗓️ Game updated: full 2026 stakes calendar, Belmont year-round, Saudi Cup & Dubai World Cup, Derby/Oaks leaderboards, partnerships, insurance, shuttle stallions and stallion shares. Any pending entries were refunded.', 'good');
   }
+  if (G.v < 3) {
+    for (const e of G.entries || []) if (e.fee) earn('Entry fees & shipping', e.fee);
+    G.entries = []; G.fields = {}; G.claims = []; G.v = 3;
+    news('📘 Condition books updated: real purses, starter & optional claiming races, conditioned claimers, Tapeta at Belmont in winter, and state-bred funds. Pending entries were refunded.', 'good');
+  }
   G.shares = G.shares || []; ensureRoad();
 }
 
 // ===================== v2 SYSTEMS =====================
 // ---- state-bred owner bonuses & KTDF (game approximations of real programs)
-function ownerBonus(h, r, fin, share) {
-  if (fin > 3 || !share) return 0; const st = TRACKS[r.trk].st;
-  const rate = { NY: r.sb ? 0.1 : 0.2, PA: r.sb ? 0.15 : 0.3, FL: 0.15, MD: r.sb ? 0.15 : 0.25, CA: 0.1, LA: 0.15, KY: r.trk === 'KD' ? 0.5 : 0.2 }[h.bred];
-  return h.bred === st && rate ? share * rate : 0;
+function fundBonus(h, r, share) {
+  const F = r.fund; if (!F || F.kind !== 'plus' || !share || h.bred !== F.st) return 0;
+  if (F.open != null) return r.sb ? 0 : share * F.open;
+  return share * (['MSW', 'ALW', 'AOC'].includes(r.type) ? F[r.type] : F.other);
+}
+function payShares(r, n) {
+  if (r.split) return r.split.map(x => x / r.purse);
+  const arr = [];
+  if (r.g || r.type === 'STK') { const R = 1 - Math.max(0, n - 5) * 0.01; [0.62, 0.2, 0.1, 0.05, 0.03].forEach(x => arr.push(x * R)); for (let i = 5; i < n; i++) arr.push(0.01); }
+  else { [0.56, 0.2, 0.1, 0.05, 0.03].forEach(x => arr.push(x)); for (let i = 5; i < n; i++) arr.push(0.015); }
+  return arr;
 }
 // ---- graded-stakes preference & invitations
 function gradedEarn(h) { return h.pp.reduce((a, p) => a + (p.g ? p.won : 0), 0); }
@@ -1390,6 +1474,117 @@ function shuttleReturn() {
     const net = book * fee * 0.8 * 0.75 * (h.studShare ?? 1); earn('Stud fees (Southern Hemisphere)', net);
     news(`${h.name} is back from Australia after covering ${book} mares at ${fmt$(fee)} — your share ${fmt$(net)}.`, 'good');
   }
+}
+
+'use strict';
+// ===================== WEEKLY ADVISOR (on-device, uses only what an owner could know) =====================
+function weeklyBurn() {
+  let t = 0; const m = D().exp;
+  for (const h of G.horses) { const o = OWN(h);
+    if (h.status === 'race') { const tr = trainer(h.trainer); t += ((tr ? tr.rate : 100) + 15) * 7 * o; }
+    else if (h.status === 'farm') t += 35 * 7 * o; else if (h.status === 'mare') t += BOARD_RATE[h.farm || 'KY'] * 7 * o;
+    else if (h.status === 'young') t += (h.pre ? 55 : BOARD_RATE[h.farm || 'KY'] * 0.8) * 7 * o; }
+  return t * m;
+}
+function trainerEst(h) { const t = trainer(h.trainer); const k = clamp(h.know * TRAINER_TIERS[t.tier].read, 0, 1); return { est: ability(h) + gauss(0, 6 * (1 - k) + 1.5, srng('ae' + h.id + Math.floor(AW() / 4))), k }; }
+function bestSpots(h, weeks = 4) {
+  const { est, k } = trainerEst(h); const pref = 21; const out = [];
+  for (let off = 0; off < weeks; off++) {
+    const aw = AW() + off; if ((aw - h.lastRace) * 7 < pref) continue; const [yy, ww] = awToYW(aw);
+    for (const r of weekRaces(yy, ww)) { if (!eligible(h, r)[0]) continue; if (r.tags && r.tags.includes('TC') && !h.tcNom) continue;
+      const sc = autoScore(h, r, est, k); if (sc != null) out.push({ r, sc: sc - off * 0.4, off, claim: claimable(r, { optClm: mustTag(h, r) }) }); }
+  }
+  return out.sort((a, b) => b.sc - a.sc);
+}
+function advise() {
+  const out = []; const add = (pri, icon, t, act) => out.push({ pri, icon, t, act });
+  const burn = weeklyBurn(); const runway = burn > 0 ? G.cash / burn : 999;
+  if (G.cash < 0) add(100, '🚨', `You're overdrawn (${fmt$(G.cash)}) and paying interest every week. Sell a horse, take partners, or sell to a trader to get back above zero.`);
+  else if (runway < 12 && G.horses.length) add(92, '⚠️', `Cash covers about ${Math.max(0, Math.floor(runway))} weeks of bills (${fmt$(burn)}/week). Time to trim: sell shares to partners or move on from a non-performer.`);
+  for (const o of G.offers) { const h = horse(o.hid); if (!h) continue; const mv = marketValue(h) * OWN(h); const ratio = o.amt / mv;
+    if (o.stud) add(88, '🌟', `Stud offer for ${h.name}: ${fmt$(o.amt)} (market est. ${fmt$(mv)}). Racing on at ${ageOf(h) + 1} can raise his value with older-horse G1 wins — but one injury or a few losses can cut it sharply.`, { label: 'Open', a: 'horse', id: h.id });
+    else add(ratio >= 1.1 ? 82 : 42, '💰', ratio >= 1.1 ? `Take the ${fmt$(o.amt)} offer for ${h.name} — about ${Math.round((ratio - 1) * 100)}% over market value.` : `The ${fmt$(o.amt)} offer for ${h.name} is ${ratio < 0.9 ? 'below' : 'close to'} market (${fmt$(mv)}). ${ratio < 0.9 ? 'Pass unless you want out.' : 'Fair — your call.'}`, { label: ratio >= 1.1 ? 'Accept' : 'Open', a: ratio >= 1.1 ? 'offerAcc' : 'horse', id: h.id }); }
+  const sale = saleThisWeek();
+  for (const h of G.horses) {
+    const a = ageOf(h); const nm = dispName(h);
+    if (!h.name && a >= 2) add(75, '✏️', `${nm} needs a registered name before it can race.`, { label: 'Name', a: 'name', id: h.id });
+    if (h.status === 'young') {
+      if (a >= 2) add(74, '🏇', `${h.name || nm} is a 2-year-old — send to a trainer so they can start breezing for spring and summer races.`, { label: 'Pick trainer', a: 'trainerPick', id: h.id });
+      else if (a === 1 && G.wk >= 36 && !h.pre) add(60, '🐴', `Yearling ${nm} can go to pre-training now ($55/day) so it's ready to race next year.`, { label: 'Pre-train', a: 'pretrain', id: h.id });
+      if (a === 0 && !h.bcNom && G.wk >= 20 && curFee(h) >= 15000) add(35, '🏆', `Nominate weanling ${nm} to the Breeders' Cup now for $400 — later it costs $20,000 or a 9% supplement.`, { label: 'Nominate', a: 'bcnom', id: h.id });
+      continue;
+    }
+    if (h.status === 'farm') { if (!h.inj) add(55, '🌾', `${h.name} is healthy and turned out. Send back into training — or sell if the plan has changed.`, { label: 'Open', a: 'horse', id: h.id }); else if (h.inj.sev === 3) add(70, '🏡', `${h.name} can't race again. Retire to breed (if pedigree/record allow) or rehome.`, { label: 'Open', a: 'horse', id: h.id }); continue; }
+    if (h.status === 'mare') {
+      if (inSeason() && !h.preg && !h.cover) { const pick = recMating(h); if (pick) add(66, '🧬', `Book ${h.name} to ${pick.s.name} (${fmt$(pick.s.fee)}${pick.s.st !== h.farm ? ', ships to ' + pick.s.st : ''}) — nick ${nickGrade(pick.s, h)}, ${typeof studTraits === 'function' ? studTraits(pick.s) : ''}. Fits her value and your budget.`, { label: 'Book', a: 'doBook', id: h.id, sid: pick.s.id }); }
+      if (ageOf(h) >= 20) add(30, '🏡', `${h.name} is ${ageOf(h)}: fertility and foal quality drop at this age. Consider pensioning her.`, { label: 'Open', a: 'horse', id: h.id });
+      continue;
+    }
+    if (h.status === 'stud') { const s = stallion(h.sid); if (s && G.wk < 30 && canShuttle(h) && !h.shuttle && s.fee >= 15000) add(40, '✈️', `${h.name} could shuttle to Australia (Aug–Dec) for a second season of fees (~${fmtK(Math.round((h.lastBook || 60) * 0.6) * s.fee * 0.55 * 0.6)} net).`, { label: 'Open', a: 'horse', id: h.id });
+      if (s && G.wk <= 4 && s.fee > s.mkt * 1.3) add(50, '💵', `${h.name}'s fee (${fmt$(s.fee)}) is well above his market (${fmt$(Math.round(s.mkt / 500) * 500)}). Lower it or his book will be thin.`, { label: 'Set fee', a: 'studFee', id: h.id }); continue; }
+    if (h.status !== 'race') continue;
+    if (!h.ins && marketValue(h) * OWN(h) >= 250000) add(45, '🛡️', `${h.name} is worth ~${fmtK(marketValue(h) * OWN(h))} to you and uninsured. Mortality cover is ~${fmt$(Math.round(insValue(h) * 0.035))}/yr.`, { label: 'Insure', a: 'insBuy', id: h.id });
+    if (a === 3 && h.sex === 'C' && !h.tcNom && G.wk <= 13) { const bf = bestFig(h) ?? 0; if ((G.wk <= 4 && bf >= 82) || bf >= 92) add(G.wk <= 4 ? 64 : 58, '👑', `Nominate ${h.name} to the Triple Crown (${G.wk <= 4 ? '$600 early' : '$6,000 late'}). Supplementing later costs $200,000 for the Derby.`, { label: 'Nominate', a: 'tcnom', id: h.id }); }
+    if (h.foal === roadYear() - 3 && (h.kdPts > 0 || h.koPts > 0) && G.wk <= 18) { const w = h.sex === 'F' ? 'ko' : 'kd'; const rk = roadRank(h, w); const cut = w === 'kd' ? 18 : 14; add(52, '🌹', `${h.name} is #${rk} on the ${w === 'kd' ? 'Derby' : 'Oaks'} leaderboard (${w === 'kd' ? h.kdPts : h.koPts} pts; top ${cut} get in). ${rk > cut ? 'Needs a big finish in a 50- or 100-point prep.' : 'Inside the cutoff — protect the spot.'}`, { label: 'Derby trail', a: 'goTrail' }); }
+    if (h.inj || (h.restUntil && h.restUntil > AW())) continue;
+    const entered = G.entries.some(e => e.hid === h.id);
+    const days = (AW() - h.lastRace) * 7;
+    if (!entered && !h.auto.on && h.fit >= 80 && (days >= 21 || !h.starts)) {
+      const sp = bestSpots(h)[0];
+      if (sp) { const r = sp.r; const rf = recentFig(h); add(sp.off === 0 ? 72 : 56, '🏁', `${h.name}: best spot ${sp.off === 0 ? 'this week' : 'on ' + shortDate(r.yr, r.wk)} is the ${raceShort(r)} at ${TRACKS[r.trk].n} — ${distStr(r.dist)} ${SURF_N[r.surf].toLowerCase()}, ${fmtK(r.purse)}, par ${Math.round(r.par)}${rf ? ` vs recent figs ~${Math.round(rf)}` : ''}.${sp.claim ? ' ⚠️ Claimable.' : ''}`, sp.off === 0 ? { label: 'Enter', a: 'enterForm', id: h.id, rid: r.id } : { label: 'View', a: 'race', rid: r.id }); }
+      else add(50, '🤔', `No suitable race for ${h.name} in the next month. Consider claiming races, a different surface/distance, or selling.`, { label: 'Open', a: 'horse', id: h.id });
+    }
+    if (h.fit < 75 && !h.inj && h.starts) add(20, '🏋️', `${h.name} is at ${Math.round(h.fit)}% fitness — give a few more weeks of works before running.`);
+    // class check
+    const last3 = h.pp.slice(0, 3).filter(p => p.par);
+    if (last3.length >= 3) { const avgF = last3.reduce((s, p) => s + p.fig, 0) / 3, avgP = last3.reduce((s, p) => s + p.par, 0) / 3;
+      if (avgF < avgP - 6) add(54, '📉', `${h.name}'s last three figs (~${Math.round(avgF)}) are well below the level it's running at (par ~${Math.round(avgP)}). Drop in class${h.auto.clm ? '' : ', allow claiming races,'} or sell before value slides further.`, { label: 'Open', a: 'horse', id: h.id });
+      else if (avgF > avgP + 6) add(48, '📈', `${h.name} is running ~${Math.round(avgF - avgP)} points above its class. Time to step up — allowance or stakes company.`, { label: 'Find race', a: 'findRace', id: h.id }); }
+    // surface/distance hints from trainer knowledge
+    const k = clamp(h.know * TRAINER_TIERS[trainer(h.trainer).tier].read, 0, 1);
+    if (k > 0.35 && h.turf > 0.4 && h.starts >= 2 && !h.pp.some(p => p.surf === 'T')) add(46, '🌿', `${trainer(h.trainer).n} thinks ${h.name} will love the grass and it has never run on turf. Try a turf race.`, { label: 'Find race', a: 'findRace', id: h.id });
+    if (k > 0.35 && h.turf < -0.4 && h.pp.slice(0, 3).some(p => p.surf === 'T')) add(44, '🟫', `${h.name} is a dirt horse running on turf — switch back to dirt.`, { label: 'Find race', a: 'findRace', id: h.id });
+    if (k > 0.3 && h.starts >= 3) { const ad = h.pp.slice(0, 4).reduce((s, p) => s + p.dist, 0) / Math.min(4, h.pp.length); if (Math.abs(ad - h.dist) >= 1.8) add(42, '📏', `${h.name} has been running at ~${distStr(Math.round(ad * 2) / 2)} but the trainer sees a ${h.dist <= 7 ? 'sprinter' : h.dist <= 8.5 ? 'miler' : 'router'}. Change distance.`, { label: 'Find race', a: 'findRace', id: h.id }); }
+    if (h.green && !h.blinkers && k > 0.2) add(38, '🕶️', `${h.name} is green and distracted — the trainer wants blinkers.`, { label: 'Open', a: 'horse', id: h.id });
+    if (h.bleedKnown && !h.lasix) { }
+    if (h.sex === 'C' && !h.gelded && h.temper > 0.6 && h.starts >= 3 && studFeeFor(h) < 2500 && k > 0.3) add(36, '✂️', `${h.name} is unruly and has no stud value. Gelding usually makes them more consistent.`, { label: 'Open', a: 'horse', id: h.id });
+    if (a >= 4 && h.sex === 'F' && h.starts >= 6) { const mv = mareValue({ ...h, status: 'mare' }), rv = raceValue(h); if (mv > rv * 1.3 && (h.blackType || a >= 5)) add(47, '🧬', `${h.name} is worth more as a broodmare (~${fmtK(mv)}) than as a racehorse (~${fmtK(rv)}). Consider retiring her to breed.`, { label: 'Open', a: 'horse', id: h.id }); }
+    if (a >= 5 && h.sex === 'C' && !h.gelded && studFeeFor(h) >= 10000) add(47, '🏠', `${h.name} would stand for about ${fmt$(studFeeFor(h))}. At ${a}, each extra season adds injury risk to that stud value.`, { label: 'Open', a: 'horse', id: h.id });
+    if (a >= 8 && (recentFig(h) ?? 0) < 70) add(40, '🏡', `${h.name} is ${a} and slowing down. Consider a second career through aftercare.`, { label: 'Open', a: 'horse', id: h.id });
+  }
+  // sales this week
+  if (sale && G.saleLots) {
+    const budget = Math.max(0, G.cash * 0.4);
+    const lots = G.saleLots.map((l, i) => ({ l, i })).filter(x => (x.l.state === 'open' || x.l.state === 'live') && x.l.h.mkt <= budget);
+    const sc = (h) => impliedG(curFee(h)) + (h.dq - 74) * 0.5 + h.conf * 1.5 + (h.breeze ? (10.6 - h.breeze) * 6 : 0) + (SB_STATES.includes(h.bred) ? 1 : 0) - Math.log10(h.mkt) * 3;
+    lots.sort((a, b) => sc(b.l.h) - sc(a.l.h));
+    if (lots.length) add(62, '🔨', `${sale.n} is this week. Best value on paper within your budget: ${lots.slice(0, 2).map(x => `Hip ${x.l.h.hip} (${x.l.h.sireName}, est. ${fmtK(roundBid(x.l.h.mkt * 0.6))}–${fmtK(roundBid(x.l.h.mkt * 1.5))})`).join(' and ')}. Pay for the vet review before bidding.`, { label: 'View lot', a: 'lot', i: lots[0].i });
+    else if (G.saleLots.some(l => l.state === 'open')) add(25, '🔨', `${sale.n} is this week, but nothing fits a sensible budget (40% of cash).`);
+  }
+  // consign suggestions
+  const nextSale = (() => { for (let i = 1; i <= 4; i++) { const [yy, ww] = awToYW(AW() + i); const s = SALES.find(x => x.wk === ww); if (s) return [s, yy]; } return null; })();
+  if (nextSale) { const [s, yy] = nextSale; const fit = G.horses.filter(h => h.status !== 'race' && h.status !== 'stud' && consignOK(h, s)[0] && !G.consign.some(c => c.hid === h.id)); if (fit.length) add(34, '🏷️', `${s.n} is ${shortDate(yy, s.wk)}. ${fit.slice(0, 2).map(h => `${dispName(h)} (est. ${fmtK(marketValue(h))})`).join(', ')} could be consigned if you'd rather sell than keep.`, { label: 'Consign', a: 'consignSale', s: s.id }); }
+  // claim box
+  const crs = weekRaces(G.yr, G.wk).filter(r => (r.type === 'CLM') && r.clm <= G.cash * 0.3 && G.fields[r.id]);
+  for (const r of crs) for (const [i, x] of G.fields[r.id].runners.entries()) { const af = x.figs.length ? x.figs.reduce((a, b) => a + b, 0) / x.figs.length : 0; if (x.figs.length >= 2 && af >= r.par + 5) { add(37, '🎯', `Claim box: ${x.name} (${x.age}yo) drops into ${raceShort(r)} at ${TRACKS[r.trk].n} with recent figs ~${Math.round(af)} vs par ${Math.round(r.par)}. Class droppers can be bargains — or hurt.`, { label: 'View', a: 'race', rid: r.id }); break; } }
+  if (G.wk >= 2 && G.wk <= 5 && G.horses.some(h => h.status === 'mare')) add(30, '📅', 'Breeding season opens in February. Plan matings in the stallion directory — check nick ratings for each mare.', { label: 'Stallions', a: 'goStuds' });
+  if (!G.horses.length) add(80, '🐎', 'No horses yet. The private market sells horses ready to run; the sales calendar shows upcoming auctions; the claim box buys horses out of races.', { label: 'Sales', a: 'tab', t: 'sales' });
+  return out.sort((a, b) => b.pri - a.pri).slice(0, 12);
+}
+function recMating(m) {
+  const mv = mareValue(m); const cap = Math.max(5000, Math.min(G.cash * 0.08, mv * 0.7));
+  let best = null, bs = -1e9;
+  for (const s of G.stallions) { if (!canBook(m, s)[0]) continue; const fee = s.pid ? 0 : s.fee; if (fee > cap) continue;
+    const nick = (NICKS[s.line + '|' + m.sireLine] || 0) + (s.line === m.sireLine ? -1 : 0);
+    const proven = sireStats(s).proven ? 1 : 0;
+    const sc = impliedG(s.mkt) + nick * 1.6 + proven * 0.8 + (s.st === m.farm ? 0.8 : 0) - (s.pid ? 0 : Math.log10(fee) * 0.6);
+    if (sc > bs) { bs = sc; best = { s }; } }
+  return best;
+}
+function openAdvice() {
+  const L = advise();
+  const html = (L.length ? L.map(x => `<div class="adv-i"><div class="adv-ic">${x.icon}</div><div class="adv-t">${esc(x.t)}${x.act ? `<div><button class="btn xs" ${Object.entries(x.act).filter(([k]) => k !== 'label').map(([k, v]) => k === 'a' ? `data-a="${v}"` : `data-${k}="${esc(v)}"`).join(' ')}>${esc(x.act.label)}</button></div>` : ''}</div></div>`).join('') : '<p class="pad">Nothing urgent this week. Your barn is in order — advance when ready.</p>') + '<div class="note muted">Advice is based only on what you can see: figures, trainer comments, prices and pedigrees — not hidden ability.</div>';
+  openModal('💡 This week\'s advice', html, { push: false });
 }
 
 'use strict';
@@ -1526,7 +1721,7 @@ function renderTabs() {
 function renderAdv() {
   const n = G.entries.filter(e => { const r = raceById(e.rid); return r && r.wk === G.wk && r.yr === G.yr; }).length;
   const s = saleThisWeek(); const nw = G.wk === 52 ? dateStr(G.yr + 1, 1) : shortDate(G.yr, G.wk + 1);
-  $('#advbar').innerHTML = `<button class="adv" data-a="advance"><span>Advance week ▸</span><small>${n ? `${n} runner${n > 1 ? 's' : ''} this week` : 'No runners this week'}${s ? ' · 🔨 sale this week' : ''} · next: ${nw}</small></button>`;
+  $('#advbar').innerHTML = `<button class="advice" data-a="advice" aria-label="Advice">💡<small>Advice</small></button><button class="adv" data-a="advance"><span>Advance week ▸</span><small>${n ? `${n} runner${n > 1 ? 's' : ''} this week` : 'No runners this week'}${s ? ' · 🔨 sale this week' : ''} · next: ${nw}</small></button>`;
 }
 
 // ---------- modal ----------
@@ -1725,7 +1920,7 @@ function vEntries() {
 function openRace(rid, re) {
   const r = raceById(rid); if (!r) return;
   const f = G.fields[rid]; const isClaim = (r.type === 'CLM' || r.type === 'MCL') && r.yr === G.yr && r.wk === G.wk;
-  let o = `<div class="rinfo"><div><b>${TRACKS[r.trk].n}</b> · ${dateStr(r.yr, r.wk)}</div><div>${esc(raceLabel(r))}</div><div>${distStr(r.dist)} on the ${SURF_N[r.surf].toLowerCase()}${r.offTurf ? ' (taken off the turf)' : ''} · expected ${r.cond.toLowerCase()}</div><div>Purse <b>${fmt$(r.purse)}</b> · par fig <b>${Math.round(r.par)}</b> (${classLevel(r.par)})</div>${r.tags && r.tags.includes('KD') ? '<div>Top 18 on the Road to the Kentucky Derby leaderboard get in (field of 20).</div>' : ''}${r.tags && r.tags.includes('KO') ? '<div>Top 14 on the Road to the Kentucky Oaks leaderboard get in.</div>' : ''}${r.tags && /[po]\d/.test(r.tags) ? `<div>🌹 Points race: ${(r.tags.match(/[po](\d+)/) || [])[1]} pts to the winner (${/p\d/.test(r.tags) ? 'Derby' : 'Oaks'}).</div>` : ''}${r.intl ? '<div>✈️ Invitation-only. Travel and entry paid by the organizers. Expect a strong international field and a month off after the trip.</div>' : ''}${r.split ? `<div>Pays 10 places deep: ${r.split.slice(0, 5).map(fmtK).join(' · ')}…</div>` : ''}${r.bc ? "<div>Breeders' Cup: pre-entry needs a nomination (or 9% supplement) and selection by figures.</div>" : ''}${r.sb === 'MD' && r.name?.startsWith('Maryland Million') ? '<div>Restricted to offspring of Maryland stallions.</div>' : ''}</div>`;
+  let o = `<div class="rinfo"><div><b>${TRACKS[r.trk].n}</b> · ${dateStr(r.yr, r.wk)}</div><div>${esc(raceLabel(r))}</div><div>${distStr(r.dist)} on the ${SURF_N[r.surf].toLowerCase()}${r.offTurf ? ' (taken off the turf)' : ''} · expected ${r.cond.toLowerCase()}</div><div>Purse <b>${fmt$(r.purse)}</b> · par fig <b>${Math.round(r.par)}</b> (${classLevel(r.par)})</div>${r.tags && r.tags.includes('KD') ? '<div>Top 18 on the Road to the Kentucky Derby leaderboard get in (field of 20).</div>' : ''}${r.tags && r.tags.includes('KO') ? '<div>Top 14 on the Road to the Kentucky Oaks leaderboard get in.</div>' : ''}${r.tags && /[po]\d/.test(r.tags) ? `<div>🌹 Points race: ${(r.tags.match(/[po](\d+)/) || [])[1]} pts to the winner (${/p\d/.test(r.tags) ? 'Derby' : 'Oaks'}).</div>` : ''}${r.intl ? '<div>✈️ Invitation-only. Travel and entry paid by the organizers. Expect a strong international field and a month off after the trip.</div>' : ''}${r.fund ? `<div>💵 ${r.fund.kind === 'incl' ? `Purse includes ${r.fund.st === 'KY' ? 'KTDF' : r.fund.st + '-bred fund'} money paid only to ${r.fund.st}-breds` : r.fund.open != null ? `${r.fund.st}-breds earn up to ${Math.round(r.fund.open * 100)}% extra${r.sb ? ' (not in restricted races)' : ''}` : `${r.fund.st}-breds earn up to ${Math.round((r.fund[r.type] || r.fund.other) * 100)}% extra`}.</div>` : ''}${condText(r) && !r.name ? `<div>Conditions: ${esc(condText(r))}.</div>` : ''}${r.split ? `<div>Pays 10 places deep: ${r.split.slice(0, 5).map(fmtK).join(' · ')}…</div>` : ''}${r.bc ? "<div>Breeders' Cup: pre-entry needs a nomination (or 9% supplement) and selection by figures.</div>" : ''}${r.sb === 'MD' && r.name?.startsWith('Maryland Million') ? '<div>Restricted to offspring of Maryland stallions.</div>' : ''}</div>`;
   const mine = racersList();
   if (mine.length) {
     o += '<h3 class="sub">Your horses</h3>';
@@ -1741,12 +1936,14 @@ function openEnter(hid, rid) {
   const h = horse(hid), r = raceById(rid); const jos = jockeyOptions(h, r); const { fee, notes } = entryFees(h, r);
   const noLasix = r.age === '2' || r.g || r.type === 'STK';
   const days = (awOf(r.yr, r.wk) - h.lastRace) * 7;
-  const warn = [];
+  const warn = []; let notesPlus = '';
   if (h.fit < 80) warn.push(`Fitness only ${Math.round(h.fit)}% — trainer thinks he needs more works.`.replace('he', h.sex === 'F' ? 'she' : 'he'));
   if (h.starts && days < 21) warn.push(`Only ${days} days since the last race — risk of a dull effort and injury.`);
-  if (r.clm && r.type !== 'AOC') warn.push(`Claiming race: anyone can buy ${h.name} for ${fmt$(r.clm)}. Current est. value ${fmt$(raceValue(h))}.`);
+  if (claimable(r, { optClm: mustTag(h, r) })) warn.push(`${['AOC', 'SOC', 'MOC'].includes(r.type) ? `${h.name} doesn't meet the allowance/starter condition, so must run for the tag. ` : ''}Claiming: anyone can buy ${h.name} for ${fmt$(r.clm)}. Current est. value ${fmt$(raceValue(h))}.`);
+  if (r.fund && r.fund.kind === 'incl' && h.bred !== r.fund.st) warn.push(`${Math.round(((['MSW', 'ALW', 'AOC'].includes(r.type) ? r.fund[r.type] : r.fund.other) || 0) * 100)}% of this purse is ${r.fund.st === 'KY' ? 'KTDF' : r.fund.st + '-bred'} money that only ${r.fund.st}-breds collect.`);
+  if (r.fund && r.fund.kind === 'plus' && h.bred === r.fund.st && !(r.fund.open != null && r.sb)) notesPlus = `${h.bred}-bred bonus: up to ${Math.round((r.fund.open ?? (['MSW', 'ALW', 'AOC'].includes(r.type) ? r.fund[r.type] : r.fund.other)) * 100)}% extra on any purse money earned.`;
   if (h.restUntil > awOf(r.yr, r.wk)) warn.push('Vet asked for rest after bleeding.');
-  let o = `<div class="rinfo"><b>${esc(h.name)}</b> → ${esc(r.name || raceLabel(r))}<br>${TRACKS[r.trk].n} · ${dateStr(r.yr, r.wk)} · ${distStr(r.dist)} ${SURF_N[r.surf].toLowerCase()}</div>${warn.map(w => `<div class="warnbox">⚠️ ${esc(w)}</div>`).join('')}
+  let o = `<div class="rinfo"><b>${esc(h.name)}</b> → ${esc(r.name || raceLabel(r))}<br>${TRACKS[r.trk].n} · ${dateStr(r.yr, r.wk)} · ${distStr(r.dist)} ${SURF_N[r.surf].toLowerCase()}</div>${warn.map(w => `<div class="warnbox">⚠️ ${esc(w)}</div>`).join('')}${notesPlus ? `<div class="note">💵 ${esc(notesPlus)}</div>` : ''}
   <label class="lab">Jockey</label>${jos.map(j => `<label class="radio ${j.ok ? '' : 'dis'}"><input type="radio" name="jk" value="${j.i}" data-n="${esc(j.name)}" ${j.ok ? '' : 'disabled'} ${j.i === jos.filter(x => x.ok).pop().i ? 'checked' : ''}> <b>${esc(j.name)}</b> — ${j.n}${j.ok ? '' : ' <i>(declined the mount)</i>'}${j.bug && !noLasix ? ' · 5-lb allowance' : ''}</label>`).join('')}
   ${!noLasix ? `<label class="radio"><input type="checkbox" id="en-lasix" ${h.bleedKnown ? 'checked' : ''}> Race on Lasix (anti-bleeding medication)</label>` : '<div class="note muted">No Lasix: 2yo races and stakes are run medication-free.</div>'}
   <label class="lab">Win bet on your horse</label><select id="en-bet" class="inp">${[0, 100, 500, 1000, 5000, 20000].map(b => `<option value="${b}">${b ? fmt$(b) + ' to win' : 'No bet'}</option>`).join('')}</select>
@@ -1883,6 +2080,8 @@ function helpHtml() {
   <p><b>The Derby:</b> nominate your 3yo colts to the Triple Crown in January ($600, or $6,000 late). Earn points in the prep races to make the 20-horse field.</p>
   <p><b>Breeding:</b> book mares Feb–June. The foal's ability comes from both parents plus a lot of luck; nick ratings show which sire lines cross well. Foals are state-bred where the mare foals, so moving a mare to New York or Pennsylvania opens rich state-bred programs. Sire fees rise or fall once their first crops race.</p>
   <p><b>Stud or race on?</b> After a big 3yo season farms make syndication offers. Racing at 4 can raise his value (older-horse G1 wins count extra) — or an injury or a few losses can sink it.</p>
+  <p><b>Advice:</b> tap 💡 next to Advance for a ranked list of what to do this week — races to enter, horses to drop or move up, matings, sales picks, offers to take. It only uses what a real owner could see.</p>
+  <p><b>Condition book:</b> real race types — maiden special weight, maiden claiming and maiden optional claiming, claiming (open, never-won-2, never-won-3, no win in 6 months), starter allowance and starter optional claiming, N1X/N2X/N3X allowance and allowance optional claiming. Purses come from 2026 condition books. Kentucky (KTDF) and Florida purses include money only their state-breds collect; New York, California and Pennsylvania-breds earn bonuses on top. Belmont runs on Tapeta in winter.</p>
   <p><b>Big races:</b> the full 2026 US stakes calendar (600+ graded & listed races) with real age conditions — early-season older-horse races are 4&up. New York races at Belmont year-round except the Saratoga summer meet. The Saudi Cup (Feb) and Dubai World Cup (Mar) are invitation-only; win the Pegasus to get the Saudi invite.</p>
   <p><b>Ownership tools:</b> sell shares to partners to spread risk, insure valuable horses (about 3.5% a year), shuttle stallions to Australia for a second season, and buy lifetime stallion shares or no-guarantee seasons.</p>
   <p><b>State-bred bonuses:</b> NY, PA, FL, MD, CA and LA-breds earn owner bonuses on top of purses in their home state, and Kentucky-breds get KTDF supplements in Kentucky (big ones at Kentucky Downs). Rates are approximations of the real programs.</p>
@@ -1894,7 +2093,7 @@ function openReport(rep) {
   rep = rep || G.lastRep; if (!rep) return;
   let o = '';
   if (rep.races.length) o += rep.races.map((res, i) => res.mine.map(m => `<div class="resc ${m.fin === 1 ? 'win' : m.fin <= 3 ? 'itm' : ''}"><div class="resc-h"><span class="fpos">${ordinal(m.fin)}</span><div><b>${esc(m.name)}</b><div class="hs">${esc(res.label)} · ${TRACKS[res.trk].n} · ${distStr(res.dist)} ${SURF_N[res.surf].toLowerCase()}</div></div></div>
-  <div class="hs">${m.fin === 1 ? `Won by ${lenStr(res.runners[1]?.btn || 0)}` : `Beaten ${lenStr(m.btn)}`} · fig <b>${m.fig}</b> · ${oddsStr(m.odds)} · ${esc(m.comment)}${m.share ? ` · <b class="good">${fmt$(m.share)}</b>` : ''}${m.bonus ? ` + breeder award ${fmt$(m.bonus)}` : ''}${m.bet ? (m.betRet ? ` · bet paid ${fmt$(m.betRet)}` : ` · lost ${fmt$(m.bet)} bet`) : ''}</div>
+  <div class="hs">${m.fin === 1 ? `Won by ${lenStr(res.runners[1]?.btn || 0)}` : `Beaten ${lenStr(m.btn)}`} · fig <b>${m.fig}</b> · ${oddsStr(m.odds)} · ${esc(m.comment)}${m.share ? ` · <b class="good">${fmt$(m.share)}</b>` : ''}${m.bonus ? ` + bonuses ${fmt$(m.bonus)}` : ''}${m.fundNote ? ` · <i>${esc(m.fundNote)}</i>` : ''}${m.bet ? (m.betRet ? ` · bet paid ${fmt$(m.betRet)}` : ` · lost ${fmt$(m.bet)} bet`) : ''}</div>
   <button class="btn sm" data-a="watch" data-i="${i}">▶ Watch the race</button></div>`).join('') || `<div class="resc"><b>Claim race:</b> ${esc(res.label)} at ${TRACKS[res.trk].n} <button class="btn sm" data-a="watch" data-i="${i}">▶ Watch</button></div>`).join('');
   o += rep.news.length ? '<h3 class="sub">This week</h3>' + rep.news.map(n => `<div class="news ${n.type}">${esc(n.t)}</div>`).join('') : '<p class="pad muted">A quiet week at the barn.</p>';
   o += '<button class="btn big" data-a="close">Continue</button>';
@@ -1987,6 +2186,9 @@ const ACT = {
   mkt: d => { const h = G.market[+d.i]; openModal(esc(h.name), `<div class="ped"><div><span>Sire</span><b>${esc(h.sireName)}</b></div><div><span>Dam</span><b>${esc(h.damName)}</b> <small>by ${esc(h.damsireName)}</small></div></div><dl class="kv"><dt>Age/sex</dt><dd>${ageOf(h)}yo ${sexLabel(h)} · ${h.bred}-bred</dd><dt>Record</dt><dd>${rec(h)} · ${fmt$(h.earn)}</dd><dt>Recent figs</dt><dd>${h.pp.map(p => p.fig).join(', ') || '—'}</dd><dt>Conditions</dt><dd>${h.wins ? `Won ${h.alw} allowance race(s)` : 'Maiden'}</dd><dt>Asking</dt><dd><b>${fmt$(h.ask)}</b></dd></dl><label class="lab">Trainer</label><select id="mk-t" class="inp">${G.trainers.filter(t => trainerAccepts(t, h)).map(t => `<option value="${t.id}" ${t.id === defaultTrainer() ? 'selected' : ''}>${esc(t.n)} · ${TRAINER_TIERS[t.tier].n} · ${REGION_N[t.rg]} · ${fmt$(t.rate)}/day</option>`).join('')}</select><button class="btn big" data-a="mktBuy" data-i="${d.i}">Buy for ${fmt$(h.ask)}</button>`); },
   mktBuy: d => { const h = G.market[+d.i]; if (G.cash < h.ask) return toast('Not enough cash'); spend('Horse purchases', h.ask); h.boughtFor = h.ask; h.trainer = $('#mk-t').value; G.lastTrainer = h.trainer; h.ceil += D().luck; G.horses.push(h); G.market.splice(+d.i, 1); news(`You bought ${h.name} privately for ${fmt$(h.ask)}.`, 'good'); toast('Welcome to the barn, ' + h.name); closeModal(); scheduleSave(); },
   bsub: d => { UI.bsub = d.t; render(); }, bst: d => { UI.bst = d.s; render(); }, stud: d => openStud(d.sid),
+  advice: () => openAdvice(),
+  goTrail: () => { UI.tab = 'races'; UI.rsub = 'trail'; closeModal(); },
+  goStuds: () => { UI.tab = 'breed'; UI.bsub = 'studs'; closeModal(); },
   help: () => openModal('How to play', helpHtml()),
   saveHelp: () => openModal('How saving works', `<div class="help"><p><b>Automatic:</b> the game saves on this device after every week and every action. ${cloud.status === 'cloud' ? 'Inside Claude it also saves to your Claude account.' : 'On the home-screen app it is stored in that app\'s own storage and works offline.'}</p><p><b>What can wipe it:</b> deleting the home-screen app, clearing Safari website data, or (for a regular Safari tab you don\'t open for weeks) Safari\'s storage clean-up. The Claude version and the home-screen version keep separate saves.</p><p><b>Snapshots:</b> every 13 weeks the game keeps a snapshot (last 6) you can roll back to.</p><p><b>Backups:</b> tap <i>Save backup file</i> now and then — it goes to your Files app / Downloads. <i>Load backup file</i> restores it on any device. The copy/paste save code does the same thing without files.</p></div>`),
   dlBackup: () => { if (window.claude) return ACT.export(); const s = serialize(); try { const blob = new Blob([s], { type: 'application/json' }); const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = `turf-tycoon-${G.yr}-wk${G.wk}.json`; document.body.appendChild(a); a.click(); setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 2000); G.lastBackup = AW(); scheduleSave(); toast('Backup file saved'); } catch (e) { ACT.export(); } },
