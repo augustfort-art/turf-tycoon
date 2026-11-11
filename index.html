@@ -187,6 +187,14 @@ button:focus-visible,.race:focus-visible,.pill:focus-visible{outline:2px solid v
 /* iOS: inputs under 16px make Safari zoom the page on focus (and home-screen apps stay zoomed) */
 input,select,textarea,.inp{font-size:16px}
 body.newgame #top{min-height:0;padding-bottom:6px}
+/* Home-screen app on iPhone: iOS draws a soft blur a little below the status bar, so keep the header text clear of it */
+@media (display-mode: standalone) {
+  #top { padding-top: calc(env(safe-area-inset-top) + 26px); }
+  #app { padding-top: calc(env(safe-area-inset-top) + 16px + var(--toph0, 54px)); }
+  .subnav { top: calc(env(safe-area-inset-top) + 16px + var(--toph0, 54px)); }
+}
+/* horizontal strips scroll sideways only */
+.subnav, .chips.scroll, .fbar { overflow-y: hidden; overscroll-behavior: contain; touch-action: pan-x; }
 </style>
 </head>
 <body>
