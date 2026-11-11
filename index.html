@@ -202,6 +202,17 @@ body.newgame #top{min-height:0;padding-bottom:6px}
 .wx{white-space:nowrap}
 .tc-y{font-size:12px;color:var(--good);font-weight:600;margin-top:2px}
 .inp.search{margin:4px 0 8px;padding:9px 12px;border-radius:20px}
+
+/* getting-started guide */
+.tut{margin:10px 12px 4px;padding:12px 14px;border-radius:12px;background:var(--card);border:1.5px solid var(--brass);box-shadow:0 1px 0 rgba(0,0,0,.04)}
+.tut-h{display:flex;justify-content:space-between;align-items:baseline;gap:8px}.tut-h b{font-size:15px}.tut-h span{font-size:12px;color:var(--muted);white-space:nowrap}
+.tut-d{font-size:13.5px;line-height:1.45;margin:6px 0 10px}.tut-b{display:flex;gap:8px;flex-wrap:wrap}
+.tut-p{display:flex;gap:4px;margin-top:10px}.tut-p i{flex:1;height:4px;border-radius:2px;background:var(--line)}.tut-p i.on{background:var(--brass)}.tut-p i.cur{background:var(--brass);opacity:.45}
+.adv.pulse{animation:tpulse .8s ease-in-out 3}@keyframes tpulse{50%{transform:scale(1.04);box-shadow:0 0 0 4px rgba(0,0,0,.12)}}
+@media (prefers-reduced-motion:reduce){.adv.pulse{animation:none;outline:3px solid var(--brass)}}
+tr.me td,.erow.me,.race.me{background:rgba(226,184,88,.16)}
+.own.star{font-weight:600}
+.tut.mini{padding:9px 12px;margin-bottom:2px}.tut.mini .tut-d{font-size:12.5px;margin:3px 0 7px;color:var(--muted)}.tut.mini .tut-h b{font-size:14px}
 </style>
 </head>
 <body>
@@ -224,6 +235,8 @@ const REAL_LINES = ["Mr. Prospector", "Storm Cat", "A.P. Indy", "Danzig", "Sadle
 const REAL_TRAINER_ROSTER = [["Brad H. Cox","KY",4,975,246,173,127,30102358,1],["Mark E. Casse","KY",3,1373,227,203,182,26471935,2],["Chad C. Brown","NY",4,811,190,154,136,25793347,3],["Steven M. Asmussen","S",2,1960,337,313,271,24052799,4],["Saffie A. Joseph, Jr.","FL",3,798,182,140,107,20385772,5],["William I. Mott","NY",4,566,87,88,76,17196758,6],["Brendan P. Walsh","KY",3,738,123,88,100,14477127,7],["Todd A. Pletcher","NY",3,537,85,71,67,12974386,8],["Bob Baffert","CA",4,309,90,47,44,12881899,9],["Joe Sharp","KY",2,867,164,141,108,12554872,10],["Miguel Clement","NY",4,479,86,89,78,12475014,11],["Michael J. Maker","KY",2,765,135,95,108,11996084,12],["Linda Rice","NY",2,824,186,149,127,11286107,13],["Cherie DeVaux","NY",4,284,46,38,30,10620225,14],["Jamie Ness","MA",1,1089,265,185,186,8528730,15],["Wesley A. Ward","KY",3,322,84,54,40,7765983,16],["Kenneth G. McPeek","KY",2,479,77,69,72,7697534,17],["Michael W. McCarthy","CA",2,480,67,67,62,7514458,18],["Philip D'Amato","CA",2,486,87,70,70,7348078,19],["Brian A. Lynch","KY",4,237,53,37,30,6953088,20],["William Walden","KY",4,226,57,38,31,6815955,21],["H. Graham Motion","MA",3,300,55,48,39,6624834,22],["Doug F. O'Neill","CA",1,586,99,88,74,6266046,23],["George Weaver","NY",2,386,62,55,52,5692158,24],["Brittany T. Russell","MA",2,412,113,74,61,5604574,25],["Michael J. Trombetta","MA",1,462,77,76,68,4966845,26],["John W. Sadler","CA",3,288,53,49,41,4932970,27],["D. Whitworth Beckman","S",3,266,39,38,30,4912542,28],["George R. Arnold II","KY",3,231,36,22,34,4581044,29],["Jose Francisco D'Angelo","NY",1,558,85,78,70,4307514,31],["Horacio De Paz","NY",2,324,53,49,46,4087584,33],["Peter Miller","CA",2,361,67,59,50,4050807,34],["W. Bret Calhoun","S",1,499,97,83,61,3910526,35],["Riley Mott","KY",2,280,41,32,29,3884315,36],["Ian R. Wilkes","KY",2,250,31,31,40,3847044,37],["Kelsey Danner","NY",2,343,38,50,44,3808563,38],["Dallas Stewart","KY",3,211,40,26,19,3786160,39],["Mark Glatt","CA",2,310,56,46,53,3716687,40],["Ilkay Kantarmaci","NY",1,459,56,69,67,3605396,41],["Anthony Farrior","MA",0,688,153,125,109,3572908,42],["Richard E. Dutrow, Jr.","NY",2,256,51,45,40,3464575,43],["Timothy E. Hamm","MA",0,595,101,96,111,3432371,44],["Ron Moquett","S",1,343,44,40,57,3416286,45],["Claude R. McGaughey III","NY",3,186,33,32,30,3213013,47],["Chad Summers","NY",3,158,21,21,24,3209262,48],["Amelia J. Green","KY",2,260,41,45,36,3188737,49],["David Fawkes","FL",2,280,57,37,43,3145857,50],["Robert M. Gorham","MA",1,464,92,72,70,3106055,51],["Peter Eurton","CA",1,312,41,47,55,3104900,52],["David Jacobson","NY",2,256,39,37,27,3049666,53],["Genaro Garcia","FL",0,575,83,68,102,2998558,54],["Carlos A. David","FL",1,347,71,67,46,2991084,55],["Robertino Diodoro","S",0,500,121,75,71,2927842,56],["Ernesto Padilla-Preciado","FL",1,390,105,72,59,2862691,57],["Allen Landry","S",1,384,103,64,58,2833104,58],["Michael Stidham","KY",1,266,43,47,35,2821860,59],["Eddie Kenneally","KY",2,210,35,37,29,2819472,60],["Todd W. Fincher","S",1,286,75,56,45,2806364,61],["Thomas Morley","NY",2,208,29,39,30,2726522,62],["George Papaprodromou","CA",1,315,54,47,55,2683528,63],["Jeff Mullins","CA",2,201,50,28,28,2659790,64],["Lindsay Schultz","FL",1,266,34,33,39,2628277,65],["Victor Barboza, Jr.","FL",1,359,79,64,53,2622431,66],["Rob Atras","NY",2,187,37,22,28,2558485,67],["Gustavo Delgado","FL",4,74,8,9,13,2533737,68],["Leonard Powell","CA",1,275,25,41,40,2513769,69],["Victoria H. Oliver","KY",2,199,24,22,26,2513262,70],["Rodolphe Brisset","KY",2,187,30,30,25,2471742,71],["Brandon L. Kulp","MA",0,441,119,99,68,2453397,72],["Keri Brion","MA",1,340,48,41,55,2452964,73],["Chris A. Hartman","S",1,293,36,44,39,2445557,74],["Gregory D. Foley","KY",2,195,27,27,25,2424412,75],["Michael V. Pino","MA",1,330,93,51,47,2421852,76],["McLean Robertson","KY",1,378,76,64,54,2399896,77],["Robert C. Cline","MA",0,516,90,67,85,2367118,78],["John Haran","MA",0,505,63,74,71,2324792,79],["Ronney W. Brown","MA",0,494,120,85,75,2323115,80],["Joseph F. Orseno","FL",1,346,49,55,56,2320112,81],["Gary Capuano","MA",2,140,41,24,22,2309248,82],["Dale L. Romans","KY",2,201,24,22,25,2247862,83],["Jeff C. Runco","MA",1,306,73,47,59,2225116,84],["Kinnon LaRose","MA",2,183,25,31,23,2223236,85],["Rudy R. Rodriguez","NY",1,317,32,39,35,2199771,86],["Jorge R. Abreu","NY",2,173,21,26,22,2187964,87],["Richard E. Mandella","CA",2,146,20,22,16,2162710,88],["Dick Cappellucci","MA",0,449,96,74,58,2138222,89],["Patrick L. Biancone","KY",2,138,24,26,16,2130463,90],["Jorge Delgado","FL",1,228,49,35,34,2122018,91],["Arnaud Delacour","MA",2,154,33,27,31,2111729,92],["Cipriano Contreras","FL",1,262,48,44,39,2103198,93],["John C. Servis","MA",1,203,25,34,33,2101451,94],["Eric N. Foster","KY",1,227,32,27,25,2097758,95],["Chris J. Englehart","NY",1,336,64,55,42,2079904,96],["Philip A. Bauer","NY",3,95,13,20,9,2068950,97],["Kathleen O'Connell","FL",0,421,77,73,45,2028500,98],["John Ennis","NY",1,262,32,25,39,2024018,99],["Jay P. Bernardini","MA",0,633,130,134,99,1981003,100]];
 // [name, region, tier(1 journeyman..4 Hall of Fame level), starts, wins, earnings, rank]
 const REAL_JOCKEYS = [["Flavien Prat","CA",4,1199,295,42700175,1],["Jose L. Ortiz","NY",4,1274,278,42136958,2],["Irad Ortiz, Jr.","NY",4,965,228,28349896,3],["Tyler Gaffalione","KY",4,1244,190,26617426,4],["Manuel Franco","NY",3,1283,278,25291252,5],["Luis Saez","NY",3,1112,187,22580689,6],["John R. Velazquez","NY",3,768,122,21357785,7],["Junior Alvarado","NY",3,679,96,17301325,8],["Paco Lopez","FL",3,1308,322,15216038,9],["Ricardo Santana, Jr.","NY",3,933,140,13260905,10],["Juan J. Hernandez","CA",3,618,139,11475197,11],["Javier Castellano","NY",3,659,106,11450481,12],["Kendrick Carmouche","NY",3,747,118,11427888,13],["Joel Rosario","NY",3,731,121,10393761,14],["Francisco Arrieta","S",3,652,107,10025369,15],["Brian Joseph Hernandez, Jr.","KY",3,612,75,9707453,16],["Mychel J. Sanchez","MA",2,1132,249,9597907,17],["Cristian A. Torres","KY",2,638,84,8677395,18],["Yedsit Hazlewood","MA",2,956,213,8632653,19],["Dylan Davis","NY",2,722,79,8624578,20],["Jose Lezcano","NY",2,764,116,8543142,21],["Antonio Fresu","CA",2,686,118,8414841,22],["Axel Concepcion","MA",2,759,95,8223827,23],["Jaime Rodriguez","MA",2,992,128,8222734,24],["Jaime A. Torres","KY",2,574,68,8134258,25],["Florent Geroux","KY",2,399,59,7630537,26],["Samuel Marin","FL",2,995,200,7618532,27],["Edgard J. Zayas","FL",2,818,104,7550133,28],["Kazushi Kimura","CA",2,724,122,7224349,29],["Emisael Jaramillo","FL",2,672,117,6889308,30],["Ben Curtis","S",2,545,76,6743717,31],["Pietro Moran","MA",2,720,145,6630028,32],["Emmanuel Esquivel","CA",2,553,89,6462594,33],["Micah J. Husbands","KY",2,429,77,6404649,34],["Edwin Gonzalez","FL",2,837,184,6366842,35],["Rafael Manuel Hernandez","S",2,593,115,6261646,36],["Fraser Aebly","KY",2,612,119,6245931,37],["Erik Asmussen","S",2,738,151,6186090,38],["Armando Ayuso","CA",2,786,105,6127829,39],["Rafael Bejarano","KY",2,526,81,6102222,40],["Luan Machado","KY",2,601,75,6033548,41],["Ramon A. Vazquez","CA",2,702,124,6003363,42],["Jorge Ruiz","FL",2,683,105,5752353,43],["Samy Camacho","FL",2,815,169,5470709,44],["Fernando De La Cruz","MA",2,796,133,5381500,45],["Keith J. Asmussen","S",2,526,64,5217114,46],["Edgar Morales","KY",2,624,54,5127794,47],["Umberto Rispoli","CA",2,291,57,5121692,48],["Diego A. Herrera","CA",2,762,134,5078161,49],["Miguel Angel Vasquez","FL",2,749,125,4610246,50],["Hector Isaac Berrios","KY",2,376,61,4543269,51],["Jeiron Barbosa","NY",2,706,142,4532809,52],["Sonny Leon","KY",2,754,110,4418080,53],["Marcelino Pedroza, Jr.","FL",2,809,113,4360191,54],["Christopher Elliott","NY",2,684,64,4256905,55],["David Cabrera","S",1,764,148,4249590,56],["Sheldon Russell","MA",1,293,75,4221550,57],["Angel Cruz","MA",1,744,122,4153789,58],["Ruben Silvera","MA",1,692,96,4130644,59],["Martin Chuan","MA",1,628,116,4108710,60],["Amir Mendoza","S",1,695,99,4043154,61],["Jareth Loveberry","KY",1,572,95,3983487,62],["Jevian Toledo","MA",1,511,82,3764775,64],["Mario Gutierrez","CA",1,396,42,3763284,65],["Danny Sheehy","MA",1,606,55,3591039,66],["Jose E. Morelos","NY",1,742,83,3545721,67],["Walter A. Rodriguez","MA",1,384,62,3542017,68],["Ryan Munger","S",1,355,61,3482373,69],["Leonel Reyes","FL",1,562,104,3472793,70],["Joseph D. Ramos","MA",1,571,69,3462497,71],["Harry Hernandez","MA",1,762,150,3433728,72],["Isaac Castillo","KY",1,861,144,3395723,73],["Erik Barbaran","KY",1,690,139,3268419,74],["Elvin Gonzalez","MA",1,574,98,3217039,76],["Tiago Josue Pereira","CA",1,546,65,3109638,77],["Julio A. Hernandez","MA",1,555,100,3105908,78],["Reylu Gutierrez","S",1,614,81,3098487,79],["Sahin Civaci","MA",1,367,48,3082237,80],["Arnaldo Bocachica","MA",1,426,124,3073771,81],["Walter De La Cruz","MA",1,538,95,3061687,82],["Francisco Martinez","S",1,697,94,3051575,83],["Stewart Elliott","S",1,573,100,3024524,84],["Forest Boyce","MA",1,299,53,2982240,85],["Jorge A. Vargas, Jr.","MA",1,387,68,2972487,86],["Ricardo Gonzalez","FL",1,404,57,2954620,87],["Alex Achard","KY",1,479,73,2905334,88],["Luis Raul Rivera","FL",1,629,114,2872539,89],["Deshawn L. Parker","MA",1,787,128,2791171,90],["Carlos Eduardo Lopez","MA",1,457,85,2790645,91],["Jose A. Bracho","MA",1,563,112,2719039,92],["Angel R. Rodriguez","MA",1,444,113,2700750,93],["Luis Raul Rivera, Jr.","FL",1,445,68,2698820,94],["Jose E. Vargas","MA",1,468,74,2658452,95],["Floyd Wethey Jr.","S",1,623,104,2633654,96],["Manuel Americano","MA",1,721,158,2626946,97],["Dexter Haddock","MA",1,671,81,2576867,98],["Alex Birzer","S",1,649,104,2565200,99],["Eliseo Ruiz","MA",1,377,63,2537715,100]];
+// Equibase 2026 owner leaders (as of Nov 11 2026): [name, home circuit (approx.), starts, wins, earnings, rank]
+const REAL_OWNERS = [["Godolphin, LLC","KY",376,67,14268121,1],["Klaravich Stables, Inc.","NY",286,72,9799281,2],["D. J. Stable LLC","KY",245,48,6315531,3],["Wathnan Racing","KY",93,18,5247485,4],["Juddmonte","KY",173,35,4728522,6],["C R K Stable LLC","KY",148,28,4182602,7],["Repole Stable","NY",249,47,3590195,8],["Calumet Farm","KY",304,37,3411291,9],["Gold Square LLC","FL",101,15,3259112,10],["Spendthrift Farm LLC","KY",100,13,3235593,11],["Live Oak Plantation","FL",216,41,3041053,16],["Three Diamonds Farm","KY",209,29,2959023,17],["Gary Barber","CA",216,38,2785097,18],["Reddam Racing LLC","CA",194,26,2710247,20],["Amerman Racing, LLC","CA",63,17,2603689,21],["Pin Oak Stud LLC","KY",95,24,2496181,23],["Daniel Alonso","FL",21,3,2334650,27],["Carl R. Moore Management, LLC","KY",138,25,2246667,30],["Tracy Farmer","KY",106,14,2127925,31],["Flying Dutchmen Breeding and Racing LLC","S",55,13,2069987,32],["Rigney Racing LLC","MA",95,13,2068950,33],["WinStar Farm LLC","KY",16,7,2055998,34],["Flying P Stable","MA",160,30,2022860,35],["TEC Racing (Elliott S. Logan)","S",188,35,1997943,36],["Lael Stables","MA",75,15,1706646,44],["Hronis Racing LLC","CA",115,23,1673930,45],["Amaty Racing Stables","FL",285,64,1670044,46],["Rivera Racing Stables LLC","NY",429,69,1662162,49],["Norman Stables LLC","S",183,23,1588125,51],["Arindel","FL",152,19,1584145,52],["Doubledown Stables, Inc.","S",76,7,1570258,54],["The Elkstone Group LLC (Stuart Grant)","MA",174,40,1508858,58],["Marion F. Gorham Revocable Trust","MA",247,44,1495081,59],["Robison, J. Kirk and Robison, Judy","KY",140,26,1476759,60],["JKX Racing","NY",199,48,1437261,61],["Novogratz Racing Stables, Inc.","NY",178,33,1431932,63],["Starry Night Racing","NY",232,41,1429528,65],["NBS Stable","NY",138,14,1416798,67],["Les Blake","S",153,37,1416407,68],["Stonestreet Stables LLC","KY",35,11,1407658,69],["Henry S. Witt, Jr.","S",501,84,1384698,70],["Twin Oaks Bloodstock LLC","KY",128,13,1363176,72],["Resolute Racing","KY",72,17,1339261,73],["Michael Dubb","NY",108,28,1338137,74],["Nicholas B. Alexander","CA",121,18,1336818,75],["Whisper Hill Farm LLC","MA",62,11,1327442,76],["Kenneth L. Ramsey","KY",69,18,1286710,80],["OXO Equine LLC","CA",51,14,1269477,82],["Harris Farms, Inc.","CA",120,18,1262293,83],["Top Notch Racing","MA",194,58,1260700,84],["Barry K. Schwartz","NY",110,24,1237724,87],["Mark N. Hibdon","S",484,86,1237722,88],["Miller Racing LLC","KY",40,5,1158873,92],["Colts Neck Stables LLC","MA",122,26,1157428,93],["Joel Politi","MA",55,15,1156949,94],["Colebrook Farms","NY",224,23,1146404,95],["Gokmen Kaya","FL",300,40,1145746,96],["Zedan Racing Stables, Inc.","CA",30,9,1137202,98],["Jack J. Armstrong","S",200,39,1129582,100]];
 
 'use strict';
 // ===================== STATIC DATA =====================
@@ -526,9 +539,9 @@ function newGame(opts) {
     diff: opts.diff, stable: opts.stable || 'My Stable', silks: opts.silks, home: opts.home || 'KY',
     cash: DIFF[opts.diff].cash, yr: START_YEAR, wk: 1, rep: 3, horses: [], stallions: [], trainers: [], news: [], fin: {},
     offers: [], entries: [], fields: {}, claims: [], consign: [], trophies: [], nextId: 1, market: [], mktAw: 0,
-    shares: [], road: null, v: 6, tstats: {}, jstats: {}, realTrainers: opts.realTrainers !== false, saleLots: null, saleId: null, lastRep: null, history: [], pinned: {}
+    shares: [], road: null, v: 7, tut: { step: 0 }, tstats: {}, jstats: {}, realTrainers: opts.realTrainers !== false, saleLots: null, saleId: null, lastRep: null, history: [], pinned: {}
   };
-  initTrainers(); initStallions();
+  initTrainers(); initStallions(); initRivals();
   if (opts.diff === 'easy') {
     const s = G.stallions.find(x => x.name === 'Twirling Candy') || G.stallions.find(x => x.fee >= 25000 && x.fee <= 60000);
     const m = makeHorse({ foal: G.yr - 7, sex: 'F', sire: G.stallions.find(x => x.name === 'Speightstown') || G.stallions.find(x => x.fee >= 50000), damG: 76, bred: 'KY' });
@@ -941,6 +954,11 @@ function getField(r) {
   // dropping down from a higher level (the reason no spot is ever truly easy)
   if (!r.name) { const p = r.type === 'CLM' || r.type === 'MCL' ? 0.4 : r.type === 'STR' || r.type === 'SOC' || r.type === 'MOC' ? 0.3 : 0.2;
     for (let i = 0; i < runners.length && i < 3; i++) if (rr() < p * (i === 0 ? 1 : 0.5)) { const x = runners[i]; const lift = 6 + gauss(2, 3, rr); x.rating += lift; x.figs = x.figs.map(f => Math.round(f + lift)); x.dropper = 1; } }
+  injectStars(r, runners, rr);
+  for (const x of runners) {
+    if (!x.owner) { const o = rr() < 0.6 ? pickOwner(rr, !!r.name || r.type === 'ALW' || r.type === 'AOC') : null; x.owner = o ? o.n : pick(FIRST_N, rr) + ' ' + pick(LAST_N, rr); }
+    if (G.realTrainers) { const reg = TRACKS[r.trk].rg; const ts = G.trainers.filter(t => t.real && (t.rg === reg || reg === 'INTL') && (r.name ? t.tier >= 2 : t.tier <= 3)); if (ts.length) x.trainerName = pick(ts, rr).n; }
+  }
   G.fields[r.id] = { runners, mine: [] };
   return G.fields[r.id];
 }
@@ -1032,7 +1050,7 @@ function runRace(r) {
     if (!x.ai && r.fund && share) { const F = r.fund; const k = ['MSW', 'ALW', 'AOC'].includes(r.type) ? r.type : 'other';
       if (F.kind === 'incl' && x.h.bred !== F.st) { share *= 1 - (F[k] || F.other); fundNote = `${F.st === 'KY' ? 'KTDF' : F.st + '-bred fund'} share not paid (not ${F.st}-bred)`; } }
     const comment = x.notes.length ? x.notes.join(', ') : tripComment(x, n);
-    res.runners.push({ name: x.name, post: x.post, fin: x.fin, btn: x.btn, mrg: x.mrg, odds: x.odds, fig: x.fig, time: x.time, eF: x.eF, style: x.style, mine: !x.ai, hid: x.h?.id, comment, jockey: x.ai ? x.x.jockeyName : x.jockey, sire: x.ai ? x.x.sireName : x.h.sireName });
+    res.runners.push({ star: x.ai ? x.x.star : null, owner: x.ai ? x.x.owner : G.stable, name: x.name, post: x.post, fin: x.fin, btn: x.btn, mrg: x.mrg, odds: x.odds, fig: x.fig, time: x.time, eF: x.eF, style: x.style, mine: !x.ai, hid: x.h?.id, comment, jockey: x.ai ? x.x.jockeyName : x.jockey, sire: x.ai ? x.x.sireName : x.h.sireName });
     if (!x.ai) {
       const h = x.h; const e = x.e;
       h.starts++; h.ys.st++; if (x.fin === 1) { h.wins++; h.ys.w++; } else if (x.fin === 2) h.pl++; else if (x.fin === 3) h.sh++;
@@ -1074,7 +1092,7 @@ function runRace(r) {
   // claims of my horses
   for (const c of res.claims) {
     const h = horse(c.hid); if (!h) continue;
-    earn('Claimed (sold)', c.price * OWN(h)); news(`${h.name} was claimed for ${fmt$(c.price)} out of the race. Goodbye, old friend.`, 'bad');
+    const by = pickOwner(rnd, false); earn('Claimed (sold)', c.price * OWN(h)); news(`${h.name} was claimed for ${fmt$(c.price)}${by ? ' by ' + by.n : ''} out of the race. Goodbye, old friend.`, 'bad');
     G.history.push({ name: h.name, out: `Claimed ${fmt$(c.price)}`, yr: G.yr });
     removeHorse(h.id);
   }
@@ -1252,7 +1270,7 @@ function resolveLotAI(lot, sale) {
   if (lot.state === 'out') return;
   const v = aiVals(lot, sale); const R = reserveOf(lot);
   if (v[0] < R) { lot.state = 'rna'; lot.price = roundBid(v[0]); return; }
-  lot.state = 'sold'; lot.price = Math.max(R, roundBid(Math.min(v[0], v[1] + bidInc(v[1]))));
+  lot.state = 'sold'; lot.price = Math.max(R, roundBid(Math.min(v[0], v[1] + bidInc(v[1])))); lot.buyer = lot.price >= 150000 || rnd() < 0.25 ? buyerName({ elite: lot.price >= 500000 }) : pick(['a pinhooker', 'a private buyer', 'an agent', 'a Florida pinhooker', 'a regional trainer', 'an overseas buyer']);
 }
 function buyLot(lot, price, share = 1) {
   spend('Horse purchases', price * share); lot.state = 'mine'; lot.price = price;
@@ -1424,15 +1442,19 @@ function doAwards() {
     ['Champion Male Turf Horse', h => ageOf(h) >= 3 && h.sex !== 'F', p => p.surf === 'T', [14, 24]], ['Champion Female Turf Horse', h => ageOf(h) >= 3 && h.sex === 'F', p => p.surf === 'T', [14, 22]],
     ['Champion Male Sprinter', h => ageOf(h) >= 3 && h.sex !== 'F', p => p.sprint, [12, 20]], ['Champion Female Sprinter', h => ageOf(h) >= 3 && h.sex === 'F', p => p.sprint, [12, 20]],
   ];
-  let hoty = null, hotyS = 0;
-  for (const [title, hf, pf, th] of cats) {
-    let best = null, bs = 0; for (const h of G.horses) { if (!hf(h)) continue; const s = seasonScore(h, pf); if (s > bs) { bs = s; best = h; } }
-    const need = th[0] + rnd() * (th[1] - th[0]);
-    if (best && bs >= need) { G.trophies.push({ yr: G.yr, t: title, h: best.name }); G.rep = Math.min(100, G.rep + 5); news(`🏆 Eclipse Award: ${best.name} — ${title} of ${G.yr}!`, 'good'); best.champ = (best.champ || 0) + 1; const tot = seasonScore(best, p => true); if (tot > hotyS) { hotyS = tot; hoty = best; } }
-  }
-  if (hoty && hotyS >= 28 + rnd() * 12) { G.trophies.push({ yr: G.yr, t: 'Horse of the Year', h: hoty.name }); G.rep = Math.min(100, G.rep + 8); news(`🏆🏆 ${hoty.name} is ${G.yr} Horse of the Year!`, 'good'); }
-  const yE = finYear().inc['Purses'] || 0;
-  if (yE >= 3500000 + rnd() * 3000000) { G.trophies.push({ yr: G.yr, t: 'Eclipse Award — Outstanding Owner', h: G.stable }); G.rep = Math.min(100, G.rep + 6); news(`🏆 ${G.stable} wins the Eclipse Award as Outstanding Owner!`, 'good'); }
+  // titles are decided against the rival stables' stars (the same points scale: G1 win 10, BC/big race +6, G2 win 5, G3 win 3, places)
+  let hoty = null, hotyS = 0; const champs = []; const divs = ['2M', '2F', '3M', '3F', 'OM', 'OF', 'TM', 'TF', 'SM', 'SF'];
+  cats.forEach(([title, hf, pf, th], i) => {
+    let best = null, bs = 0; for (const h of G.horses) { if (!hf(h)) continue; const sc = seasonScore(h, pf); if (sc > bs) { bs = sc; best = h; } }
+    const rv = typeof rivalBest === 'function' ? rivalBest(divs[i]) : null; const rs = rv ? rv.pts : 0;
+    const need = Math.max(th[0] * 0.6, rs + 0.01);
+    if (best && bs >= need) { champs.push({ t: title, h: best.name, o: G.stable, me: 1 }); G.trophies.push({ yr: G.yr, t: title, h: best.name }); G.rep = Math.min(100, G.rep + 5); news(`🏆 Eclipse Award: ${best.name} — ${title} of ${G.yr}!`, 'good'); best.champ = (best.champ || 0) + 1; const tot = seasonScore(best, p => true); if (tot > hotyS) { hotyS = tot; hoty = { name: best.name, o: G.stable, me: 1 }; } }
+    else if (rv && rs > 0) { champs.push({ t: title, h: rv.name, o: rv.owner }); if (rs > hotyS) { hotyS = rs; hoty = { name: rv.name, o: rv.owner }; } if (best && bs > 0) news(`${title}: ${rv.name} (${rv.owner}) edged out your ${best.name} (${bs} pts to ${rs}).`, 'info'); }
+  });
+  if (hoty) { champs.push({ t: 'Horse of the Year', h: hoty.name, o: hoty.o, me: hoty.me }); if (hoty.me) { G.trophies.push({ yr: G.yr, t: 'Horse of the Year', h: hoty.name }); G.rep = Math.min(100, G.rep + 8); news(`🏆🏆 ${hoty.name} is ${G.yr} Horse of the Year!`, 'good'); } else news(`${G.yr} Horse of the Year: ${hoty.name} (${hoty.o}).`, 'info'); }
+  const tbl = typeof standings === 'function' ? standings() : []; const top = tbl[0];
+  if (top) { champs.push({ t: 'Outstanding Owner', h: top.n, o: top.n, me: top.me }); if (top.me) { G.trophies.push({ yr: G.yr, t: 'Eclipse Award — Outstanding Owner', h: G.stable }); G.rep = Math.min(100, G.rep + 6); news(`🏆 ${G.stable} wins the Eclipse Award as Outstanding Owner — leading earner in North America!`, 'good'); } else { const myRank = tbl.findIndex(x => x.me) + 1; news(`${G.yr} Outstanding Owner: ${top.n} (${fmtK(top.e)}). You finished #${myRank} of ${tbl.length} on the owner table.`, 'info'); } }
+  G.champs = G.champs || {}; G.champs[G.yr] = champs;
 }
 function repTitle(r) { return r >= 70 ? 'Racing Dynasty' : r >= 45 ? 'Major Owner' : r >= 25 ? 'Established Owner' : r >= 10 ? 'Up-and-Comer' : 'Hobbyist'; }
 
@@ -1536,6 +1558,7 @@ function advanceWeek() {
   const resById = {};
   for (const r of now) if (runIds.has(r.id)) { const res = runRace(r); rep.races.push(res); resById[r.id] = res; }
   ensureRoad(); for (const r of now) if (r.tags && /[po]\d/.test(r.tags)) roadRace(r, resById[r.id]);
+  rivalsWeek(rep, runIds, resById);
   G.entries = G.entries.filter(e => { const r = raceById(e.rid); return r && awOf(r.yr, r.wk) > AW(); });
   for (const k of Object.keys(G.fields)) { const r = raceById(k); if (!r || awOf(r.yr, r.wk) <= AW()) delete G.fields[k]; }
   // 2. sales
@@ -1656,7 +1679,7 @@ function reminders() {
   const s = SALES.find(x => x.wk === G.wk); if (s) news(`🔨 ${s.n} is this week. Visit the Sales tab.`, 'info');
 }
 function yearEnd() {
-  doAwards(); stallionAwards();
+  doAwards(); stallionAwards(); if (typeof rivalsYearEnd === 'function') rivalsYearEnd();
   G.rep = Math.max(0, G.rep * 0.92);
   G.wk = 1; G.yr++;
   for (const h of G.horses) { h.ys = { st: 0, w: 0, e: 0 }; if (ageOf(h) === 3) { h.tcNom = null; } if (ageOf(h) === 4) { h.kdPts = 0; h.koPts = 0; } h.wayi = []; }
@@ -1703,6 +1726,7 @@ function migrate() {
     for (const c of G.consign || []) { const s = SALES.find(x => x.id === c.sale); if (s && c.yr === G.yr && s.wk < G.wk) c.yr = G.yr + 1; }
     G.tstats = G.tstats || {}; G.jstats = G.jstats || {}; G.v = 6;
   }
+  if (G.v < 7) { if (!G.rivals) initRivals(); if (!G.tut) G.tut = { step: G.horses.length || G.yr > START_YEAR ? 99 : 0 }; G.v = 7; news('🏇 Rival stables are here: the 2026 owner leaders (Godolphin, Klaravich, Repole, Juddmonte…) now race their stars in graded stakes, bid at the sales and claim horses. See Office → Standings.', 'good'); }
   if (G.wkLots && G.saleSel) G.saleLots = G.wkLots[G.saleSel] || null;
   for (const h of G.horses) if (h.starts && h.lastRace < -50) h.lastRace = AW() - 6;
   for (const h of G.market || []) if (h.starts && h.lastRace < -50) h.lastRace = AW() - 4;
@@ -1877,6 +1901,106 @@ function aiPP(x, r) {
   });
   x._pp = out; return out;
 }
+
+'use strict';
+// ===================== RIVAL OWNERS (Equibase 2026 owner leaders) =====================
+// Rival stables run all season: they earn at their real 2026 pace, own the stakes stars that show up in graded fields,
+// bid at the sales and claim horses. Year-end titles are decided against them.
+const DIV_T = { '2M': 'Champion 2-Year-Old Male', '2F': 'Champion 2-Year-Old Filly', '3M': 'Champion 3-Year-Old Male', '3F': 'Champion 3-Year-Old Filly', OM: 'Champion Older Dirt Male', OF: 'Champion Older Dirt Female', TM: 'Champion Male Turf Horse', TF: 'Champion Female Turf Horse', SM: 'Champion Male Sprinter', SF: 'Champion Female Sprinter' };
+const DIV_LIST = Object.keys(DIV_T);
+function raceDiv(r) {
+  const f = !!r.f;
+  if (r.age === '2') return f ? '2F' : '2M';
+  if (r.surf === 'T') return f ? 'TF' : 'TM';
+  if (r.age === '3') return f ? '3F' : '3M';
+  if (r.dist <= 7) return f ? 'SF' : 'SM';
+  return f ? 'OF' : 'OM';
+}
+function ptsFor(g, fin, big) { if (g === 1) return fin === 1 ? 10 + (big ? 6 : 0) : fin === 2 ? 3 : fin === 3 ? 1.5 : 0; if (g === 2) return fin === 1 ? 5 : fin === 2 ? 1.5 : 0; if (g === 3) return fin === 1 ? 3 : 0; return 0; }
+const ownerW = (o) => Math.pow(o.e / 1e6, 1.4);
+function pickOwner(rr = rnd, top = false) { const L = G.rivals || []; if (!L.length) return null; return wpick(L, L.map(o => top ? ownerW(o) : Math.sqrt(o.st)), rr); }
+function initRivals() {
+  G.rivals = REAL_OWNERS.map(([n, rg, st, w, e, rk]) => ({ n, rg, st, w, e, rk, ys: { e: 0, w: 0, st: 0, gw: 0, sw: 0 } }));
+  G.stars = []; G.stakesLog = []; G.champs = G.champs || {}; G.ownerHist = G.ownerHist || {};
+  for (const d of DIV_LIST) if (d[0] !== '2') topUpStars(d);
+}
+function newStar(d) {
+  const o = pickOwner(rnd, true); const age = d[0] === '2' ? 2 : d[0] === '3' ? 3 : rint(4, 6);
+  return { id: 'st' + (G.nextId++), name: genName(), div: d, owner: o ? o.n : 'Private owner', q: gauss(0, 3), age, sex: d.endsWith('F') ? 'F' : 'C', pts: 0, purse: 0, starts: 0, wins: 0, last: -99 };
+}
+function topUpStars(d) { const n = G.stars.filter(s => s.div === d).length; for (let i = n; i < 4; i++) G.stars.push(newStar(d)); }
+function starRating(r, s) { const g1 = r.g === 1 ? r.par : r.par + (r.g === 2 ? 4 : r.g === 3 ? 7 : 9); return g1 - 2 + s.q - Math.max(0, s.age - 5) * 1.5; }
+// put eligible stars into a graded field (they replace generic runners)
+function injectStars(r, runners, rr) {
+  if (!r.name || !r.g || !G.stars) return;
+  const d = raceDiv(r); const pool = G.stars.filter(s => s.div === d && AW() - s.last >= 3);
+  let slot = 0;
+  for (const s of pool) { if (slot >= runners.length - 1) break; if (rr() > (r.g === 1 ? 0.75 : 0.45)) continue;
+    const x = runners[slot++]; const rating = starRating(r, s);
+    Object.assign(x, { name: s.name, owner: s.owner, star: s.id, rating, age: s.age, sex: s.sex === 'F' ? 'F' : 'C', figs: [0, 1, 2, 3].map(i => Math.round(rating + gauss(-1 - i * 0.4, 3, rr))), starts: Math.max(x.starts, 4 + s.starts), wins: Math.max(x.wins, 2 + s.wins), _pp: null });
+  }
+}
+function creditStar(id, r, fin) {
+  const s = (G.stars || []).find(z => z.id === id); if (!s) return;
+  s.starts++; s.last = awOf(r.yr, r.wk); const big = r.tags && r.tags.includes('BIG') || r.bc;
+  s.pts += ptsFor(r.g, fin, big); const share = r.purse * ([0.6, 0.2, 0.11, 0.06, 0.03][fin - 1] || 0); s.purse += share;
+  const o = G.rivals.find(x => x.n === s.owner); if (o) { o.ys.e += share; if (fin === 1) { o.ys.gw++; o.ys.w++; } }
+  if (fin === 1) s.wins++;
+}
+// simulate graded stakes that you didn't run in
+function simStakes(r) {
+  const d = raceDiv(r); const pool = G.stars.filter(s => s.div === d && AW() - s.last >= 3 && rnd() < (r.g === 1 ? 0.75 : 0.45));
+  const perf = pool.map(s => ({ s, p: starRating(r, s) + gauss(0, 4.5) }));
+  for (let i = 0; i < 4; i++) perf.push({ s: null, p: r.par + 1 - i * 2.5 + gauss(0, 3) });
+  perf.sort((a, b) => b.p - a.p);
+  perf.slice(0, 3).forEach((x, i) => { if (x.s) creditStar(x.s.id, r, i + 1); });
+  const w = perf[0]; const o = w.s ? null : pickOwner(rnd, true);
+  if (!w.s && o) { o.ys.e += r.purse * 0.6; o.ys.gw++; o.ys.w++; }
+  logStakes(r, w.s ? w.s.name : genName(), w.s ? w.s.owner : (o ? o.n : 'Private owner'), false);
+}
+function logStakes(r, horseName, owner, mine) { G.stakesLog = G.stakesLog || []; G.stakesLog.unshift({ yr: r.yr, wk: r.wk, race: r.name, g: r.g, trk: r.trk, horse: horseName, owner, mine: !!mine }); if (G.stakesLog.length > 60) G.stakesLog.length = 60; }
+function rivalsWeek(rep, runIds, resById) {
+  if (!G.rivals) initRivals();
+  if (G.wk === 22) { topUpStars('2M'); topUpStars('2F'); }
+  for (const o of G.rivals) { // base earnings at their real 2026 pace (45 weeks of data), a little noise
+    const f = Math.max(0, gauss(1, 0.35)); o.ys.e += o.e / 45 * 0.8 * f; o.ys.st += o.st / 45 * f; o.ys.w += o.w / 45 * f;
+  }
+  for (const r of weekRaces(G.yr, G.wk)) {
+    if (!r.name || !r.g || r.rn !== 0 || (r.tags && (r.tags.includes('KD') || r.tags.includes('KO')))) continue;
+    if (runIds.has(r.id)) { const res = resById[r.id]; if (!res) continue; res.runners.forEach(x => { if (x.star && x.fin <= 3) creditStar(x.star, r, x.fin); }); const w = res.runners.find(x => x.fin === 1); if (w) logStakes(r, w.name, w.mine ? G.stable : (w.owner || 'Private owner'), w.mine); }
+    else simStakes(r);
+  }
+}
+function playerYear() {
+  const f = G.fin[G.yr] || { inc: {} }; const e = (f.inc['Purses'] || 0) + (f.inc['State-bred owner bonuses'] || 0);
+  let w = 0, st = 0, gw = 0; for (const h of G.horses) for (const p of h.pp) if (p.yr === G.yr && p.race !== 'prior') { st++; if (p.fin === 1) { w++; if (p.g) gw++; } }
+  for (const x of G.stakesLog || []) if (x.mine && x.yr === G.yr) { } // already counted via horses still owned
+  return { e, w, st, gw };
+}
+function standings() {
+  const me = playerYear(); const L = (G.rivals || []).map(o => ({ n: o.n, e: o.ys.e, w: Math.round(o.ys.w), st: Math.round(o.ys.st), gw: o.ys.gw, rg: o.rg }));
+  L.push({ n: G.stable, e: me.e, w: me.w, st: me.st, gw: me.gw, me: 1 });
+  return L.sort((a, b) => b.e - a.e);
+}
+function divLeaders(d) {
+  const L = (G.stars || []).filter(s => s.div === d && s.pts > 0).map(s => ({ name: s.name, owner: s.owner, pts: s.pts, wins: s.wins }));
+  for (const h of G.horses) { const t = DIV_T[d]; const sc = playerDivScore(h, d); if (sc > 0) L.push({ name: h.name, owner: G.stable, pts: sc, mine: 1 }); }
+  return L.sort((a, b) => b.pts - a.pts);
+}
+const DIV_FILT = { '2M': [h => ageOf(h) === 2 && h.sex !== 'F', p => true], '2F': [h => ageOf(h) === 2 && h.sex === 'F', p => true], '3M': [h => ageOf(h) === 3 && h.sex !== 'F', p => p.surf !== 'T'], '3F': [h => ageOf(h) === 3 && h.sex === 'F', p => p.surf !== 'T'], OM: [h => ageOf(h) >= 4 && h.sex !== 'F', p => p.surf !== 'T'], OF: [h => ageOf(h) >= 4 && h.sex === 'F', p => p.surf !== 'T'], TM: [h => ageOf(h) >= 3 && h.sex !== 'F', p => p.surf === 'T'], TF: [h => ageOf(h) >= 3 && h.sex === 'F', p => p.surf === 'T'], SM: [h => ageOf(h) >= 3 && h.sex !== 'F', p => p.sprint], SF: [h => ageOf(h) >= 3 && h.sex === 'F', p => p.sprint] };
+function playerDivScore(h, d) { const [hf, pf] = DIV_FILT[d]; return hf(h) ? seasonScore(h, pf) : 0; }
+function rivalBest(d) { return (G.stars || []).filter(s => s.div === d).sort((a, b) => b.pts - a.pts)[0] || null; }
+// year end: age the stars, close the books on the owner table
+function rivalsYearEnd() {
+  if (!G.rivals) return;
+  G.ownerHist[G.yr] = standings().slice(0, 12).map(x => ({ n: x.n, e: Math.round(x.e), w: x.w, gw: x.gw, me: x.me }));
+  const next = { '2M': '3M', '2F': '3F', '3M': 'OM', '3F': 'OF' };
+  G.stars = G.stars.filter(s => s.age < 7 && !(s.age >= 5 && rnd() < 0.5) && rnd() < 0.85).map(s => ({ ...s, age: s.age + 1, div: next[s.div] || s.div, pts: 0, purse: 0, last: -99, q: s.q + (s.age <= 3 ? gauss(0.8, 1.5) : gauss(-0.5, 1.5)) }));
+  for (const d of DIV_LIST) if (d[0] !== '2') topUpStars(d);
+  for (const o of G.rivals) o.ys = { e: 0, w: 0, st: 0, gw: 0, sw: 0 };
+}
+// names for auction bidders / buyers / claimants
+function buyerName(sale, rr = rnd) { const o = pickOwner(rr, !!(sale && sale.elite)); return o ? o.n : 'a private buyer'; }
 
 'use strict';
 // ===================== WEEKLY ADVISOR (on-device, uses only what an owner could know) =====================
@@ -2096,7 +2220,7 @@ function render() {
   if (!G) { renderNew(); return; }
   document.body.classList.remove('newgame');
   renderTop(); renderTabs(); renderAdv();
-  const v = $('#view'); v.innerHTML = ({ stable: vStable, races: vRaces, sales: vSales, breed: vBreed, office: vOffice })[UI.tab]();
+  const v = $('#view'); v.innerHTML = tutCard() + ({ stable: vStable, races: vRaces, sales: vSales, breed: vBreed, office: vOffice })[UI.tab]();
   paintSilks(v);
 }
 function renderTop() {
@@ -2214,7 +2338,7 @@ const PP_HEAD = '<tr><th>Date</th><th>Trk</th><th>Race</th><th>Dist</th><th>Fin<
 // AI runner past performances (tap a horse in the field)
 function openAIPP(rid, idx, re) {
   const r = raceById(rid); const x = G.fields[rid]?.runners[idx]; if (!r || !x) { toast('That field is no longer available'); return closeModal(); } const pp = aiPP(x, r);
-  const o = `<div class="rinfo"><b>${esc(x.name)}</b> · ${x.age}yo ${x.sex === 'F' ? 'filly/mare' : x.sex === 'G' ? 'gelding' : 'colt/horse'} · by ${esc(x.sireName)}<br>Trainer ${esc(x.trainerName)} · Jockey ${esc(x.jockeyName)}<br>Lifetime ${x.starts}: ${x.wins} wins · best fig ${x.figs.length ? Math.max(...x.figs) : '—'}</div>${pp.length ? `<table class="dtab pp">${PP_HEAD}${pp.map(ppRow).join('')}</table>` : '<p class="pad muted">First-time starter — no past performances.</p>'}`;
+  const o = `<div class="rinfo"><b>${esc(x.name)}</b> · ${x.age}yo ${x.sex === 'F' ? 'filly/mare' : x.sex === 'G' ? 'gelding' : 'colt/horse'} · by ${esc(x.sireName)}<br>Owner ${esc(x.owner || '—')}${x.star ? ' · <b>stakes star</b>' : ''}<br>Trainer ${esc(x.trainerName)} · Jockey ${esc(x.jockeyName)}<br>Lifetime ${x.starts}: ${x.wins} wins · best fig ${x.figs.length ? Math.max(...x.figs) : '—'}</div>${pp.length ? `<table class="dtab pp">${PP_HEAD}${pp.map(ppRow).join('')}</table>` : '<p class="pad muted">First-time starter — no past performances.</p>'}`;
   openModal(esc(x.name), o, { push: !re, fn: () => openAIPP(rid, idx, true) });
 }
 // Full-field past performances, DRF style: every runner's recent lines, figs in the right margin
@@ -2224,7 +2348,7 @@ function openFieldPP(rid, re) {
   for (const x of list) {
     const sc = SADDLE[(x.post - 1) % SADDLE.length];
     const pp = x.ai ? aiPP(x.x, r) : x.h.pp.slice(0, 6);
-    const head = x.ai ? `${x.x.age}yo · ${esc(x.x.sireName)} · ${x.x.starts}: ${x.x.wins} wins · ${esc(x.x.trainerName)}` : `yours · ${ageOf(x.h)}yo · ${esc(x.h.sireName)} · ${rec(x.h)}`;
+    const head = x.ai ? `${x.x.age}yo · ${esc(x.x.sireName)} · ${x.x.starts}: ${x.x.wins} wins · ${esc(x.x.trainerName)}${x.x.owner ? ' · ' + esc(x.x.owner) : ''}` : `yours · ${ageOf(x.h)}yo · ${esc(x.h.sireName)} · ${rec(x.h)}`;
     o += `<h3 class="sub"><span class="pn" style="background:${sc[0]};color:${sc[1]}">${x.post}</span> ${esc(x.name)} <small>ML ${oddsStr(x.ml)}</small></h3><div class="cm pad">${head}</div>${pp.length ? `<table class="dtab pp">${PP_HEAD}${pp.slice(0, 6).map(ppRow).join('')}</table>` : '<p class="pad muted">First-time starter</p>'}`;
   }
   openModal('Past performances', o, { push: !re, fn: () => openFieldPP(rid, true) });
@@ -2266,7 +2390,7 @@ function openRace(rid, re) {
   }
   if (f || isClaim) {
     const list = fieldList(r);
-    o += `<h3 class="sub">Field (morning line) <button class="btn xs ghost" data-a="fieldpp" data-rid="${rid}">Full past performances</button></h3><div class="note muted">Tap a horse for its past performances.</div><table class="dtab fld"><tr><th>#</th><th>Horse</th><th>Last figs</th><th>ML</th>${isClaim ? '<th></th>' : ''}</tr>${list.map(x => { const sc = SADDLE[(x.post - 1) % SADDLE.length]; if (!x.ai) return `<tr class="me"><td><span class="pn" style="background:${sc[0]};color:${sc[1]}">${x.post}</span></td><td><a data-a="horse" data-id="${x.h.id}"><b>${esc(x.name)}</b></a><div class="cm">yours</div></td><td>${x.h.pp.slice(0, 3).map(p => p.fig).join(' ') || 'debut'}</td><td>${oddsStr(x.ml)}</td>${isClaim ? '<td></td>' : ''}</tr>`; const ai = x.x; const idx = f ? f.runners.indexOf(ai) : G.fields[rid].runners.indexOf(ai); const slip = G.claims.some(c => c.rid === rid && c.idx === idx); return `<tr><td><span class="pn" style="background:${sc[0]};color:${sc[1]}">${x.post}</span></td><td><a data-a="aipp" data-rid="${rid}" data-i="${idx}">${esc(ai.name)}</a><div class="cm">${ai.age}yo ${ai.sex === 'F' ? 'f' : ai.sex === 'G' ? 'g' : 'c'} · ${esc(ai.sireName)} · ${ai.starts ? ai.starts + ': ' + ai.wins + ' wins' : 'firster'} · ${esc(ai.trainerName)}</div></td><td>${ai.figs.slice(0, 3).join(' ') || '—'}</td><td>${oddsStr(x.ml)}</td>${isClaim ? `<td>${slip ? '<span class="ok">slip in</span>' : `<button class="btn xs" data-a="claimForm" data-rid="${rid}" data-i="${idx}">Claim</button>`}</td>` : ''}</tr>`; }).join('')}</table>`;
+    o += `<h3 class="sub">Field (morning line) <button class="btn xs ghost" data-a="fieldpp" data-rid="${rid}">Full past performances</button></h3><div class="note muted">Tap a horse for its past performances.</div><table class="dtab fld"><tr><th>#</th><th>Horse</th><th>Last figs</th><th>ML</th>${isClaim ? '<th></th>' : ''}</tr>${list.map(x => { const sc = SADDLE[(x.post - 1) % SADDLE.length]; if (!x.ai) return `<tr class="me"><td><span class="pn" style="background:${sc[0]};color:${sc[1]}">${x.post}</span></td><td><a data-a="horse" data-id="${x.h.id}"><b>${esc(x.name)}</b></a><div class="cm">yours</div></td><td>${x.h.pp.slice(0, 3).map(p => p.fig).join(' ') || 'debut'}</td><td>${oddsStr(x.ml)}</td>${isClaim ? '<td></td>' : ''}</tr>`; const ai = x.x; const idx = f ? f.runners.indexOf(ai) : G.fields[rid].runners.indexOf(ai); const slip = G.claims.some(c => c.rid === rid && c.idx === idx); return `<tr><td><span class="pn" style="background:${sc[0]};color:${sc[1]}">${x.post}</span></td><td><a data-a="aipp" data-rid="${rid}" data-i="${idx}">${esc(ai.name)}</a><div class="cm">${ai.age}yo ${ai.sex === 'F' ? 'f' : ai.sex === 'G' ? 'g' : 'c'} · ${esc(ai.sireName)} · ${ai.starts ? ai.starts + ': ' + ai.wins + ' wins' : 'firster'} · ${esc(ai.trainerName)}${ai.owner ? ` · <span class="own${ai.star ? ' star' : ''}">${esc(ai.owner)}</span>` : ''}</div></td><td>${ai.figs.slice(0, 3).join(' ') || '—'}</td><td>${oddsStr(x.ml)}</td>${isClaim ? `<td>${slip ? '<span class="ok">slip in</span>' : `<button class="btn xs" data-a="claimForm" data-rid="${rid}" data-i="${idx}">Claim</button>`}</td>` : ''}</tr>`; }).join('')}</table>`;
   } else if (awOf(r.yr, r.wk) >= AW()) o += `<button class="btn ghost wide" data-a="viewField" data-rid="${rid}">Preview probable field</button>`;
   openModal(r.name ? esc(r.name) : `Race ${r.rn} · ${TRACKS[r.trk].n}`, o, { push: !re, fn: () => openRace(rid, true) });
 }
@@ -2318,7 +2442,7 @@ function openLot(i, re) {
     o += `<div class="btnrow">${l.vet ? '' : `<button class="btn ghost sm" data-a="lotVet" data-i="${i}">Vet review ($500)</button>`}${l.agent ? '' : `<button class="btn ghost sm" data-a="lotAgent" data-i="${i}">Agent inspection (${fmt$(agentFee(h))})</button>`}</div>`;
     const blocked = sale.elite && G.rep < 10 && G.cash < 1e6;
     o += blocked ? '<div class="warnbox">You are not credit-approved for this select sale yet.</div>' : `<button class="btn big" data-a="auction" data-i="${i}">Bid on this horse</button>`;
-  } else o += `<div class="note">${l.state === 'mine' ? `You bought this horse for ${fmt$(l.price)}.` : l.state === 'sold' ? `Sold to another buyer for ${fmt$(l.price)}.` : `Bought back (RNA) at ${fmt$(l.price)}.`}</div>`;
+  } else o += `<div class="note">${l.state === 'mine' ? `You bought this horse for ${fmt$(l.price)}.` : l.state === 'sold' ? `Sold to ${esc(l.buyer || 'another buyer')} for ${fmt$(l.price)}.` : `Bought back (RNA) at ${fmt$(l.price)}.`}</div>`;
   openModal(lotTitle(l), o, { push: !re, fn: () => openLot(i, true) });
 }
 function agentFee(h) { return Math.max(1000, Math.round(h.mkt * 0.01 / 100) * 100); }
@@ -2337,7 +2461,7 @@ function openAuction(i, re) {
 }
 function aiRespond(l) {
   const A = l.auc; const nxt = A.cur + bidInc(A.cur);
-  const willing = A.v.filter(v => v >= nxt); if (willing.length) { A.cur = nxt; A.mine = false; A.log.push(`${fmt$(A.cur)} — ${pick(['bid on the phone', 'agent in the pavilion', 'back-walking ring', 'the pinhooker in row 4', 'an international bidder'])}`); return true; }
+  const willing = A.v.filter(v => v >= nxt); if (willing.length) { A.cur = nxt; A.mine = false; A.log.push(`${fmt$(A.cur)} — ${A.cur > 250000 && Math.random() < 0.6 ? 'agent for ' + buyerName(saleThisWeek() || {}, rnd) : pick(['bid on the phone', 'agent in the pavilion', 'back-walking ring', 'the pinhooker in row 4', 'an international bidder'])}`); return true; }
   return false;
 }
 function hammer(i) {
@@ -2481,7 +2605,7 @@ const ACT = {
   mkt: d => { const h = G.market[+d.i]; openModal(esc(h.name), `<div class="ped"><div><span>Sire</span><b>${esc(h.sireName)}</b></div><div><span>Dam</span><b>${esc(h.damName)}</b> <small>by ${esc(h.damsireName)}</small></div></div><dl class="kv"><dt>Age/sex</dt><dd>${ageOf(h)}yo ${sexLabel(h)} · ${h.bred}-bred</dd><dt>Record</dt><dd>${rec(h)} · ${fmt$(h.earn)}</dd><dt>Recent figs</dt><dd>${h.pp.map(p => p.fig).join(', ') || '—'}</dd><dt>Conditions</dt><dd>${h.wins ? `Won ${h.alw} allowance race(s)` : 'Maiden'}</dd><dt>Asking</dt><dd><b>${fmt$(h.ask)}</b></dd></dl><label class="lab">Trainer</label><select id="mk-t" class="inp">${G.trainers.filter(t => trainerAccepts(t, h)).map(t => `<option value="${t.id}" ${t.id === defaultTrainer() ? 'selected' : ''}>${esc(t.n)} · ${TRAINER_TIERS[t.tier].n} · ${REGION_N[t.rg]} · ${fmt$(t.rate)}/day</option>`).join('')}</select><button class="btn big" data-a="mktBuy" data-i="${d.i}">Buy for ${fmt$(h.ask)}</button>`); },
   mktBuy: d => { const h = G.market[+d.i]; if (G.cash < h.ask) return toast('Not enough cash'); spend('Horse purchases', h.ask); h.boughtFor = h.ask; h.trainer = $('#mk-t').value; G.lastTrainer = h.trainer; h.ceil += D().luck; G.horses.push(h); G.market.splice(+d.i, 1); news(`You bought ${h.name} privately for ${fmt$(h.ask)}.`, 'good'); toast('Welcome to the barn, ' + h.name); closeModal(); scheduleSave(); },
   bsub: d => { UI.bsub = d.t; render(); }, bst: d => { UI.bst = d.s; render(); }, stud: d => openStud(d.sid),
-  advice: () => openAdvice(),
+  advice: () => { if (G.tut && G.tut.step === 5) G.tut.adv = 1; openAdvice(); },
   goTrail: () => { UI.tab = 'races'; UI.rsub = 'trail'; closeModal(); },
   goStuds: () => { UI.tab = 'breed'; UI.bsub = 'studs'; closeModal(); },
   help: () => openModal('How to play', helpHtml()),
@@ -2874,7 +2998,7 @@ function vBreed() {
 
 // ---------- OFFICE ----------
 function vOffice() {
-  const subs = [['ov', 'Overview'], ['fin', 'Finances'], ['barn', 'Barn stats'], ['news', 'News'], ['hist', 'Trophies & history'], ['game', 'Save & settings']];
+  const subs = [['ov', 'Overview'], ['fin', 'Finances'], ['barn', 'Barn stats'], ['stand', 'Standings'], ['news', 'News'], ['hist', 'Trophies & history'], ['game', 'Save & settings']];
   let o = subnav(subs, UI.osub, 'osub');
   const f = G.fin[G.yr] || { inc: {}, exp: {} }; const inc = Object.values(f.inc).reduce((a, b) => a + b, 0), exp = Object.values(f.exp).reduce((a, b) => a + b, 0);
   if (UI.osub === 'ov') {
@@ -2892,6 +3016,8 @@ function vOffice() {
     const all = Object.values(G.tstats || {}); const st = all.reduce((a, z) => a + z.st, 0), w = all.reduce((a, z) => a + z.w, 0), e = all.reduce((a, z) => a + z.e, 0);
     o += `<div class="dash"><div><b>${st}</b><span>starts</span></div><div><b>${w}</b><span>wins</span></div><div><b>${st ? Math.round(w / st * 100) : 0}%</b><span>win rate</span></div><div><b>${fmtK(e)}</b><span>purses</span></div></div><div class="note muted">Your stable's own record with each barn and rider. 🔥 = two or more wins in the last five starts.</div>`;
     o += tbl(G.tstats, 'Trainers', k => trainer(k)?.n || k) + tbl(G.jstats, 'Jockeys', k => k);
+  } else if (UI.osub === 'stand') {
+    o += vStandings();
   } else if (UI.osub === 'news') {
     o += G.news.slice(0, 80).map(n => `<div class="news ${n.type}"><span>${shortDate(...awToYW(n.aw))}</span>${esc(n.t)}</div>`).join('') || emptyState('No news yet.', '');
   } else if (UI.osub === 'hist') {
@@ -2901,7 +3027,7 @@ function vOffice() {
     o += `<div class="card"><div class="hs">Difficulty <b>${DIFF[G.diff].label}</b> · <b id="savestat">${cloud.status === 'cloud' ? 'Saved to your account' : 'Saved in this browser'}</b> · last backup file ${G.lastBackup ? shortDate(...awToYW(G.lastBackup)) : 'never'}</div>
     <h3 class="sub">Backups</h3><div class="btnrow"><button class="btn sm" data-a="dlBackup">Save backup file</button><button class="btn ghost sm" data-a="ulBackup">Load backup file</button><input type="file" id="bkfile" accept=".json,application/json,text/plain" hidden></div>
     <div class="btnrow"><button class="btn ghost sm" data-a="export">Copy save code</button><button class="btn ghost sm" data-a="import">Paste save code</button><button class="btn ghost sm" data-a="snaps">Restore a snapshot</button></div>
-    <h3 class="sub">Help</h3><div class="btnrow"><button class="btn ghost sm" data-a="help">How to play</button><button class="btn ghost sm" data-a="saveHelp">How saving works</button></div>
+    <h3 class="sub">Help</h3><div class="btnrow"><button class="btn ghost sm" data-a="help">How to play</button><button class="btn ghost sm" data-a="tutRestart">Restart getting-started guide</button><button class="btn ghost sm" data-a="saveHelp">How saving works</button></div>
     <h3 class="sub">Danger zone</h3><div class="btnrow"><button class="btn ghost sm danger" data-a="newgame">Start a new game</button></div></div>`;
   }
   return o;
@@ -2972,7 +3098,12 @@ Object.assign(ACT, {
   buyShare: d => { UI.buyShare = +d.v; refreshModal(); },
   rw: d => { UI.rw = +d.v; render(); },
   rsub: d => { UI.rsub = d.t; render(); window.scrollTo(0, 0); },
-  bsub: d => { UI.bsub = d.t; render(); }, osub: d => { UI.osub = d.t; render(); window.scrollTo(0, 0); },
+  bsub: d => { UI.bsub = d.t; render(); },
+  ssub: d => { UI.ssub = d.v; render(); },
+  tutNext: () => { G.tut.step++; G.tut.wk0 = AW(); scheduleSave(); render(); },
+  tutSkip: () => { G.tut.step = 99; scheduleSave(); render(); toast('Guide hidden — restart it any time in Office → Save & settings'); },
+  tutRestart: () => { G.tut = { step: 1, wk0: AW() }; scheduleSave(); UI.tab = 'stable'; render(); window.scrollTo(0, 0); },
+  tutGo: () => tutShow(), osub: d => { UI.osub = d.t; render(); window.scrollTo(0, 0); },
   sfsub: d => { UI.sf.sub = d.t; render(); },
   fopen: d => { const def = UI.fdefs[d.k]; const cur = d.k === 'rh' ? UI.rh : ({ f: UI.f, sf: UI.sf, sd: UI.sd, stf: UI.stf })[def.store][keyOf(d.k)];
     openModal(def.label, `<div class="choices">${def.opts.map(([v, n]) => `<button class="choice ${String(v) === String(cur) ? 'on' : ''}" data-a="fset" data-k="${d.k}" data-v="${esc(v)}">${esc(n)}</button>`).join('')}</div>`, { push: false }); },
@@ -3004,6 +3135,62 @@ function keyOf(k) { return ({ skind: 'kind', ssex: 'sex', ssort: 'sort', msort: 
 
 // live search: re-render on typing and keep the caret in the box
 document.addEventListener('input', e => { const el = e.target.closest('[data-search]'); if (!el) return; UI.q = UI.q || {}; const k = el.dataset.search; UI.q[k] = el.value; const pos = el.selectionStart; render(); const n = document.querySelector(`[data-search="${k}"]`); if (n) { n.focus(); try { n.setSelectionRange(pos, pos); } catch (er) { } } });
+
+// ---------- STANDINGS: owners, championship races, graded winners, champions ----------
+function vStandings() {
+  const ss = UI.ssub || 'own';
+  let o = `<div class="chips scroll">${[['own', 'Leading owners'], ['div', 'Championship races'], ['gw', 'Graded winners'], ['ch', 'Champions']].map(([k, n]) => `<button class="chip ${ss === k ? 'on' : ''}" data-a="ssub" data-v="${k}">${n}</button>`).join('')}</div>`;
+  if (ss === 'own') {
+    const L = standings(); const mi = L.findIndex(x => x.me);
+    const row = (x, i) => `<tr class="${x.me ? 'me' : ''}"><td>${i + 1}</td><td>${x.me ? '<b>' + esc(x.n) + '</b>' : esc(x.n)}${x.rg ? `<div class="cm">${esc(x.rg)}</div>` : ''}</td><td>${x.st}</td><td>${x.w}</td><td>${x.gw || 0}</td><td>${fmtK(x.e)}</td></tr>`;
+    o += `<div class="dash"><div><b>#${mi + 1}</b><span>your rank</span></div><div><b>${fmtK(L[mi].e)}</b><span>${G.yr} purses</span></div><div><b>${mi > 0 ? fmtK(L[mi - 1].e - L[mi].e) : '—'}</b><span>to next place</span></div></div>
+    <div class="note muted">${G.yr} North American owner standings by purse earnings. Rival stables are the real 2026 leaders, earning at their real pace. Top the table for the Outstanding Owner award.</div>
+    <table class="dtab board"><tr><th>#</th><th>Owner</th><th>Sts</th><th>W</th><th>GW</th><th>Earned</th></tr>${L.slice(0, 20).map(row).join('')}${mi >= 20 ? `<tr><td colspan="6" class="muted">…</td></tr>` + row(L[mi], mi) : ''}</table>`;
+    const ys = Object.keys(G.ownerHist || {}).map(Number).sort((a, b) => b - a);
+    if (ys.length) o += '<h3 class="sub">Past seasons</h3>' + ys.map(y => { const H = G.ownerHist[y]; const me = H.findIndex(x => x.me); return `<div class="erow"><div><b>${y}</b><div class="hs">1. ${esc(H[0].n)} ${fmtK(H[0].e)}${me > 0 ? ` · you #${me + 1}` : me === 0 ? ' · that was you!' : ''}</div></div></div>`; }).join('');
+  } else if (ss === 'div') {
+    o += `<div class="note muted">Points from graded stakes this season (G1 counts most). The leader in each division at year end is the favourite for the Eclipse-style title.</div>`;
+    for (const d of DIV_LIST) {
+      const L = divLeaders(d).slice(0, 4);
+      o += `<h3 class="sub">${DIV_T[d].replace('Champion ', '')}</h3>` + (L.length ? L.map((x, i) => `<div class="erow ${x.mine ? 'me' : ''}"><div>${i + 1}. <b>${esc(x.name || 'Unnamed')}</b><div class="hs">${esc(x.owner)}${x.wins ? ` · ${x.wins} graded win${x.wins > 1 ? 's' : ''}` : ''}</div></div><div><b>${Math.round(x.pts)}</b> pts</div></div>`).join('') : '<div class="muted pad">No graded results yet.</div>');
+    }
+  } else if (ss === 'gw') {
+    const L = (G.stakesLog || []).slice(0, 60);
+    o += L.length ? L.map(x => `<div class="race ${x.mine ? 'me' : ''}"><div class="rnum"><span class="ty ty-G${x.g}">G${x.g}</span><small>${shortDate(x.yr, x.wk)}</small></div><div class="rc"><div class="rt">${esc(x.race)}</div><div class="rs">${esc(x.horse)} · ${esc(x.owner)} · ${TRACKS[x.trk] ? TRACKS[x.trk].n : x.trk}</div></div></div>`).join('') : emptyState('No graded stakes run yet this season.', 'Winners of every graded race show up here, yours included.');
+  } else {
+    const ys = Object.keys(G.champs || {}).map(Number).sort((a, b) => b - a);
+    o += ys.length ? ys.map(y => `<h3 class="sub">${y} champions</h3>` + G.champs[y].map(c => `<div class="erow ${c.o === G.stable ? 'me' : ''}"><div>${c.o === G.stable ? '🏆 ' : ''}<b>${esc(c.h)}</b><div class="hs">${esc(c.t)} · ${esc(c.o)}</div></div></div>`).join('')).join('') : emptyState('Championships are decided at the end of the season.', 'Win graded stakes to build a case in your horse\'s division.');
+  }
+  return o;
+}
+
+// ---------- GETTING STARTED GUIDE ----------
+const TUT = [
+  { t: 'Welcome to the barn', d: 'Your first few weeks: buy a racehorse, put it with a trainer, enter a race, then let the week run. This card follows you around and ticks itself off as you go.', btn: 'Let\'s go', next: 1 },
+  { t: 'Buy a horse that can race now', d: 'Sales → Private market lists horses of racing age, ready to run. Sale yearlings are cheaper but won\'t race until they turn two. A $15k–40k claimer is a sensible first buy.', done: () => G.horses.some(h => h.status === 'race') },
+  { t: 'Put it with a trainer', d: 'Better barns cost more per day but find softer spots and get more out of a horse. Tap the horse, then Choose a trainer — the cards show tier, day rate and current form.', done: () => G.horses.some(h => h.status === 'race' && h.trainer && !h.needTrainer) },
+  { t: 'Enter a race', d: 'Open your horse → Plan races. The top section is your trainer\'s picks, with the win chance, field strength and weather for each. Or tick "Let the trainer pick races" to put it on autopilot.', done: () => G.entries.length > 0 || G.horses.some(h => h.status === 'race' && h.auto && h.auto.on) },
+  { t: 'Advance the week', d: 'Tap Advance week at the bottom. Races run, bills are paid and news comes in. Horses need about three weeks between starts, so keep advancing until your runner goes.', done: () => AW() > (G.tut.wk0 || 0) },
+  { t: 'Check your advice', d: 'The 💡 Advice button reads your whole operation each week: horses ready to run, better spots, bills, sales worth going to. Open it now.', done: () => !!G.tut.adv },
+  { t: 'You\'re set', d: 'After a race, tap the result for the chart and your horse\'s new figure. Office → Standings shows where you rank against Godolphin, Klaravich and the rest. Good luck.', btn: 'Finish', next: 99 }
+];
+function tutCard() {
+  const T = G.tut; if (!T || T.step >= TUT.length) return '';
+  while (TUT[T.step].done && TUT[T.step].done()) { T.step++; T.wk0 = T.wk0 || AW(); if (T.step === 4) T.wk0 = AW(); }
+  const s = TUT[T.step]; const n = TUT.length - 2;
+  const prog = T.step === 0 ? '' : T.step > n ? 'Done' : `Step ${T.step} of ${n}`;
+  if (UI.tab !== 'stable' && !s.btn) return `<div class="tut mini"><div class="tut-h"><b>${esc(s.t)}</b><span>${prog}</span></div><div class="tut-d">${s.d.split('. ')[0].replace(/\.$/, '')}.</div><div class="tut-b"><button class="btn xs" data-a="tutGo">Show me</button><button class="btn xs ghost" data-a="tutSkip">Skip guide</button></div></div>`;
+  return `<div class="tut"><div class="tut-h"><b>${esc(s.t)}</b>${prog ? `<span>${prog}</span>` : ''}</div><div class="tut-d">${s.d}</div><div class="tut-b">${s.btn ? `<button class="btn sm" data-a="tutNext">${s.btn}</button>` : `<button class="btn sm" data-a="tutGo">Show me</button>`}${T.step < TUT.length - 1 ? `<button class="btn sm ghost" data-a="tutSkip">Skip guide</button>` : ''}</div>${T.step > 0 && T.step <= n ? `<div class="tut-p">${Array.from({ length: n }, (_, i) => `<i class="${i + 1 < T.step ? 'on' : i + 1 === T.step ? 'cur' : ''}"></i>`).join('')}</div>` : ''}</div>`;
+}
+function tutShow() {
+  const st = G.tut.step; const rh = G.horses.find(h => h.status === 'race');
+  if (st === 1) { UI.tab = 'sales'; UI.sf.sub = 'mkt'; render(); window.scrollTo(0, 0); }
+  else if (st === 2 && rh) openTrainerPicker(rh.id, 'hire');
+  else if (st === 3 && rh) openPlanner(rh.id);
+  else if (st === 4) { const b = $('#advbar .adv'); if (b) { b.classList.add('pulse'); setTimeout(() => b.classList.remove('pulse'), 2400); } toast('Tap “Advance week” at the bottom'); }
+  else if (st === 5) { G.tut.adv = 1; openAdvice(); }
+  else { UI.tab = 'stable'; render(); }
+}
 
 boot();
 try { if ('serviceWorker' in navigator && (location.protocol === 'https:' || location.hostname === 'localhost')) navigator.serviceWorker.register('sw.js').catch(() => {}); if (navigator.storage && navigator.storage.persist) navigator.storage.persist().catch(() => {}); } catch (e) { }
