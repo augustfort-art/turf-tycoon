@@ -109,6 +109,12 @@ input[type=checkbox],input[type=radio]{accent-color:var(--g)}
 .advice{pointer-events:auto;border:0;border-radius:14px;background:#fff8e3;box-shadow:inset 0 0 0 1.5px var(--brass),0 6px 18px rgba(14,59,44,.25);font-size:22px;width:64px;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:4px 0}
 .advice small{font-size:10.5px;font-weight:700;color:var(--g)}
 .adv-i{display:flex;gap:10px;padding:10px 2px;border-bottom:1px solid var(--line)}.adv-ic{font-size:20px;min-width:26px}.adv-t{font-size:14px}.adv-t .btn{margin-top:6px}
+/* v4: Beyer figure in the right margin, like a DRF past-performance line */
+.dtab.pp td.figc { text-align: right; font-size: 1.05em; border-left: 1px solid rgba(0,0,0,.12); }
+.dtab.pp td.figc b { color: #111; }
+.dtab.fld a, .sub a { text-decoration: underline; cursor: pointer; }
+.sub small { font-weight: 400; opacity: .7; margin-left: 6px; }
+.dtab.fld td:last-child, .dtab.fld td:nth-child(4) { white-space: nowrap; }
 </style>
 </head>
 <body>
@@ -121,50 +127,64 @@ input[type=checkbox],input[type=radio]{accent-color:var(--g)}
 const STAKES_GEN = [[1,"BEL","Busanda","L","3",1,9,"D",150,"","o20"],[1,"GP","Smile Sprint","L","4U",0,6,"D",125,"",""],[1,"GP","Gulfstream Park Turf Sprint","L","4U",0,5.5,"T",125,"",""],[1,"OP","Smarty Jones","L","3",0,8,"D",200,"","p10"],[1,"OP","Smarty Jones","L","3",0,8,"D",200,"","p10"],[1,"SA","San Vicente",2,"3",0,7.0,"D",200,"",""],[1,"SA","Las Flores",3,"4U",1,6.0,"D",100,"",""],[2,"BEL","Stymie","L","4U",0,8,"D",125,"",""],[2,"SA","Las Cienegas",3,"4U",1,6.5,"T",103,"",""],[2,"SA","Santa Ynez","L","3",1,7,"D",100,"","o10"],[3,"BEL","Queens County","L","4U",0,8,"D",125,"",""],[3,"FG","Lecomte",3,"3",0,8.5,"D",194,"","p20"],[3,"FG","Louisiana",3,"4U",0,8.5,"D",170,"",""],[3,"FG","Silverbulletday","L","3",1,8.5,"D",150,"","o20"],[3,"SA","La Canada",3,"4U",1,8.5,"D",100,"",""],[4,"BEL","Glen Cove",3,"3",1,7,"D",175,"",""],[4,"BEL","Autumn Days","L","4U",1,5.5,"T",125,"",""],[4,"FG","Colonel E. R. Bradley","L","4U",0,8,"T",125,"",""],[4,"GP","Pegasus World Cup Invitational",1,"4U",0,9.0,"D",2933,"",""],[4,"GP","Pegasus World Cup Turf Invitational",1,"4U",0,9.0,"T",952,"",""],[4,"GP","Pegasus World Cup Filly and Mare Turf Invitational",2,"4U",1,8.5,"T",486,"",""],[4,"GP","Inside Information",2,"4U",1,7.0,"D",210,"",""],[4,"GP","La Prevoyante",3,"4U",1,12.0,"T",150,"",""],[4,"GP","Fred W. Hooper",3,"4U",0,8.0,"D",150,"",""],[4,"GP","William L. Mcknight",3,"4U",0,12.0,"T",200,"",""],[4,"HOU","Houston Ladies Classic",3,"4U",1,8.5,"D",300,"",""],[4,"LRL","General George","L","4U",0,7,"D",125,"",""],[4,"OP","Southwest",3,"3",0,8.5,"D",1000,"","p20"],[4,"OP","Martha Washington","L","3",1,8,"D",200,"","o20"],[4,"OP","Tinsel","L","4U",0,8,"D",125,"",""],[4,"SA","San Pasqual",2,"4U",0,9.0,"D",201,"",""],[4,"SA","John Shear","L","3",0,6,"D",125,"",""],[5,"BEL","Withers","L","3",0,9,"D",250,"","p20"],[5,"BEL","Fall Highweight","L","4U",0,6,"D",125,"",""],[5,"GP","Holy Bull",3,"3",0,8.5,"D",250,"","p20"],[5,"GP","Forward Gal",3,"3",1,7.0,"D",155,"","o20"],[5,"SA","Santa Monica",2,"4U",1,7.0,"D",196,"",""],[5,"SA","Robert B. Lewis",3,"3",0,8.5,"D",200,"","p20"],[5,"SA","Megahertz",3,"4U",1,8.0,"T",101,"",""],[5,"SA","Thunder Road",3,"4U",0,8.0,"T",102,"",""],[5,"SA","Las Virgenes","L","3",1,8.0,"D",92,"","o20"],[5,"TAM","Endeavour",3,"4U",1,8.5,"T",150,"",""],[5,"TAM","Tampa Bay",3,"4U",0,8.5,"T",150,"",""],[6,"FG","Woodchopper","L","3",0,8,"T",125,"",""],[6,"GP","Janus","L","4U",0,5.5,"T",125,"",""],[6,"SA","San Marcos",3,"4U",0,10.0,"T",101,"",""],[6,"SA","Astra","L","4U",1,11,"T",125,"",""],[6,"TAM","Sam F. Davis","L","3",0,8.5,"D",250,"","p20"],[6,"TAM","Suncoast","L","3",1,8.5,"D",150,"","o20"],[6,"TP","Leonatus","L","3",0,8.5,"S",150,"","p10"],[7,"FG","Risen Star",2,"3",0,9.0,"D",500,"","p50"],[7,"FG","Rachel Alexandra",2,"3",1,8.5,"D",282,"","o50"],[7,"FG","Mineshaft",3,"4U",0,8.5,"D",248,"",""],[7,"FG","Fair Grounds",3,"4U",0,9.0,"T",175,"",""],[7,"GP","Royal Delta",3,"4U",1,8.5,"D",150,"",""],[7,"HOU","John B. Connally Turf Cup","L","4U",0,11,"T",125,"",""],[7,"KSA","Saudi Cup",1,"4U",0,9,"D",20000,"","BIG INTL"],[7,"OP","Temperence Hill","L","4U",0,10,"D",125,"",""],[7,"SA","Palos Verdes","L","4U",0,6.0,"D",100,"",""],[7,"TP","Cincinnati Trophy","L","3",1,8.5,"S",150,"","o20"],[8,"OP","Rebel",2,"3",0,8.5,"D",1250,"","p50"],[8,"OP","Honeybee",3,"3",1,8.5,"D",500,"","o50"],[8,"OP","Razorback",3,"4U",0,8.5,"D",500,"",""],[8,"SUN","Sunland Park Derby","L","3",0,9,"D",400,"","p20"],[8,"SUN","Sunland Park Oaks","L","3",1,8.5,"D",200,"","o20"],[8,"TP","Prairie Bayou","L","4U",0,8.5,"S",125,"",""],[9,"BEL","Gotham",3,"3",0,8.0,"D",300,"","p50"],[9,"BEL","Tom Fool",3,"4U",0,6.0,"D",175,"",""],[9,"FG","Tom Benson Memorial","L","4U",1,8,"T",125,"",""],[9,"FG","Colonel Power","L","4U",0,5.5,"T",125,"",""],[9,"GP","Fountain of Youth",2,"3",0,8.5,"D",402,"","p50"],[9,"GP","Davona Dale",2,"3",1,8.0,"D",200,"","o50"],[9,"GP","Mac Diarmida",2,"4U",0,11.0,"T",200,"",""],[9,"GP","Herecomesthebride",3,"3",1,8.5,"T",205,"",""],[9,"GP","Honey Fox",3,"4U",1,8.0,"T",150,"",""],[9,"GP","The Very One",3,"4U",1,11.0,"T",150,"",""],[9,"GP","Gulfstream Park Mile",3,"4U",0,8.0,"D",202,"",""],[9,"GP","Canadian Turf",3,"4U",0,8.0,"T",150,"",""],[9,"SA","Santa Anita Handicap",1,"4U",0,10.0,"D",302,"",""],[9,"SA","San Felipe",2,"3",0,8.5,"D",300,"","p50"],[9,"SA","Buena Vista",2,"4U",1,8.0,"T",200,"",""],[9,"SA","Frank E. Kilroe Mile",2,"4U",0,8.0,"T",301,"",""],[9,"SA","Santa Ysabel",3,"3",1,8.5,"D",98,"","o50"],[9,"SA","Kona Gold","L","4U",0,6,"D",125,"",""],[9,"TP","John Battaglia Memorial","L","3",0,8.5,"S",200,"","p20"],[9,"TP","Latonia","L","4U",1,8.5,"S",125,"",""],[10,"BEL","Busher","L","3",1,8.5,"D",200,"","o50"],[10,"GP","Hurricane Bertie",3,"4U",1,6.5,"D",163,"",""],[10,"OP","Azeri",2,"4U",1,8.5,"D",400,"",""],[10,"SA","Beholder Mile",1,"3U",1,8.0,"D",301,"",""],[10,"SA","San Simeon",3,"3U",0,6.5,"T",101,"",""],[10,"SA","Angels Flight","L","3",1,6,"D",125,"",""],[10,"TAM","Hillsborough",2,"4U",1,9.0,"T",200,"",""],[10,"TAM","Tampa Bay Derby",3,"3",0,8.5,"D",350,"","p50"],[10,"TAM","Florida Oaks",3,"3",1,8.5,"T",150,"",""],[10,"TAM","Challenger",3,"4U",0,8.5,"D",95,"",""],[10,"TP","Big Daddy","L","4U",0,7,"S",125,"",""],[11,"CNL","Virginia Derby","L","3",0,9,"D",500,"","p50"],[11,"CNL","Virginia Oaks","L","3",1,8.5,"D",300,"","o50"],[11,"OP","Whitmore",3,"4U",0,6.0,"D",250,"",""],[11,"SA","Santa Ana",3,"4U",1,10.0,"T",101,"",""],[12,"FG","Louisiana Derby",2,"3",0,9.5,"D",1000,"","p100"],[12,"FG","Fair Grounds Oaks",2,"3",1,8.5,"D",396,"","o100"],[12,"FG","New Orleans Classic",2,"4U",0,9.0,"D",480,"",""],[12,"FG","Muniz Memorial Classic",2,"4U",0,9.0,"T",300,"",""],[12,"FG","Buddy Diliberto Memorial","L","4U",0,8,"T",125,"",""],[12,"LRL","Henry S. Clark","L","4U",0,8,"T",125,"",""],[12,"OP","Essex",3,"4U",0,8.5,"D",500,"",""],[12,"OP","Carousel","L","4U",1,7,"D",125,"",""],[12,"OP","Fifth Season","L","4U",0,8,"D",125,"",""],[12,"SA","San Luis Rey",3,"4U",0,12.0,"T",100,"",""],[12,"TP","Jeff Ruby Steaks",3,"3",0,9.0,"S",776,"","p100"],[12,"TP","Kentucky Cup Classic",3,"4U",0,9.0,"S",290,"",""],[12,"TP","Bourbonette Oaks","L","3",1,8,"S",250,"","o50"],[13,"BEL","Gold Fever","L","3",0,7,"D",125,"",""],[13,"BEL","Athenia","L","4U",1,8,"T",125,"",""],[13,"GP","Florida Derby",1,"3",0,9.0,"D",1020,"","p100"],[13,"GP","Gulfstream Park Oaks",2,"3",1,8.5,"D",250,"","o100"],[13,"GP","Orchid",3,"4U",1,12.0,"T",150,"",""],[13,"GP","Ghostzapper",3,"4U",0,8.5,"D",150,"",""],[13,"GP","Pan American",3,"4U",0,12.0,"T",200,"",""],[13,"GP","Ginger Brew","L","3",1,9,"T",125,"",""],[13,"MEY","Dubai World Cup",1,"4U",0,10,"D",12000,"","BIG INTL"],[13,"OP","Arkansas Derby",1,"3",0,9.0,"D",1500,"","p100"],[13,"OP","Fantasy",2,"3",1,8.5,"D",750,"","o100"],[13,"OP","Oaklawn Mile",3,"4U",0,8.0,"D",500,"",""],[13,"OP","Pippin","L","4U",1,8.5,"D",125,"",""],[13,"SA","Wilshire",3,"3U",1,8.0,"T",101,"",""],[13,"SA","San Carlos",3,"3U",0,7.0,"D",100,"",""],[13,"TAM","Pelican","L","4U",0,6,"D",125,"",""],[14,"BEL","Wood Memorial",2,"3",0,9.0,"D",750,"","p100"],[14,"BEL","Carter",2,"4U",0,7.0,"D",300,"",""],[14,"BEL","Gazelle",3,"3",1,9.0,"D",200,"","o100"],[14,"BEL","Distaff",3,"4U",1,7.0,"D",170,"",""],[14,"KEE","Blue Grass",1,"3",0,9.0,"D",1226,"","p100"],[14,"KEE","Ashland",1,"3",1,8.5,"D",743,"","o100"],[14,"KEE","Madison",1,"4U",1,7.0,"D",623,"",""],[14,"KEE","Appalachian",2,"3",1,8.0,"T",500,"",""],[14,"KEE","Beaumont",2,"3",1,7.0,"D",365,"",""],[14,"KEE","Shakertown",2,"3U",0,5.5,"T",377,"",""],[14,"KEE","Transylvania",3,"3",0,8.5,"T",598,"",""],[14,"KEE","Commonwealth",3,"4U",0,7.0,"D",350,"",""],[14,"SA","Santa Anita Derby",1,"3",0,9.0,"D",500,"","p100"],[14,"SA","Santa Anita Oaks",2,"3",1,8.5,"D",200,"","o100"],[14,"SA","Monrovia",3,"3U",1,6.5,"D",101,"",""],[14,"SA","Sweet Life","L","3",1,7,"D",125,"",""],[15,"GP","Sugar Swirl","L","4U",1,6,"D",125,"",""],[15,"KEE","Jenny Wiley",1,"4U",1,8.5,"T",522,"",""],[15,"KEE","Maker's Mark Mile",1,"4U",0,8.0,"T",552,"",""],[15,"KEE","Giant's Causeway",2,"3U",1,5.5,"T",271,"",""],[15,"KEE","Lexington",3,"3",0,8.5,"D",400,"","p20"],[15,"KEE","Palisades","L","3",0,6,"D",125,"",""],[15,"OP","Apple Blossom",1,"4U",1,8.5,"D",1250,"",""],[15,"OP","Count Fleet Sprint",3,"3U",0,6.0,"D",500,"",""],[15,"OP","King Cotton","L","4U",0,6,"D",125,"",""],[16,"BEL","Turnback The Alarm","L","4U",1,8.5,"D",125,"",""],[16,"CD","American","L","3U",0,8.0,"T",103,"",""],[16,"KEE","Doubledogdare",2,"4U",1,8.5,"D",293,"",""],[16,"KEE","Elkhorn",2,"4U",0,12.0,"T",314,"",""],[16,"KEE","Limestone",3,"3",1,6.5,"D",175,"",""],[16,"KEE","Ben Ali",3,"4U",0,9.5,"D",300,"",""],[16,"OP","Oaklawn Handicap",2,"4U",0,9.0,"D",1250,"",""],[16,"OP","American","L","3U",0,8.0,"T",103,"",""],[16,"SA","John C. Harris",3,"3",1,6.5,"D",175,"",""],[16,"SA","Santa Maria",3,"4U",1,8.5,"D",201,"",""],[16,"SA","Californian",3,"3U",0,9.0,"D",98,"",""],[16,"SA","American",3,"3U",0,8.0,"T",103,"",""],[16,"SA","Providencia","L","3",1,9.0,"T",101,"",""],[17,"CD","Hanshin",3,"4U",0,8.5,"D",175,"",""],[17,"CD","Seneca Overnight","L","3",1,8.5,"D",125,"",""],[17,"GP","Tropical Park Oaks","L","3",1,8,"T",125,"",""],[17,"KEE","Bewitch",3,"4U",1,12.0,"T",290,"",""],[17,"SA","Senorita",3,"3",1,6.5,"T",102,"",""],[17,"SA","Royal Heroine",3,"4U",1,8.0,"T",103,"",""],[18,"BEL","Beaugay",3,"3U",1,8.5,"T",175,"",""],[18,"BEL","Sheepshead Bay",3,"4U",1,11.0,"T",170,"",""],[18,"BEL","Vagrancy",3,"3U",1,6.5,"D",175,"",""],[18,"BEL","Westchester",3,"3U",0,8.0,"D",175,"",""],[18,"BEL","Fort Marcy",3,"4U",0,9.0,"T",194,"",""],[18,"CD","Kentucky Derby",1,"3",0,10.0,"D",5000,"","KD TC BIG"],[18,"CD","American Turf",1,"3",0,8.5,"T",925,"",""],[18,"CD","Kentucky Oaks",1,"3",1,9.0,"D",1500,"","KO BIG"],[18,"CD","La Troienne",1,"4U",1,8.5,"D",992,"",""],[18,"CD","Derby City Distaff",1,"4U",1,7.0,"D",1000,"",""],[18,"CD","Turf Classic",1,"4U",0,9.0,"T",934,"",""],[18,"CD","Churchill Downs Stakes",1,"4U",0,7.0,"D",935,"",""],[18,"CD","Pat Day Mile",2,"3",0,8.0,"D",540,"",""],[18,"CD","Edgewood",2,"3",1,8.5,"T",575,"",""],[18,"CD","Eight Belles",2,"3",1,7.0,"D",580,"",""],[18,"CD","Churchill Distaff Turf Mile",2,"3U",1,8.0,"T",741,"",""],[18,"CD","Unbridled Sidney",2,"3U",1,5.5,"T",330,"",""],[18,"CD","Alysheba",2,"4U",0,8.5,"D",750,"",""],[18,"CD","Twin Spires Turf Sprint",2,"3U",0,5.5,"T",570,"",""],[18,"CD","Modesty",3,"4U",1,9.0,"T",378,"",""],[18,"PIM","Hilltop","L","3",1,8.5,"T",125,"",""],[18,"PIM","Allaire Dupont Distaff","L","4U",1,8.5,"D",125,"",""],[18,"PRM","Iowa Oaks","L","3",1,8.5,"D",125,"",""],[18,"SA","Charles Whittingham",2,"3U",0,10.0,"T",201,"",""],[19,"BEL","Ruffian",2,"4U",1,8.0,"D",200,"",""],[19,"BEL","Man o' War",2,"4U",0,11.0,"T",400,"",""],[19,"BEL","Peter Pan",3,"3",0,9.0,"D",200,"",""],[19,"BEL","Runhappy",3,"4U",0,6.0,"D",170,"",""],[19,"BEL","John A. Nerud",3,"3U",0,6.0,"D",194,"",""],[19,"CD","Mamzelle",3,"3",1,5.5,"T",225,"",""],[19,"IND","Jonathan B. Schuster Memorial","L","4U",0,8,"T",125,"",""],[19,"PIM","Chick Lang","L","3",0,7,"D",125,"",""],[20,"BEL","Top Flight","L","4U",1,9,"D",125,"",""],[20,"CD","Louisville",3,"4U",0,12.0,"T",241,"",""],[20,"CD","Louisville","L","4U",0,12.0,"T",241,"",""],[20,"PIM","Preakness Stakes",1,"3",0,9.5,"D",2000,"","TC BIG"],[20,"PIM","Black-Eyed Susan",2,"3",1,9.0,"D",300,"",""],[20,"PIM","Miss Preakness",3,"3",1,6.0,"D",150,"",""],[20,"PIM","Gallorette",3,"3U",1,8.5,"T",99,"",""],[20,"PIM","Pimlico Special",3,"3U",0,9.5,"D",250,"",""],[20,"PIM","Dinner Party",3,"3U",0,8.5,"T",500,"",""],[20,"PIM","Maryland Sprint",3,"3U",0,6.0,"D",100,"",""],[20,"PIM","Jim Mckay Turf Sprint","L","4U",0,5.5,"T",125,"",""],[20,"SA","Honeymoon","L","3",1,9.0,"T",102,"",""],[21,"BEL","Toboggan","L","4U",0,7,"D",125,"",""],[21,"CD","Winning Colors",3,"4U",1,6.0,"D",250,"",""],[21,"CD","Audubon","L","3",0,8,"T",125,"",""],[21,"CD","Tepin","L","3",1,8,"T",125,"",""],[21,"CD","Leslie's Lady Overnight","L","3",1,6,"D",125,"",""],[21,"GP","Army Mule","L","4U",0,6.5,"D",125,"",""],[21,"LS","Steve Sexton Mile",3,"3U",0,8.0,"D",400,"",""],[21,"SA","Gamely",1,"3U",1,9.0,"T",302,"",""],[21,"SA","Shoemaker Mile",1,"3U",0,8.0,"T",302,"",""],[21,"SA","Santa Margarita",2,"4U",1,9.0,"D",200,"",""],[21,"SA","Hollywood Gold Cup",2,"3U",0,10.0,"D",201,"",""],[22,"CD","Shawnee",2,"4U",1,8.5,"D",271,"",""],[22,"CD","Regret",3,"3",1,9.0,"T",273,"",""],[22,"CD","Mint Julep",3,"4U",1,8.5,"T",237,"",""],[22,"CD","Blame",3,"4U",0,9.0,"D",270,"",""],[22,"CD","Arlington",3,"3U",0,8.5,"T",274,"",""],[22,"CD","Aristides",3,"3U",0,6.0,"D",275,"",""],[22,"CD","Roxelana","L","4U",1,7,"D",125,"",""],[22,"GP","Kitten's Joy","L","3",0,9,"T",125,"",""],[22,"GP","Tropical Park Derby","L","3",0,8.5,"T",125,"",""],[22,"SA","Triple Bend",3,"4U",0,7.0,"D",98,"",""],[22,"SA","Mizdirection","L","4U",1,5.5,"T",125,"",""],[23,"BEL","Belmont Stakes",1,"3",0,12.0,"D",2000,"","TC BIG"],[23,"BEL","Woody Stephens",1,"3",0,7.0,"D",500,"",""],[23,"BEL","Acorn",1,"3",1,9.0,"D",485,"",""],[23,"BEL","Ogden Phipps",1,"4U",1,9.0,"D",500,"",""],[23,"BEL","Just a Game",1,"4U",1,8.0,"T",500,"",""],[23,"BEL","New York",1,"4U",1,9.5,"T",750,"",""],[23,"BEL","Metropolitan Handicap",1,"3U",0,8.0,"D",970,"",""],[23,"BEL","Manhattan",1,"4U",0,9.0,"T",1000,"",""],[23,"BEL","Jaipur",1,"3U",0,5.5,"T",500,"",""],[23,"BEL","Wonder Again",2,"3",1,8.0,"T",261,"",""],[23,"BEL","Bed O' Roses",2,"4U",1,7.0,"D",300,"",""],[23,"BEL","Intercontinental",2,"4U",1,5.5,"T",200,"",""],[23,"BEL","Belmont Gold Cup",2,"4U",0,14.0,"T",250,"",""],[23,"BEL","Pennine Ridge",3,"3",0,8.0,"T",300,"",""],[23,"BEL","Soaring Softly",3,"3",1,5.5,"T",175,"",""],[23,"BEL","Poker",3,"4U",0,8.0,"T",300,"",""],[23,"BEL","True North",3,"4U",0,6.5,"D",400,"",""],[23,"CD","Matt Winn",3,"3",0,8.5,"D",387,"",""],[23,"CD","Maxfield",3,"3",0,6.5,"D",175,"",""],[23,"GP","Swale","L","3",0,7,"D",125,"",""],[23,"MTH","Monmouth","L","4U",0,8,"T",125,"",""],[23,"PIM","Skipat","L","4U",1,6.5,"D",125,"",""],[23,"SA","Summertime Oaks",3,"3",1,8.5,"D",196,"",""],[24,"BEL","Bay Shore","L","3",0,6.5,"D",125,"",""],[24,"CD","Isaac Murphy Marathon","L","4U",0,10,"D",125,"",""],[24,"CD","Bet On Sunshine","L","4U",0,7,"D",125,"",""],[24,"DEL","Delaware Oaks",3,"3",1,8.5,"D",300,"",""],[24,"MTH","Eatontown",3,"3U",1,8.5,"T",148,"",""],[24,"MTH","Salvator Mile",3,"3U",0,8.0,"D",150,"",""],[24,"SA","San Juan Capistrano",3,"3U",0,14.0,"T",100,"",""],[24,"SA","Daytona",3,"4U",0,6.5,"T",101,"",""],[24,"TDN","Lady Jacqueline","L","4U",1,8.5,"D",125,"",""],[25,"CD","Chicago",2,"4U",1,7.0,"D",250,"",""],[25,"TDN","Ohio Derby",3,"3",0,9.0,"D",500,"",""],[26,"CD","Stephen Foster",1,"4U",0,9.0,"D",940,"",""],[26,"CD","Fleur de Lis",2,"4U",1,9.0,"D",499,"",""],[26,"CD","Wise Dan",2,"3U",0,8.5,"T",499,"",""],[26,"CD","Kelly's Landing",3,"3U",0,6.5,"D",220,"",""],[26,"MNR","West Virginia Governor's","L","4U",0,8.5,"D",125,"",""],[26,"MVR","Steel Valley Sprint","L","3",0,6,"D",125,"",""],[26,"PEN","Penn Mile",3,"3",0,8.0,"T",400,"",""],[27,"BEL","Belmont Derby",1,"3",0,10.0,"T",750,"",""],[27,"BEL","Belmont Oaks",1,"3",1,10.0,"T",500,"",""],[27,"BEL","Suburban",2,"4U",0,10.0,"D",400,"",""],[27,"BEL","Brooklyn",2,"4U",0,11.0,"D",200,"",""],[27,"BEL","Manila",3,"3",0,8.0,"T",200,"",""],[27,"BEL","Victory Ride",3,"3",1,6.5,"D",163,"",""],[27,"BEL","Kelso",3,"4U",0,8.0,"T",175,"",""],[27,"BEL","Dwyer","L","3",0,8.0,"D",186,"",""],[27,"DEL","Delaware Handicap",3,"3U",1,9.5,"D",500,"",""],[27,"DEL","Robert G. Dick Memorial",3,"3U",1,11.0,"T",250,"",""],[27,"ELP","Ellis Park Derby","L","3",0,8.5,"D",125,"",""],[27,"ELP","Ky Downs Preview Ladies Turf Mile","L","3U",1,8,"T",125,"",""],[27,"ELP","Ky Downs Preview Turf Cup","L","3U",0,11,"T",125,"",""],[27,"EMD","Longacres Mile","L","3U",0,8.5,"D",125,"",""],[27,"IND","Indiana Derby",3,"3",0,8.5,"D",300,"",""],[27,"IND","Indiana Oaks",3,"3",1,8.5,"D",200,"",""],[27,"IND","Michael G. Schaefer Memorial","L","3U",0,8,"D",125,"",""],[27,"LRC","Great Lady M.",2,"3U",1,6.5,"D",201,"",""],[27,"MTH","Pegasus","L","3",0,8.5,"D",125,"",""],[27,"PRM","Prairie Meadows Cornhusker Handicap",3,"3U",0,9.0,"D",300,"",""],[28,"ELP","Ky Downs Preview Ladies Turf Sprint","L","3U",1,5.5,"T",125,"",""],[28,"ELP","Ky Downs Preview Turf Sprint","L","3U",0,5.5,"T",125,"",""],[28,"GP","Via Borghese","L","3U",1,11,"T",125,"",""],[28,"SAR","Diana",1,"3U",1,9.0,"T",485,"",""],[28,"SAR","Bowling Green",2,"4U",0,11.0,"T",186,"",""],[28,"SAR","Sanford",3,"2",0,6.0,"D",175,"",""],[28,"SAR","Quick Call",3,"3",0,5.5,"T",175,"",""],[28,"SAR","Coronation Cup",3,"3",1,5.5,"T",175,"",""],[28,"SAR","Harvey Pack","L","3U",0,5.5,"T",125,"",""],[29,"CNL","Old Dominion Oaks","L","3",1,8.5,"T",125,"",""],[29,"DMR","San Clemente",2,"3",1,8.0,"T",202,"",""],[29,"ELP","Groupie Doll","L","3U",1,9,"D",125,"",""],[29,"GP","Colonel Liam","L","3",0,9,"T",125,"",""],[29,"GP","Sweetest Chant","L","3",1,8,"T",125,"",""],[29,"GP","Sand Springs","L","3U",1,8,"T",125,"",""],[29,"LRL","Frank J. De Francis Memorial Dash","L","3U",0,6,"D",125,"",""],[29,"MTH","Haskell",1,"3",0,9.0,"D",1018,"",""],[29,"MTH","Molly Pitcher",2,"3U",1,8.5,"D",495,"",""],[29,"MTH","United Nations",2,"3U",0,11.0,"T",612,"",""],[29,"MTH","Matchmaker",3,"3U",1,9.0,"T",300,"",""],[29,"MTH","Monmouth Cup",3,"3U",0,9.0,"D",396,"",""],[29,"MTH","Lady's Secret","L","3U",1,9,"D",125,"",""],[29,"SAR","Coaching Club American Oaks",1,"3",1,9.0,"D",465,"",""],[29,"SAR","Shuvee",2,"4U",1,9.0,"D",200,"",""],[29,"SAR","Honorable Miss",2,"3U",1,6.0,"D",200,"",""],[29,"SAR","Caress",2,"4U",1,5.5,"T",175,"",""],[29,"SAR","Alfred G. Vanderbilt",2,"3U",0,6.0,"D",400,"",""],[29,"SAR","Schuylerville","L","2",1,7,"D",125,"",""],[29,"SAR","Smart And Fancy","L","3U",1,5.5,"T",125,"",""],[29,"SAR","Bernard Baruch","L","3U",0,8,"T",125,"",""],[30,"CNL","Van Clief","L","3U",0,5.5,"T",125,"",""],[30,"DMR","Bing Crosby",1,"3U",0,6.0,"D",402,"",""],[30,"DMR","San Diego",2,"3U",0,8.5,"D",301,"",""],[30,"DMR","Eddie Read",2,"3U",0,9.0,"T",251,"",""],[30,"DMR","Cougar II",3,"3U",0,12.0,"D",100,"",""],[30,"GP","Dania Beach","L","3",0,8,"T",125,"",""],[30,"GP","Gulfstream Park Sprint","L","3U",0,6,"D",125,"",""],[30,"MTH","Monmouth Oaks",3,"3",1,8.5,"D",252,"",""],[30,"SAR","Jim Dandy",2,"3",0,9.0,"D",485,"",""],[30,"SAR","National Museum of Racing Hall of Fame",2,"3",0,8.0,"T",400,"",""],[30,"SAR","Amsterdam",2,"3",0,6.5,"D",200,"",""],[30,"SAR","Glens Falls",2,"3U",1,12.0,"T",250,"",""],[30,"SAR","Lake George",3,"3",1,8.5,"T",175,"",""],[31,"DMR","Clement L. Hirsch",1,"3U",1,8.5,"D",401,"",""],[31,"DMR","Thoroughbred Aftercare Alliance","L","2",0,8,"T",125,"",""],[31,"DMR","La Jolla Handicap","L","3",0,9,"T",125,"",""],[31,"DMR","Desi Arnaz","L","2",1,7,"D",125,"",""],[31,"DMR","Del Mar Juvenile Fillies Turf","L","2",1,8,"T",125,"",""],[31,"ELP","Pucker Up","L","3",1,9.0,"T",399,"",""],[31,"MNR","West Virginia Derby",3,"3",0,9.0,"D",400,"",""],[31,"PRM","Iowa Derby","L","3",0,9,"D",125,"",""],[31,"SAR","Saratoga Derby Invitational",1,"3",0,9.5,"T",750,"",""],[31,"SAR","Test",1,"3",1,7.0,"D",500,"",""],[31,"SAR","Whitney",1,"3U",0,9.0,"D",1000,"",""],[31,"SAR","Fourstardave",1,"3U",0,8.0,"T",750,"",""],[31,"SAR","Saratoga Special",2,"2",0,6.5,"D",186,"",""],[31,"SAR","Troy",2,"3U",0,5.5,"T",300,"",""],[31,"SAR","Adirondack",3,"2",1,6.5,"D",170,"",""],[32,"CNL","Arlington Million",1,"3U",0,10.0,"T",1000,"",""],[32,"CNL","Secretariat",2,"3",0,8.0,"T",500,"",""],[32,"CNL","Beverly D.",2,"3U",1,9.5,"T",500,"",""],[32,"DMR","Yellow Ribbon",2,"3U",1,8.5,"T",202,"",""],[32,"DMR","Best Pal",3,"2",0,6.0,"D",150,"",""],[32,"DMR","Sorrento",3,"2",1,6.0,"D",151,"",""],[32,"SAR","Sword Dancer",1,"4U",0,12.0,"T",750,"",""],[32,"SAR","Saratoga Oaks Invitational",2,"3",1,9.5,"T",500,"",""],[32,"SAR","Ballston Spa",2,"4U",1,8.5,"T",300,"",""],[32,"SAR","Mahony",3,"3",0,5.5,"T",175,"",""],[32,"SAR","Bolton Landing","L","2",1,8,"T",125,"",""],[32,"SAR","Wild Applause","L","3",1,8.5,"T",125,"",""],[33,"DMR","Del Mar Oaks",1,"3",1,9.0,"T",303,"",""],[33,"DMR","Ctt And Toc","L","3U",1,11,"T",125,"",""],[33,"DMR","Daisycutter Handicap","L","3U",1,5.5,"T",125,"",""],[33,"MTH","Philip H. Iselin",3,"3U",0,8.5,"D",245,"",""],[33,"SAR","Alabama",1,"3",1,10.0,"D",600,"",""],[33,"SAR","Birdstone","L","3U",0,10,"D",125,"",""],[34,"CT","Charles Town Oaks",2,"3",1,7.0,"D",750,"",""],[34,"CT","Charles Town Classic",2,"4U",0,9.0,"D",1000,"",""],[34,"CT","Robert Hilton Memorial","L","3",0,6.5,"D",125,"",""],[34,"DMR","Pat O'Brien",2,"3U",0,7.0,"D",252,"",""],[34,"DMR","Rancho Bernardo",3,"3U",1,6.5,"D",126,"",""],[34,"DMR","Shared Belief","L","3",0,8.5,"D",125,"",""],[34,"ELP","Ky Downs Preview Mint Millions Turf Mile","L","3U",0,8,"T",125,"",""],[34,"ELP","Jeff Hall Memorial","L","3U",0,6.5,"D",125,"",""],[34,"GP","H. Allen Jerkens Memorial","L","3",0,7.0,"D",500,"",""],[34,"RP","Remington Park Oaks","L","3",1,9,"D",125,"",""],[34,"SAR","Travers",1,"3",0,10.0,"D",1250,"","BIG"],[34,"SAR","H. Allen Jerkens Memorial",1,"3",0,7.0,"D",500,"",""],[34,"SAR","Personal Ensign",1,"3U",1,9.0,"D",500,"",""],[34,"SAR","Ballerina",1,"3U",1,7.0,"D",500,"",""],[34,"SAR","Forego",1,"4U",0,7.0,"D",500,"",""],[34,"SAR","Lake Placid",2,"3",1,8.5,"T",200,"",""],[35,"DMR","Pacific Classic",1,"3U",0,10.0,"D",1002,"",""],[35,"DMR","Del Mar Derby",2,"3",0,9.0,"T",301,"",""],[35,"DMR","Del Mar Mile",2,"3U",0,8.0,"T",303,"",""],[35,"DMR","Del Mar Handicap",2,"3U",0,11.0,"T",301,"",""],[35,"DMR","Green Flash",2,"3U",0,5.0,"T",153,"",""],[35,"DMR","Torrey Pines",3,"3",1,8.0,"D",151,"",""],[35,"GP","Suwannee River","L","3U",1,8,"T",125,"",""],[35,"MTH","Miss Liberty","L","3U",1,8,"T",125,"",""],[35,"SAR","Hopeful",1,"2",0,7.0,"D",300,"",""],[35,"SAR","Spinaway",1,"2",1,7.0,"D",300,"",""],[35,"SAR","With Anticipation",3,"2",0,8.5,"T",175,"",""],[35,"SAR","Prioress",3,"3",1,6.0,"D",200,"",""],[35,"SAR","Tremont","L","2",0,7,"D",125,"",""],[35,"SAR","Saranac","L","3",0,8,"T",125,"",""],[35,"SAR","P. G. Johnson","L","2",1,8,"T",125,"",""],[35,"SAR","Lure","L","3U",0,8,"T",125,"",""],[36,"CNL","Old Dominion Derby",3,"3",0,9.0,"T",504,"",""],[36,"DMR","Del Mar Futurity",1,"2",0,7.0,"D",301,"",""],[36,"DMR","Del Mar Debutante",1,"2",1,7.0,"D",301,"",""],[36,"DMR","John C. Mabee",2,"3U",1,9.0,"T",251,"",""],[36,"DMR","Del Mar Juvenile Turf",3,"2",0,8.0,"T",104,"",""],[36,"DMR","Senator Ken Maddy","L","3U",1,5.5,"T",125,"",""],[36,"KD","Ladies Turf Sprint",1,"3U",1,6.5,"T",1378,"",""],[36,"KD","Nashville Derby",2,"3",0,10.5,"T",2337,"",""],[36,"KD","Franklin-Simpson",2,"3",0,6.5,"T",1847,"",""],[36,"KD","Music City",2,"3",1,6.5,"T",1767,"",""],[36,"KD","Ladies Turf",2,"3U",1,8.0,"T",1495,"",""],[36,"KD","Kentucky Turf Cup",2,"3U",0,12.0,"T",1995,"",""],[36,"KD","Kentucky Turf Sprint",2,"3U",0,6.0,"T",1797,"",""],[36,"KD","Dueling Grounds Oaks",3,"3",1,10.5,"T",1000,"",""],[36,"KD","Ladies Marathon Invitational",3,"3U",1,10.5,"T",1300,"",""],[36,"KD","Mint Millions",3,"3U",0,8.0,"T",1800,"",""],[36,"KD","Kentucky Downs Juvenile Fillies","L","2",1,8,"T",500,"",""],[36,"SAR","Galway","L","3",1,6.5,"D",125,"",""],[36,"SAR","Perfect Sting","L","3U",1,8,"T",125,"",""],[37,"BEL","Jockey Club Oaks Invitational",3,"3",1,11.0,"T",350,"",""],[37,"CD","Locust Grove",2,"3U",1,8.5,"D",379,"",""],[37,"CD","Iroquois",3,"2",0,8.0,"D",255,"","p10"],[37,"CD","Pocahontas",3,"2",1,8.0,"D",292,"","o10"],[37,"CD","Bashford Manor","L","2",0,7,"D",125,"",""],[37,"CD","Opening Verse","L","3U",0,8,"T",125,"",""],[37,"KD","Kentucky Downs Juvenile Sprint","L","2",0,5.5,"T",500,"",""],[37,"KD","Juvenile Mile","L","2",0,8,"T",500,"",""],[38,"BEL","Noble Damsel","L","3U",1,8.0,"T",175,"",""],[38,"BEL","Excelsior","L","3U",0,10,"D",125,"",""],[38,"CD","Dogwood",3,"3",1,7.0,"D",269,"",""],[38,"CD","Open Mind","L","3U",1,6,"D",125,"",""],[38,"GP","Princess Rooney",3,"3U",1,7.0,"D",210,"",""],[38,"PID","Presque Isle Downs Masters",2,"3U",1,6.5,"S",300,"",""],[38,"PRX","Pennsylvania Derby",1,"3",0,9.0,"D",1000,"",""],[38,"PRX","Cotillion",1,"3",1,8.5,"D",1000,"",""],[38,"PRX","Gallant Bob",2,"3",0,6.0,"D",400,"",""],[38,"PRX","Turf Monster",3,"3U",0,5.0,"T",250,"",""],[38,"PRX","Greenwood Cup","L","3U",0,12.0,"D",200,"",""],[39,"BEL","Jockey Club Gold Cup",1,"3U",0,10.0,"D",1000,"",""],[39,"BEL","Joe Hirsch Turf Classic",1,"3U",0,12.0,"T",485,"",""],[39,"BEL","Pilgrim",2,"2",0,8.5,"T",200,"",""],[39,"BEL","Gallant Bloom",2,"3U",1,6.5,"D",250,"",""],[39,"BEL","Woodward",2,"3U",0,9.0,"D",372,"",""],[39,"BEL","Vosburgh",3,"3U",0,7.0,"D",250,"",""],[39,"CD","Lukas Classic",2,"3U",0,9.0,"D",500,"",""],[39,"CD","Ack Ack",3,"3U",0,8.0,"D",356,"",""],[39,"CD","Debutante","L","2",1,7,"D",125,"",""],[39,"CD","Keertana","L","3U",1,11,"T",125,"",""],[39,"RP","Oklahoma Derby",3,"3",0,9.0,"D",400,"",""],[39,"SA","Goodwood",1,"3U",0,9.0,"D",1001,"",""],[39,"SA","Zenyatta",2,"3U",1,8.5,"D",200,"",""],[39,"SA","City of Hope Mile",2,"3U",0,8.0,"T",202,"",""],[39,"SA","John Henry Turf Championship",2,"3U",0,10.0,"T",753,"",""],[39,"SA","Santa Anita Sprint Championship",2,"3U",0,6.0,"D",201,"",""],[39,"SA","Eddie D",2,"3U",0,6.5,"T",753,"",""],[39,"SA","Speakeasy","L","2",0,8,"T",125,"",""],[39,"SA","Blue Norther","L","2",1,8,"T",125,"",""],[39,"ZIA","Zia Park Derby","L","3",0,8.5,"D",125,"",""],[40,"BEL","Champagne",1,"2",0,8.0,"D",500,"","p10"],[40,"BEL","Frizette",1,"2",1,8.0,"D",400,"","o10"],[40,"BEL","Jockey Club Derby Invitational",2,"3",0,10.0,"D",500,"",""],[40,"BEL","Miss Grillo",2,"2",1,8.5,"T",200,"",""],[40,"BEL","Beldame",2,"3U",1,9.0,"D",243,"",""],[40,"BEL","Flower Bowl",2,"3U",1,11.0,"T",500,"",""],[40,"BEL","Futurity",3,"2",0,6.0,"T",175,"",""],[40,"BEL","Matron",3,"2",1,6.0,"T",175,"",""],[40,"BEL","Waya",3,"3U",1,11.0,"T",200,"",""],[40,"BEL","Belmont Turf Sprint",3,"3U",0,6.0,"T",200,"",""],[40,"BEL","Chelsey Flower","L","2",1,8,"T",125,"",""],[40,"BEL","Artie Schiller","L","3U",0,8,"T",125,"",""],[40,"DEL","Cape Henlopen","L","3U",0,11,"T",125,"",""],[40,"KEE","Breeders' Futurity",1,"2",0,8.5,"D",594,"","p10"],[40,"KEE","Alcibiades",1,"2",1,8.5,"D",600,"","o10"],[40,"KEE","Spinster",1,"3U",1,9.0,"D",600,"",""],[40,"KEE","First Lady",1,"3U",1,8.0,"T",729,"",""],[40,"KEE","Turf Mile",1,"3U",0,8.0,"T",1066,"",""],[40,"KEE","Bourbon",2,"2",0,8.5,"T",348,"",""],[40,"KEE","Jessamine",2,"2",1,8.5,"T",350,"",""],[40,"KEE","Thoroughbred Club of America",2,"3U",1,6.0,"D",340,"",""],[40,"KEE","Sycamore",2,"3U",0,12.0,"T",290,"",""],[40,"KEE","Phoenix",2,"3U",0,6.0,"D",314,"",""],[40,"KEE","Woodford",2,"3U",0,5.5,"T",320,"",""],[40,"KEE","Lafayette","L","3",0,6.5,"D",125,"",""],[40,"OP","Matron","L","2",1,6.0,"T",175,"",""],[40,"SA","American Pharoah",1,"2",0,8.5,"D",301,"","p10"],[40,"SA","Oak Leaf",2,"2",1,8.5,"D",201,"","o10"],[40,"SA","Rodeo Drive",2,"3U",1,10.0,"T",201,"",""],[40,"SA","Zuma Beach",3,"2",0,8.0,"T",102,"",""],[40,"SA","Surfer Girl",3,"2",1,8.0,"T",101,"",""],[40,"SA","Chillingworth",3,"3U",1,6.5,"D",98,"",""],[40,"SA","Affirmed","L","3",0,8.5,"D",125,"",""],[40,"SA","Possibly Perfect","L","3U",1,11,"T",125,"",""],[40,"SA","Desert Stormer","L","3U",1,6,"D",125,"",""],[41,"BEL","Sands Point",3,"3",1,9.0,"T",200,"",""],[41,"BEL","Central Park","L","2",0,8,"T",125,"",""],[41,"BEL","Knickerbocker","L","3U",0,9.0,"T",170,"",""],[41,"GP","Rampart","L","3U",1,9,"D",125,"",""],[41,"KEE","Queen Elizabeth II Challenge Cup",1,"3",1,9.0,"T",719,"",""],[41,"KEE","Raven Run",2,"3",1,7.0,"D",340,"",""],[41,"KEE","Franklin",2,"3U",1,5.5,"T",303,"",""],[42,"BEL","Nashua","L","2",0,8.5,"D",125,"",""],[42,"BEL","Memories Of Silver","L","3",1,8,"T",125,"",""],[42,"BEL","Aqueduct Turf Sprint Championship","L","3U",0,5.5,"T",125,"",""],[42,"KEE","Valley View",2,"3",1,8.5,"T",318,"",""],[42,"KEE","Perryville",3,"3",0,7.0,"D",259,"",""],[42,"KEE","Dowager",3,"3U",1,12.0,"T",297,"",""],[42,"SA","China Doll","L","3",1,8,"T",125,"",""],[42,"SA","Santa Barbara","L","3U",1,11,"T",125,"",""],[43,"BEL","Mother Goose",2,"3",1,9.0,"D",243,"",""],[43,"BEL","Forty Niner",3,"3U",0,8.0,"D",250,"",""],[43,"BEL","Bold Ruler",3,"3U",0,6.0,"D",175,"",""],[43,"CD","Street Sense",3,"2",0,8.0,"D",198,"","p10"],[43,"GP","Silks Run","L","3U",0,5.5,"T",125,"",""],[43,"KEE","Bryan Station",2,"3U",0,8.0,"T",592,"",""],[43,"KEE","Indian Summer",3,"2",0,8,"T",175,"",""],[43,"KEE","Fayette",3,"3U",0,9.0,"D",350,"",""],[43,"KEE","Myrtlewood","L","2",1,8.5,"D",125,"",""],[43,"SA","Twilight Derby",2,"3",0,9.0,"T",201,"",""],[43,"SA","Autumn Miss",3,"3",1,8.0,"T",103,"",""],[44,"CD","Rags to Riches","L","2",1,8.5,"D",200,"","o10"],[44,"DMR","Bayakoa (Los Alamitos)",3,"3U",1,8.0,"D",201,"",""],[44,"DMR","Goldikova",3,"3U",1,8.0,"T",303,"",""],[44,"OP","Bayakoa (Los Alamitos)",3,"3U",1,8.0,"D",201,"",""],[44,"SA","Eddie Logan","L","2",0,8,"T",125,"",""],[45,"BEL","Red Smith",2,"3U",0,11.0,"T",300,"",""],[45,"BEL","Hill Prince",3,"3",0,9.0,"T",200,"",""],[45,"BEL","Pebbles",3,"3",1,8.0,"T",175,"",""],[45,"BEL","Long Island",3,"3U",1,11.0,"T",300,"",""],[45,"CD","River City",3,"3U",0,9.0,"T",291,"",""],[45,"CD","Chorleywood","L","3U",0,11,"T",125,"",""],[46,"BEL","Tempted","L","2",1,8.5,"D",125,"",""],[46,"CD","Fern Creek","L","2",1,8.5,"D",125,"",""],[46,"CD","Mighty Beau","L","3U",0,5.5,"T",125,"",""],[46,"DMR","Bob Hope","L","2",0,7.0,"D",100,"",""],[46,"PRX","Parx Dirt Mile","L","3U",0,8,"D",125,"",""],[47,"BEL","Pumpkin Pie","L","3U",1,6.5,"D",125,"",""],[47,"BEL","Danger's Hour","L","3U",0,8,"T",125,"",""],[47,"BEL","Gravesend","L","3U",0,6,"D",125,"",""],[47,"CD","Commonwealth Turf",3,"3U",0,8.5,"T",286,"",""],[47,"CD","Chilukki",3,"3U",1,8.0,"D",298,"",""],[47,"CD","William Walker","L","3",0,7,"D",125,"",""],[47,"CD","Anchorage Overnight","L","3U",1,8,"T",125,"",""],[47,"CD","Dream Supreme","L","3U",1,6.5,"D",125,"",""],[47,"DMR","Native Diver",3,"3U",0,9.0,"D",101,"",""],[47,"DMR","Red Carpet","L","3U",1,11.0,"T",101,"",""],[47,"PRX","Cathryn Sophia","L","3",1,9,"D",125,"",""],[48,"BEL","Comely",3,"3",1,9.0,"D",194,"",""],[48,"BEL","Winter Memories",3,"3",1,8.5,"T",175,"",""],[48,"BEL","Elusive Quality","L","3U",0,5.5,"T",125,"",""],[48,"CD","Kentucky Jockey Club",2,"2",0,8.5,"D",381,"","p10"],[48,"CD","Golden Rod",2,"2",1,8.5,"D",400,"","o10"],[48,"CD","Mrs. Revere",2,"3",1,8.5,"T",292,"",""],[48,"CD","Clark",2,"3U",0,9.0,"D",600,"",""],[48,"CD","Falls City",3,"3U",1,9.0,"D",400,"",""],[48,"CD","Cardinal","L","3U",1,9.0,"T",265,"",""],[48,"DMR","Hollywood Derby",1,"3",0,9.0,"T",303,"",""],[48,"DMR","Matriarch",1,"3U",1,8.0,"T",303,"",""],[48,"DMR","Seabiscuit",2,"3U",0,8.5,"T",204,"",""],[48,"DMR","Hollywood Turf Cup",2,"3U",0,12.0,"T",202,"",""],[48,"DMR","Cecil B. DeMille",3,"2",0,8.0,"T",102,"",""],[48,"DMR","Jimmy Durante",3,"2",1,8.0,"T",103,"",""],[48,"FG","Tenacious","L","3U",0,8,"D",125,"",""],[49,"BEL","Remsen",2,"2",0,9.0,"D",250,"","p10"],[49,"BEL","Demoiselle",2,"2",1,9.0,"D",250,"","o10"],[49,"BEL","Cigar Mile",2,"3U",0,8.0,"D",500,"",""],[49,"BEL","Go for Wand","L","3U",1,8.0,"D",200,"",""],[49,"BEL","License Fee","L","3U",1,5.5,"T",125,"",""],[49,"FG","Pago Hop","L","3",1,9,"T",125,"",""],[49,"FG","Duncan F. Kenner","L","3U",0,5.5,"T",125,"",""],[49,"LRC","Starlet",2,"2",1,8.5,"D",201,"","o10"],[50,"GP","Mucho Macho Man","L","3",0,9,"D",125,"",""],[50,"GP","Sanibel Island","L","3",1,8,"T",125,"",""],[50,"LRC","Los Alamitos Futurity",2,"2",0,8.5,"D",200,"","p10"],[50,"RP","Remington Springboard Mile","L","2",0,8,"D",400,"","p10"],[50,"TP","Holiday Inaugural","L","3U",1,7,"S",125,"",""],[51,"FG","Gun Runner","L","2",0,8.5,"D",150,"","p10"],[51,"FG","Gun Runner","L","2",0,8.5,"D",150,"","p10"],[51,"FG","Untapable","L","2",1,8.5,"D",150,"","o10"],[51,"GP","Harlan's Holiday",3,"3U",0,8.5,"D",150,"",""],[51,"GP","Ft. Lauderdale",3,"3U",0,9.0,"T",200,"",""],[51,"GP","Pulpit","L","2",0,8,"T",125,"",""],[51,"LRC","Los Alamitos Derby","L","3",0,8.5,"D",125,"",""],[51,"LRL","Barbara Fritchie","L","3U",1,6,"D",125,"",""],[52,"BEL","Plenty Of Grace","L","3U",1,8,"T",125,"",""],[52,"FG","Albert M. Stall Memorial","L","3U",1,8,"T",125,"",""],[52,"GP","Mr. Prospector",3,"3U",0,7.0,"D",125,"",""],[52,"GP","Appleton","L","3U",0,8,"T",125,"",""],[52,"SA","Malibu",1,"3",0,7.0,"D",301,"",""],[52,"SA","American Oaks",1,"3",1,10.0,"T",300,"",""],[52,"SA","La Brea",1,"3",1,7.0,"D",302,"",""],[52,"SA","Mathis Mile",2,"3",0,8.0,"T",201,"",""],[52,"SA","Laffit Pincay Jr.",2,"3U",0,8.5,"D",200,"",""],[52,"SA","Robert J. Frankel",3,"3U",1,9.0,"T",101,"",""],[52,"SA","San Gabriel",3,"3U",0,9.0,"T",201,"",""],[52,"SA","Joe Hernandez",3,"3U",0,6.5,"T",204,"",""]];
 
 'use strict';
+// Real 2026 stallion roster (fees 2026, AEI/CI/AWD lifetime, mares bred 2026 report). Generated by tools/gen_real.py
+// [name, state, fee, line, AEI, CI, AWD(f), mares2026, yob, farm, BTW, foals, turf(-1..1), feeEstimated, sireOf]
+const REAL_SIRES = [["Gun Runner","KY",250000,"Mr. Prospector",2.59,2.69,7.6,250,2013,"Three Chimneys",63,733,-0.25,0,"Candy Ride"],["Not This Time","KY",250000,"Storm Cat",2.24,1.95,7.34,230,2014,"Taylor Made",79,760,-0.25,0,"Giant's Causeway"],["Into Mischief","KY",250000,"Storm Cat",2.06,1.79,6.92,194,2005,"Spendthrift",204,1914,-0.25,0,"Harlan's Holiday"],["Curlin","KY",225000,"Mr. Prospector",2.26,2.25,7.77,80,2004,"Hill 'n' Dale",121,1468,-0.25,0,"Smart Strike"],["Justify","KY",200000,"Storm Cat",2.02,2.56,8.05,205,2015,"Ashford",61,678,-0.25,0,"Scat Daddy"],["Tapit","KY",185000,"A.P. Indy",2.12,2.05,8.05,51,2001,"Gainesway",176,1802,-0.25,0,"Pulpit"],["Nyquist","KY",175000,"Halo",1.67,1.92,7.22,179,2013,"Darley",46,782,0.55,0,"Uncle Mo"],["Good Magic","KY",125000,"Mr. Prospector",1.48,1.74,7.32,117,2015,"Hill 'n' Dale",24,502,-0.25,0,"Curlin"],["Flightline","KY",125000,"A.P. Indy",null,null,null,197,null,"Lane's End",0,0,-0.25,0,""],["Constitution","KY",110000,"A.P. Indy",1.72,1.61,7.62,184,2011,"WinStar",58,882,-0.25,0,"Tapit"],["Quality Road","KY",100000,"Mr. Prospector",2.04,1.76,7.62,88,2006,"Lane's End",102,1172,-0.25,0,"Elusive Quality"],["Vekoma","KY",100000,"Mr. Prospector",1.86,1.19,6.58,224,2016,"Spendthrift",27,411,-0.25,0,"Candy Ride"],["Twirling Candy","KY",75000,"Mr. Prospector",1.53,1.3,6.86,187,2007,"Lane's End",73,1176,0.55,0,"Candy Ride"],["Practical Joke","KY",75000,"Storm Cat",1.47,1.43,null,219,2014,"",43,808,-0.25,0,"Into Mischief"],["Omaha Beach","KY",75000,"Danzig",1.41,1.53,6.87,189,2016,"Spendthrift",31,536,0.55,0,"War Front"],["McKinzie","KY",75000,"Halo",1.34,1.57,6.72,147,2015,"Gainesway",12,386,-0.25,0,"Street Sense"],["Candy Ride","KY",75000,"Mr. Prospector",null,null,null,120,null,"Lane's End",0,0,-0.25,0,""],["Smarty Jones","PA",69570,"Mr. Prospector",1.26,1.54,null,6,2001,"",29,661,-0.25,0,"Elusive Quality"],["Candy Ride (ARG)","KY",60000,"Sadler's Wells",1.85,1.64,7.13,99,1999,"",118,1976,0.3,0,"Ride the Rails"],["Oscar Performance","KY",60000,"Sadler's Wells",1.65,1.65,7.57,181,2014,"",22,358,0.55,0,"Kitten's Joy"],["Yaupon","KY",60000,"Halo",1.44,1.42,7.33,214,2017,"Spendthrift",21,290,0.55,0,"Uncle Mo"],["Life Is Good","KY",60000,"Mr. Prospector",null,null,null,197,null,"WinStar",0,0,-0.25,0,""],["Cody's Wish","KY",60000,"Halo",null,null,null,168,null,"Darley",0,0,-0.25,0,""],["Liam's Map","KY",50000,"Mr. Prospector",1.43,1.56,7.29,169,2011,"",36,838,-0.25,0,"Unbridled's Song"],["Maxfield","KY",50000,"Halo",null,null,null,149,null,"Darley",0,0,-0.25,0,""],["Munnings","KY",45000,"Mr. Prospector",1.39,1.3,6.74,120,2006,"Ashford",94,1443,-0.25,0,"Speightstown"],["Tiz the Law","KY",40000,"A.P. Indy",2.04,1.51,7.14,288,2017,"",18,321,-0.25,0,"Constitution"],["Street Sense","KY",40000,"Mr. Prospector",1.42,1.58,7.07,102,2004,"Darley",96,1452,-0.25,0,"Street Cry"],["City of Light","KY",35000,"Mr. Prospector",1.5,1.45,6.72,115,2014,"",22,424,-0.25,0,"Quality Road"],["Forte","KY",35000,"Halo",null,null,null,170,null,"",0,0,-0.25,0,""],["National Treasure","KY",35000,"A.P. Indy",null,null,null,135,null,"",0,0,-0.25,0,""],["Locked","KY",35000,"Danzig",null,null,null,60,null,"",0,0,0.3,0,""],["Elite Power","KY",35000,"Halo",null,null,6.6,130,null,"Juddmonte",0,0,-0.25,0,""],["Mo Town","KY",34223,"Halo",1.11,1.05,6.83,78,2014,"",20,486,0.55,0,"Uncle Mo"],["Violence","KY",30000,"Sadler's Wells",1.22,1.34,6.74,57,2010,"",45,909,0.3,0,"Medaglia d'Oro"],["Maclean's Music","KY",30000,"Mr. Prospector",1.21,1.33,null,99,2008,"",48,1030,-0.25,0,"Distorted Humor"],["Arabian Knight","KY",30000,"Storm Cat",null,null,null,161,null,"",0,0,0.55,0,""],["Muth","KY",30000,"Halo",null,null,null,129,null,"",0,0,0.55,0,""],["Patch Adams","KY",30000,"Storm Cat",null,null,null,60,null,"",0,0,-0.25,0,""],["Prince of Monaco","KY",30000,"Mr. Prospector",null,null,null,76,null,"",0,0,-0.25,0,""],["Dornoch","KY",30000,"Storm Cat",null,null,null,104,null,"",0,0,-0.25,0,""],["Central Banker","NY",28709,"Mr. Prospector",1.22,1.12,null,60,2010,"",19,559,-0.25,0,"Speightstown"],["Essential Quality","KY",25000,"A.P. Indy",1.54,1.93,7.79,162,2018,"",9,205,-0.25,0,"Tapit"],["Blame","KY",25000,"Halo",1.37,1.59,7.16,94,2006,"",54,917,-0.25,0,"Arch"],["Army Mule","KY",25000,"Storm Cat",1.27,1.18,null,160,2014,"",24,402,-0.25,0,"Friesan Fire"],["Golden Pal","KY",25000,"Halo",1.24,1.49,6.44,221,2018,"",3,172,0.55,0,"Uncle Mo"],["Bolt d'Oro","KY",25000,"Sadler's Wells",1.14,1.39,null,148,2015,"",24,560,0.55,0,"Medaglia d'Oro"],["Charlatan","KY",25000,"Mr. Prospector",1.04,2.1,6.48,80,2017,"",7,283,-0.25,0,"Speightstown"],["Domestic Product","KY",25000,"Sadler's Wells",null,null,null,137,null,"",0,0,0.55,0,""],["Epicenter","KY",25000,"Storm Cat",null,null,null,160,null,"",0,0,-0.25,0,""],["Gunite","KY",25000,"A.P. Indy",null,null,null,236,null,"",0,0,-0.25,0,""],["Jackie's Warrior","KY",25000,"Sadler's Wells",null,null,6.5,188,null,"",0,0,0.3,0,""],["Taiba","KY",25000,"A.P. Indy",null,null,null,178,null,"",0,0,-0.25,0,""],["Cogburn","KY",25000,"A.P. Indy",null,null,6.3,122,null,"",0,0,-0.25,0,""],["Hard Spun","KY",20000,"Danzig",1.35,1.55,7.11,76,2004,"",96,1715,0.55,0,"Danzig"],["Complexity","KY",20000,"Sadler's Wells",1.18,1.35,null,90,2016,"",14,219,0.3,0,"Maclean's Music"],["Maximus Mischief","KY",20000,"Storm Cat",1.08,1.03,7.05,166,2016,"",16,440,-0.25,0,"Into Mischief"],["Olympiad","KY",20000,"Mr. Prospector",null,null,null,52,null,"",0,0,-0.25,0,""],["Girvin","KY",15500,"Mr. Prospector",null,null,null,223,null,"",0,0,-0.25,1,""],["Karakontie (JPN)","KY",15000,"Storm Cat",1.43,1.24,7.32,61,2011,"",23,381,-0.25,0,"Bernstein"],["Midshipman","KY",15000,"Mr. Prospector",1.35,1.15,6.96,101,2006,"",62,927,-0.25,0,"Unbridled's Song"],["Kingsbarns","KY",15000,"A.P. Indy",null,null,7.3,144,null,"",0,0,0.55,0,""],["Arabian Lion","KY",15000,"Halo",null,null,null,81,null,"",0,0,0.55,0,""],["Authentic","KY",15000,"Storm Cat",null,null,null,61,null,"",0,0,-0.25,0,""],["Cyberknife","KY",15000,"Danzig",null,null,null,116,null,"",0,0,0.3,0,""],["Jack Christopher","KY",15000,"Mr. Prospector",null,null,7.0,101,null,"",0,0,-0.25,0,""],["Corniche","KY",15000,"Sadler's Wells",null,null,null,216,null,"",0,0,0.3,0,""],["Karakontie","KY",15000,"Halo",null,null,null,60,null,"",0,0,0.55,0,""],["Timberlake","KY",15000,"A.P. Indy",null,null,null,65,null,"",0,0,-0.25,0,""],["Up to the Mark","KY",14000,"Danzig",null,null,null,197,null,"",0,0,0.3,1,""],["Bucchero","NY",12500,"Sadler's Wells",1.15,1.06,6.74,118,2012,"Ironhorse",9,260,0.3,0,"Kantharos"],["Gun Pilot","KY",12500,"Danzig",null,null,6.8,87,null,"",0,0,0.3,0,""],["Early Voting","KY",12500,"A.P. Indy",null,null,null,89,null,"",0,0,-0.25,0,""],["Frosted","KY",12500,"A.P. Indy",null,null,null,27,null,"",0,0,-0.25,0,""],["Proxy","KY",12500,"Storm Cat",null,null,null,64,null,"",0,0,-0.25,0,""],["Charge It","KY",12500,"Sadler's Wells",null,null,null,113,null,"",0,0,0.3,0,""],["Annapolis","KY",12500,"Storm Cat",null,null,null,83,null,"",0,0,0.55,0,""],["Nashville","KY",12500,"Halo",null,null,null,76,null,"",0,0,-0.25,0,""],["Tonalist","KY",10000,"A.P. Indy",1.64,1.21,7.44,7,2011,"",18,529,-0.25,0,"Tapit"],["Volatile","KY",10000,"Mr. Prospector",1.33,1.28,6.71,70,2016,"",13,313,-0.25,0,"Violence"],["Dialed In","KY",10000,"A.P. Indy",1.26,1.13,null,92,2008,"",38,964,-0.25,0,"Mineshaft"],["Kantharos","KY",10000,"Sadler's Wells",1.25,1.3,6.4,24,2008,"",48,948,0.3,0,"Lion Heart"],["Cairo Prince","KY",10000,"Mr. Prospector",1.13,1.28,6.83,55,2011,"",48,870,-0.25,0,"Pioneerof the Nile"],["Mitole","KY",10000,"Storm Cat",1.13,1.18,6.56,98,2015,"",21,519,-0.25,0,"Eskendereya"],["Goldencents","KY",10000,"Storm Cat",1.06,1.13,7.25,100,2010,"",32,1097,-0.25,0,"Into Mischief"],["Union Rags","KY",10000,"A.P. Indy",1.03,1.51,7.4,28,2009,"",39,1048,-0.25,0,"Dixie Union"],["Flameaway","KY",10000,"Storm Cat",1.02,1.1,null,68,2015,"",15,324,-0.25,0,"Scat Daddy"],["Mandaloun","KY",10000,"Mr. Prospector",null,null,null,38,null,"",0,0,0.55,0,""],["Highland Falls","KY",10000,"Mr. Prospector",null,null,6.8,60,null,"",0,0,-0.25,0,""],["First Mission","KY",10000,"Halo",null,null,null,60,null,"",0,0,-0.25,0,""],["Speaker's Corner","KY",10000,"Danzig",null,null,null,146,null,"",0,0,0.55,0,""],["Straight No Chaser","KY",10000,"Sadler's Wells",null,null,6.5,60,null,"",0,0,0.3,0,""],["Heartland","KY",10000,"Danzig",null,null,null,79,null,"",0,0,0.3,0,""],["Drain the Clock","KY",10000,"Halo",null,null,6.6,227,null,"",0,0,-0.25,0,""],["Bright Future","KY",10000,"Mr. Prospector",null,null,null,7,null,"",0,0,-0.25,0,""],["Mind Control","NY",8500,"Halo",null,null,null,58,null,"Irish Hill",0,0,-0.25,0,""],["Win Win Win","FL",8500,"Danzig",null,null,7.0,42,null,"Ocala Stud",0,0,0.3,0,""],["Arcangelo","KY",8500,"Danzig",null,null,null,119,null,"",0,0,0.3,1,""],["Americanrevolution","NY",8500,"Mr. Prospector",null,null,null,106,null,"",0,0,-0.25,1,""],["Silent Name (JPN)","ON",8000,"Halo",1.45,1.21,6.44,20,2002,"",42,553,-0.25,0,"Sunday Silence"],["Instagrand","KY",8000,"Storm Cat",1.04,1.27,6.46,65,2016,"",6,268,-0.25,0,"Into Mischief"],["Stay Thirsty","CA",8000,"A.P. Indy",1.01,1.21,null,36,2008,"",26,797,-0.25,0,"Bernardini"],["Instilled Regard","KY",8000,"Danzig",null,null,null,16,null,"",0,0,0.3,0,""],["Take Charge Indy","KY",7500,"A.P. Indy",1.28,1.24,null,30,2009,"",27,553,-0.25,0,"A.P. Indy"],["Solomini","NY",7500,"Mr. Prospector",1.28,1.06,7.02,70,2015,"",7,229,-0.25,0,"Curlin"],["Honest Mischief","NY",7500,"Storm Cat",1.23,1.19,6.4,70,2016,"",10,175,-0.25,0,"Into Mischief"],["Audible","KY",7500,"Storm Cat",1.21,1.37,7.01,13,2015,"",11,366,-0.25,0,"Into Mischief"],["Marking","NM",7500,"Mr. Prospector",1.15,1.08,6.99,52,2012,"",17,186,-0.25,0,"Super Saver"],["Collected","CA",7500,"Mr. Prospector",1.15,1.36,6.88,95,2013,"",23,362,-0.25,0,"City Zip"],["Oxbow","KY",7500,"Halo",1.07,1.15,null,3,2010,"",17,478,-0.25,0,"Awesome Again"],["Jimmy Creed","KY",7500,"Mr. Prospector",1.06,0.98,null,50,2009,"",28,691,-0.25,0,"Distorted Humor"],["Star Guitar","LA",7500,"Storm Cat",0.99,0.97,null,52,2005,"",21,375,-0.25,0,"Quiet American"],["Vino Rosso","KY",7500,"Mr. Prospector",0.97,1.21,null,12,2015,"",13,497,-0.25,0,"Curlin"],["Greatest Honour","KY",7500,"Sadler's Wells",null,null,null,41,null,"",0,0,0.3,0,""],["Silver State","KY",7500,"A.P. Indy",null,null,null,60,null,"",0,0,-0.25,0,""],["War Dancer","NY",7500,"Danzig",null,null,null,3,null,"Mill Creek",0,0,0.55,0,""],["War of Will","NY",7500,"Mr. Prospector",null,null,null,29,null,"",0,0,-0.25,0,""],["Roadster","FL",7500,"Mr. Prospector",null,null,null,94,null,"Ocala Stud",0,0,-0.25,0,""],["Great Notion","MD",7500,"Storm Cat",null,null,null,60,null,"Northview",0,0,-0.25,0,""],["Honor A. P.","KY",7500,"A.P. Indy",null,null,null,110,null,"",0,0,-0.25,1,""],["Mage","KY",7500,"Mr. Prospector",null,null,null,110,null,"",0,0,-0.25,1,""],["Seize the Grey","KY",7500,"A.P. Indy",null,null,null,109,null,"",0,0,-0.25,1,""],["Rock Your World","KY",7000,"A.P. Indy",null,null,null,97,null,"",0,0,-0.25,1,""],["Colonel Liam","FL",6500,"Storm Cat",null,null,null,31,null,"Ocala Stud",0,0,-0.25,0,""],["Grazen","CA",6000,"Sadler's Wells",1.3,0.98,null,39,2006,"",29,475,0.3,0,"Benchmark"],["Creative Cause","TX",6000,"Storm Cat",1.07,1.35,7.05,26,2009,"",27,644,-0.25,0,"Giant's Causeway"],["Khozan","FL",6000,"Mr. Prospector",1.06,1.1,7.07,34,2012,"Ocala Stud",20,494,-0.25,0,"Distorted Humor"],["Tapiture","AB",6000,"A.P. Indy",1.01,1.08,6.72,54,2011,"",36,742,-0.25,0,"Tapit"],["Mystic Guide","KY",6000,"Sadler's Wells",null,null,null,88,null,"",0,0,0.3,1,""],["Simplification","FL",5500,"Sadler's Wells",null,null,null,76,null,"",0,0,0.3,1,""],["Reload","ON",5000,"Danzig",1.37,1.26,6.81,48,2009,"",8,252,0.55,0,"Hard Spun"],["Blofeld","MD",5000,"Mr. Prospector",1.28,1.09,6.69,68,2012,"",11,220,-0.25,0,"Quality Road"],["Competitive Edge","TX",5000,"Mr. Prospector",1.23,1.13,6.38,17,2012,"",16,305,-0.25,0,"Super Saver"],["Neolithic","FL",5000,"Storm Cat",1.15,0.89,6.88,73,2013,"Pleasant Acres",11,190,-0.25,0,"Harlan's Holiday"],["Tale of Ekati","KY",5000,"Storm Cat",1.08,1.17,6.64,11,2005,"",15,470,-0.25,0,"Tale of the Cat"],["Tacitus","KY",5000,"A.P. Indy",1.08,1.28,7.11,89,2016,"",2,169,-0.25,0,"Tapit"],["Cupid","MD",5000,"A.P. Indy",1.08,1.09,6.81,32,2013,"",9,377,-0.25,0,"Tapit"],["Clubhouse Ride","CA",5000,"Mr. Prospector",1.06,0.9,null,28,2008,"",8,304,-0.25,0,"Candy Ride"],["Cajun Breeze","FL",5000,"A.P. Indy",1.03,1.1,6.68,26,2008,"",9,204,-0.25,0,"Congrats"],["Enticed","PA",5000,"A.P. Indy",1.02,1.02,6.63,45,2008,"",7,255,-0.25,0,"Congrats"],["The Factor","KY",5000,"Danzig",1.01,1.16,6.94,26,2008,"",45,894,0.55,0,"War Front"],["Temple City","KY",5000,"Sadler's Wells",0.97,1.19,null,10,2005,"",32,937,0.3,0,"Dynaformer"],["Basin","KY",5000,"Sadler's Wells",null,null,6.9,19,null,"",0,0,0.3,0,""],["By My Standards","KY",5000,"Mr. Prospector",null,null,null,17,null,"",0,0,-0.25,0,""],["Known Agenda","KY",5000,"Sadler's Wells",null,null,null,5,null,"",0,0,0.3,0,""],["Loggins","KY",5000,"Mr. Prospector",null,null,null,18,null,"",0,0,-0.25,0,""],["Angel of Empire","KY",5000,"Halo",null,null,null,44,null,"",0,0,-0.25,0,""],["Dr. Schivel","KY",5000,"A.P. Indy",null,null,null,71,null,"",0,0,-0.25,0,""],["Idol","KY",5000,"Danzig",null,null,null,35,null,"",0,0,0.3,0,""],["Echo Town","AR",5000,"Storm Cat",null,null,6.8,29,null,"",0,0,-0.25,0,""],["Rich Strike","NY",5000,"Storm Cat",null,null,null,14,null,"",0,0,-0.25,0,""],["Leinster","NY",5000,"Danzig",null,null,null,115,null,"",0,0,0.55,0,""],["Gunnevera","FL",5000,"Storm Cat",null,null,null,60,null,"Pleasant Acres",0,0,-0.25,0,""],["Pappacap","KY",5000,"Mr. Prospector",null,null,null,73,null,"",0,0,-0.25,1,""],["Caracaro","KY",5000,"Mr. Prospector",null,null,null,72,null,"",0,0,-0.25,1,""],["Beau Liam","KY",5000,"Sadler's Wells",null,null,null,67,null,"",0,0,0.3,1,""],["Newgate","KY",5000,"Storm Cat",null,null,null,60,null,"",0,0,-0.25,1,""],["Mo Donegal","KY",5000,"Storm Cat",null,null,null,59,null,"",0,0,-0.25,1,""],["Senor Buscador","KY",5000,"Mr. Prospector",null,null,null,56,null,"",0,0,-0.25,1,""],["Blazing Sevens","KY",5000,"Mr. Prospector",null,null,null,54,null,"",0,0,-0.25,1,""],["Zandon","KY",5000,"Danzig",null,null,null,44,null,"",0,0,0.3,1,""],["Bee Jersey","KY",5000,"Sadler's Wells",null,null,null,39,null,"",0,0,0.3,1,""],["Modernist","KY",5000,"A.P. Indy",null,null,null,36,null,"",0,0,-0.25,1,""],["War Front","KY",5000,"Danzig",null,null,null,36,null,"",0,0,0.55,1,""],["Fulsome","KY",5000,"Sadler's Wells",null,null,null,30,null,"",0,0,0.3,1,""],["Lexitonian","KY",5000,"Mr. Prospector",null,null,null,29,null,"",0,0,-0.25,1,""],["Two Phil's","KY",5000,"Mr. Prospector",null,null,null,29,null,"",0,0,-0.25,1,""],["Tapit Trice","KY",5000,"Storm Cat",null,null,null,29,null,"",0,0,-0.25,1,""],["Independence Hall","KY",5000,"Sadler's Wells",null,null,null,28,null,"",0,0,0.3,1,""],["Gufo","KY",5000,"Halo",null,null,null,27,null,"",0,0,-0.25,1,""],["Shirl's Speight","KY",5000,"Storm Cat",null,null,null,27,null,"",0,0,-0.25,1,""],["Stage Raider","KY",5000,"Storm Cat",null,null,null,27,null,"",0,0,-0.25,1,""],["Casa Creed","KY",5000,"Storm Cat",null,null,null,24,null,"",0,0,-0.25,1,""],["More Than Looks","KY",5000,"A.P. Indy",null,null,null,24,null,"",0,0,-0.25,1,""],["Pinehurst","KY",5000,"Danzig",null,null,null,18,null,"",0,0,0.3,1,""],["Mucho Macho Man","ON",4500,"Halo",1.19,1.04,6.79,18,2008,"",14,383,-0.25,0,"Macho Uno"],["Point of Entry","ON",4500,"Sadler's Wells",1.19,1.36,6.98,8,2008,"",21,432,0.3,0,"Dynaformer"],["Hopkins","CA",4500,"Sadler's Wells",null,null,null,66,null,"",0,0,0.3,1,""],["Verifying","FL",4500,"Sadler's Wells",null,null,null,60,null,"",0,0,0.3,1,""],["Slumber (GB)","NY",4500,"Mr. Prospector",null,null,null,39,null,"",0,0,-0.25,1,""],["Frac Daddy","ON",4000,"Storm Cat",1.29,1.21,7.1,20,2010,"",7,174,-0.25,0,"Scat Daddy"],["Awesome Slew","FL",4000,"Halo",1.16,1.23,6.98,18,2013,"",6,151,-0.25,0,"Awesome Again"],["Post Time","MD",4000,"Sadler's Wells",null,null,6.7,60,null,"Northview",0,0,0.3,0,""],["Shaaz","CA",4000,"Mr. Prospector",null,null,null,59,null,"",0,0,-0.25,1,""],["Midnight Storm","CA",4000,"Danzig",null,null,null,55,null,"",0,0,0.3,1,""],["Doppelganger","FL",4000,"Storm Cat",null,null,null,48,null,"",0,0,-0.25,1,""],["Petulante","NY",4000,"Storm Cat",null,null,null,30,null,"",0,0,-0.25,1,""],["Provocateur","NY",4000,"A.P. Indy",null,null,null,25,null,"",0,0,-0.25,1,""],["Name Changer","NY",4000,"Mr. Prospector",null,null,null,24,null,"",0,0,-0.25,1,""],["Alternation","WA",3500,"Mr. Prospector",1.11,1.15,null,14,2008,"",11,338,-0.25,0,"Distorted Humor"],["Fire At Will","NY",3500,"Mr. Prospector",null,null,null,10,null,"",0,0,0.55,0,""],["Valiant Minister","FL",3500,"Storm Cat",null,null,null,29,null,"Bridlewood",0,0,0.55,0,""],["Carpe Diem","LA",3500,"Sadler's Wells",null,null,null,57,null,"",0,0,0.3,1,""],["Unified","LA",3500,"Mr. Prospector",null,null,null,54,null,"",0,0,-0.25,1,""],["Magic On Tap","FL",3500,"Storm Cat",null,null,null,28,null,"",0,0,-0.25,1,""],["Chewing Gum","NY",3500,"Halo",null,null,null,21,null,"",0,0,-0.25,1,""],["Peace and Justice","NY",3500,"Storm Cat",null,null,null,18,null,"",0,0,-0.25,1,""],["Mullion","NY",3500,"Storm Cat",null,null,null,16,null,"",0,0,-0.25,1,""],["King for a Day","NY",3500,"Mr. Prospector",null,null,null,15,null,"",0,0,-0.25,1,""],["Adios Charlie","FL",3000,"Halo",1.15,1.09,null,41,2008,"",17,459,-0.25,0,"Indian Charlie"],["Flat Out","OK",3000,"A.P. Indy",1.0,1.02,null,58,2013,"",23,658,-0.25,0,"Tapit"],["Bodexpress","FL",3000,"A.P. Indy",null,null,null,3,null,"",0,0,-0.25,0,""],["Thousand Words","KY",3000,"Storm Cat",null,null,null,58,null,"",0,0,-0.25,0,""],["Bobby's Wicked One","LA",3000,"Danzig",null,null,null,50,null,"",0,0,0.3,1,""],["Mr. Money","LA",3000,"A.P. Indy",null,null,null,49,null,"",0,0,-0.25,1,""],["Wit","LA",3000,"Storm Cat",null,null,null,41,null,"",0,0,-0.25,1,""],["Tap Back","CA",3000,"Danzig",null,null,null,38,null,"",0,0,0.3,1,""],["Forbidden Kingdom","CA",3000,"A.P. Indy",null,null,null,36,null,"",0,0,-0.25,1,""],["First Mondays","MD",3000,"Mr. Prospector",null,null,null,35,null,"",0,0,-0.25,1,""],["Pavel","CA",3000,"Halo",null,null,null,32,null,"",0,0,-0.25,1,""],["Corporal","CA",3000,"Halo",null,null,null,31,null,"",0,0,-0.25,1,""],["Jagr","FL",3000,"Danzig",null,null,null,26,null,"",0,0,0.3,1,""],["Mr Fisk","FL",3000,"Halo",null,null,null,26,null,"",0,0,-0.25,1,""],["Zozos","PA",3000,"Sadler's Wells",null,null,null,24,null,"",0,0,0.3,1,""],["Beren","PA",3000,"Mr. Prospector",null,null,null,23,null,"",0,0,-0.25,1,""],["Eastwood","PA",3000,"Halo",null,null,null,23,null,"",0,0,-0.25,1,""],["Champions Dream","FL",3000,"Sadler's Wells",null,null,null,22,null,"",0,0,0.3,1,""],["Max Player","PA",3000,"Sadler's Wells",null,null,null,19,null,"",0,0,0.3,1,""],["Uptowncharlybrown","PA",2500,"Sadler's Wells",1.16,1.01,null,23,2007,"UTCB Stud",6,253,0.3,0,"Limehouse"],["Golden Lad","MD",2500,"Sadler's Wells",1.09,1.19,6.56,26,2010,"Northview",10,377,0.3,0,"Medaglia d'Oro"],["Curlin's Honor","WV",2500,"Storm Cat",null,null,null,7,null,"",0,0,-0.25,0,""],["Endorsed","MD",2500,"Mr. Prospector",null,null,null,37,null,"Northview",0,0,-0.25,0,""],["Engage","MD",2500,"Storm Cat",null,null,null,16,null,"Northview",0,0,-0.25,0,""],["Air Force Red","CA",2500,"A.P. Indy",null,null,null,60,null,"BG Thoroughbreds",0,0,-0.25,0,""],["Catholic Boy","CA",2500,"Storm Cat",null,null,null,27,null,"",0,0,-0.25,1,""],["Om","CA",2500,"A.P. Indy",null,null,null,26,null,"",0,0,-0.25,1,""],["Mo Forza","CA",2500,"Danzig",null,null,null,26,null,"",0,0,0.3,1,""],["Warrant","MD",2500,"A.P. Indy",null,null,null,23,null,"",0,0,-0.25,1,""],["Cloud Computing","PA",2500,"A.P. Indy",null,null,null,13,null,"",0,0,-0.25,1,""],["Buy Land and See","FL",2500,"Danzig",null,null,null,13,null,"",0,0,0.3,1,""],["Rogueish","FL",2500,"Halo",null,null,null,13,null,"",0,0,-0.25,1,""],["Capo Kane","PA",2500,"A.P. Indy",null,null,null,12,null,"",0,0,-0.25,1,""],["Tunwoo","FL",2500,"Mr. Prospector",null,null,null,12,null,"",0,0,-0.25,1,""],["Winchill","PA",2500,"Sadler's Wells",null,null,null,12,null,"",0,0,0.3,1,""],["Mosler","MD",2000,"Danzig",1.09,1.13,7.13,11,2011,"",8,207,0.55,0,"War Front"],["Provenance","MD",2000,"Halo",null,null,null,60,null,"Country Life",0,0,-0.25,0,""],["Exaggerator","LA",2000,"Danzig",null,null,null,18,null,"",0,0,0.3,1,""],["Galawi (IRE)","MD",2000,"A.P. Indy",null,null,null,17,null,"",0,0,-0.25,1,""],["Keepmeinmind","LA",2000,"Mr. Prospector",null,null,null,16,null,"",0,0,-0.25,1,""],["Catalina Red","LA",2000,"Storm Cat",null,null,null,15,null,"",0,0,-0.25,1,""],["Custom for Carlos","LA",2000,"Danzig",null,null,null,15,null,"",0,0,0.3,1,""],["Rushie","LA",2000,"Storm Cat",null,null,null,14,null,"",0,0,-0.25,1,""],["Unbridled Express","IN",1500,"Mr. Prospector",1.2,0.93,6.45,22,2004,"",10,156,-0.25,0,"Unbridled's Song"],["Cowtown Cat","OK",1500,"Mr. Prospector",1.09,1.1,6.61,8,2004,"",6,285,-0.25,0,"Distorted Humor"],["Uncle Lino","MD",1500,"Halo",1.03,1.25,6.45,34,2013,"",8,325,0.55,0,"Uncle Mo"],["Divining Rod","MD",1500,"A.P. Indy",0.99,1.15,null,6,2012,"",8,205,-0.25,0,"Tapit"],["Juba","WV",1500,"A.P. Indy",0.98,1.03,null,47,2011,"",10,172,-0.25,0,"Tapit"],["Uptown Rythem","CA",1500,"Halo",null,null,null,60,null,"Rancho San Miguel",0,0,-0.25,0,""],["Friesan Fire","MD",1000,"A.P. Indy",1.04,1.16,6.83,10,2006,"",10,324,-0.25,0,"A.P. Indy"],["Irish War Cry","AR",1000,"Mr. Prospector",1.01,1.07,6.69,4,2014,"",4,183,-0.25,0,"Curlin"]];
+// pensioned / deceased / not covering in 2026 -> damsires. [name, line, AEI, CI, AWD, sireOf]
+const REAL_OLD = [["Console","Danzig",1.91,1.46,null,"War Front"],["Hockenheim","A.P. Indy",1.49,1.4,null,"A.P. Indy"],["Lookin At Lucky","Mr. Prospector",1.44,1.44,null,"Smart Strike"],["Street Boss","Mr. Prospector",1.43,1.25,null,"Street Cry"],["Society's Chairman","A.P. Indy",1.4,1.29,6.84,"Not Impossible"],["American Pharoah","Mr. Prospector",1.39,2.03,null,"Pioneerof the Nile"],["Old Forester","Storm Cat",1.34,1.34,null,"Forestry"],["Out\ufb02anker","Danzig",1.32,1.11,null,"Danzig"],["Weigelia","Mr. Prospector",1.32,1.05,7.28,"Safely's Mark"],["Upstart","Mr. Prospector",1.3,1.25,6.92,"Flatter"],["Greatness","Mr. Prospector",1.28,0.98,7.15,"Mr. Prospector"],["Classic Empire","Mr. Prospector",1.27,1.34,6.43,"Pioneerof the Nile"],["Mendelssohn","Storm Cat",1.26,1.45,null,"Scat Daddy"],["Signature Red","Storm Cat",1.26,1.08,6.45,"Bernstein"],["Caravaggio","Storm Cat",1.25,1.35,6.86,"Scat Daddy"],["Medallist","Sadler's Wells",1.23,1.25,null,"Touch Gold"],["Awesome of Course","Halo",1.22,1.24,6.59,"Awesome Again"],["Max\ufb01eld","Halo",1.22,1.7,7.15,"Street Sense"],["Mobil","Danzig",1.21,1.19,6.44,"Langfuhr"],["Will Take Charge","Mr. Prospector",1.21,1.35,6.87,"Unbridled's Song"],["Connect","Mr. Prospector",1.2,1.42,6.61,"Curlin"],["Where's the Ring","A.P. Indy",1.2,1.27,6.97,"Seeking the Gold"],["Bustin Stones","Mr. Prospector",1.19,1.16,null,"City Zip"],["Runhappy","Mr. Prospector",1.16,1.61,6.49,"Super Saver"],["Daaher","Halo",1.15,1.03,6.65,"Awesome Again"],["Summer Front","Danzig",1.14,1.24,null,"War Front"],["Dominus","Mr. Prospector",1.14,1.03,6.99,"Smart Strike"],["Bayern","Mr. Prospector",1.14,1.27,null,"Of\ufb02ee Wild"],["Palace Malice","Mr. Prospector",1.13,1.32,null,"Curlin"],["Eddington","Mr. Prospector",1.1,1.28,null,"Unbridled"],["Street Magician","Mr. Prospector",1.1,1.24,6.8,"Street Cry"],["Brethren","Mr. Prospector",1.09,1.3,6.61,"Distorted Humor"],["Daredevil","Halo",1.08,1.11,null,"More Than Ready"],["Social Inclusion","Mr. Prospector",1.07,1.0,null,"Pioneerof the Nile"],["Closing Argument","Mr. Prospector",1.07,1.03,null,"Successful Appeal"],["Honor Code","A.P. Indy",1.06,1.69,6.52,"A.P. Indy"],["Mark Valeski","Storm Cat",1.06,1.04,null,"Proud Citizen"],["Yoshida (JPN)","Mr. Prospector",1.05,1.15,6.89,"Heart's Cry"],["First Dude","Mr. Prospector",1.05,1.07,null,"Heart's Cry"],["Colonel John","Halo",1.04,1.24,6.77,"Tiznow"],["Gemologist","Halo",1.03,1.16,null,"Tiznow"],["Knicks Go","A.P. Indy",1.03,1.42,6.84,"Paynter"],["Lea","Halo",1.03,1.14,null,"First Samurai"],["Keen Ice","Mr. Prospector",1.03,1.09,null,"Curlin"],["Anchor Down","A.P. Indy",1.02,1.03,null,"Tapit"],["Cross Traf\ufb01c","Mr. Prospector",1.02,1.07,null,"Unbridled's Song"],["Good Samaritan","Storm Cat",1.02,1.15,6.83,"Harlan's Holiday"],["Algorithms","A.P. Indy",1.02,1.17,null,"Bernardini"],["Court Vision","Halo",1.02,1.15,null,"Gulch"],["Brahms","Danzig",1.01,1.09,null,"Danzig"],["Mohaymen","A.P. Indy",1.01,1.09,null,"Tapit"],["Holy Boss","Halo",0.98,1.31,null,"Street Boss"],["Yankee Gentleman","Storm Cat",0.98,1.1,null,"Storm Cat"],["Diamond","Mr. Prospector",0.98,1.0,null,"Mr. Prospector"],["Sir Prancealot (IRE)","Sadler's Wells",0.98,0.91,null,"Tamayuz"]];
+const REAL_LINES = ["Mr. Prospector", "Storm Cat", "A.P. Indy", "Danzig", "Sadler's Wells", "Halo"];
+
+'use strict';
 // ===================== STATIC DATA =====================
 const START_YEAR = 2027;
 const SURF_N = { D: 'Dirt', T: 'Turf', S: 'Synthetic' };
-const STATE_N = { KY: 'Kentucky', NY: 'New York', FL: 'Florida', CA: 'California', PA: 'Pennsylvania', MD: 'Maryland', LA: 'Louisiana', NJ: 'New Jersey', AR: 'Arkansas', VA: 'Virginia', DE: 'Delaware', WV: 'West Virginia', IN: 'Indiana', OK: 'Oklahoma', IA: 'Iowa', OH: 'Ohio', TX: 'Texas', NM: 'New Mexico', WA: 'Washington', KSA: 'Saudi Arabia', UAE: 'UAE' };
-const SB_STATES = ['NY', 'FL', 'CA', 'PA', 'MD', 'LA'];
+const STATE_N = { KY: 'Kentucky', NY: 'New York', FL: 'Florida', CA: 'California', PA: 'Pennsylvania', MD: 'Maryland', LA: 'Louisiana', NJ: 'New Jersey', AR: 'Arkansas', VA: 'Virginia', DE: 'Delaware', WV: 'West Virginia', IN: 'Indiana', ON: 'Ontario', AB: 'Alberta', OK: 'Oklahoma', IA: 'Iowa', OH: 'Ohio', TX: 'Texas', NM: 'New Mexico', WA: 'Washington', KSA: 'Saudi Arabia', UAE: 'UAE' };
+const SB_STATES = ['NY', 'FL', 'CA', 'PA', 'MD', 'LA', 'WV', 'AR', 'OK', 'TX', 'IN', 'DE'];
 const FARM_STATES = ['KY', 'NY', 'FL', 'CA', 'PA', 'MD', 'LA'];
 const BOARD_RATE = { KY: 45, NY: 36, FL: 32, CA: 38, PA: 33, MD: 32, LA: 28 };
 const REGION_N = { NY: 'New York', KY: 'Kentucky', FL: 'Florida', CA: 'California', MA: 'Mid-Atlantic', S: 'South (LA/AR)' };
 const INTL_SPLIT = { 'Saudi Cup': [10e6, 3.5e6, 2e6, 1.5e6, 1e6, 0.6e6, 0.5e6, 0.4e6, 0.3e6, 0.2e6], 'Dubai World Cup': [7.2e6, 2.4e6, 1.2e6, 0.6e6, 0.36e6, 0.24e6] };
 
-// meets: [startWk, endWk, tier]  tier 0 low .. 3 elite
+// meets: [startWk, endWk, tier, profile, scale]  tier 0 low .. 3 elite. Weeks = 2027 Saturdays (wk 1 = Jan 2).
+// Dates from the 2026 racing-dates tables and announced 2026-27 calendars (research/03_meets.md).
 const TRACKS = {
-  BEL: { n: 'Belmont Park', st: 'NY', rg: 'NY', turf: 1, m: [[1, 13, 1, 'BELW', 1], [14, 27, 2, 'BEL', 1.1], [37, 44, 2, 'BEL', 1.1], [45, 52, 1, 'BELW', 1]] },
-  SAR: { n: 'Saratoga', st: 'NY', rg: 'NY', turf: 1, m: [[28, 36, 3, 'SAR', 1]] },
-  CD: { n: 'Churchill Downs', st: 'KY', rg: 'KY', turf: 1, m: [[17, 26, 2, 'CD', 1], [37, 39, 2, 'CD', 0.95], [45, 48, 2, 'CD', 1]] },
-  KEE: { n: 'Keeneland', st: 'KY', rg: 'KY', turf: 1, m: [[14, 17, 3, 'KEE', 1], [40, 43, 3, 'KEE', 1]] },
-  ELP: { n: 'Ellis Park', st: 'KY', rg: 'KY', turf: 1, m: [[27, 35, 1, 'CD', 0.6]] },
-  KD: { n: 'Kentucky Downs', st: 'KY', rg: 'KY', turf: 1, allTurf: 1, m: [[36, 37, 3, 'KD', 1]] },
-  TP: { n: 'Turfway Park', st: 'KY', rg: 'KY', turf: 0, syn: 1, m: [[1, 13, 1, 'CD', 0.45], [49, 52, 1, 'CD', 0.45]] },
-  IND: { n: 'Indiana Grand', st: 'IN', rg: 'KY', turf: 1, m: [[17, 44, 1, 'CD', 0.5]] },
-  GP: { n: 'Gulfstream Park', st: 'FL', rg: 'FL', turf: 1, m: [[1, 13, 2, 'GPC', 1], [14, 48, 1, 'GPN', 1], [49, 52, 2, 'GPC', 1]] },
-  TAM: { n: 'Tampa Bay Downs', st: 'FL', rg: 'FL', turf: 1, m: [[1, 18, 0, 'GPN', 0.7], [47, 52, 0, 'GPN', 0.7]] },
-  SA: { n: 'Santa Anita', st: 'CA', rg: 'CA', turf: 1, m: [[1, 25, 2, 'DMR', 1.05], [39, 44, 2, 'DMR', 1], [52, 52, 2, 'DMR', 1.05]] },
-  DMR: { n: 'Del Mar', st: 'CA', rg: 'CA', turf: 1, m: [[29, 36, 3, 'DMR', 1.35], [45, 48, 2, 'DMR', 1]] },
-  LRC: { n: 'Los Alamitos', st: 'CA', rg: 'CA', turf: 0, m: [[26, 28, 1, 'DMR', 0.7], [49, 51, 1, 'DMR', 0.7]] },
-  FG: { n: 'Fair Grounds', st: 'LA', rg: 'S', turf: 1, m: [[1, 13, 2, 'FG', 1], [47, 52, 2, 'FG', 1]] },
-  OP: { n: 'Oaklawn Park', st: 'AR', rg: 'S', turf: 0, m: [[3, 18, 2, 'CD', 0.85]] },
-  EVD: { n: 'Evangeline Downs', st: 'LA', rg: 'S', turf: 1, m: [[16, 34, 0, 'DED', 0.9]] },
-  DED: { n: 'Delta Downs', st: 'LA', rg: 'S', turf: 0, m: [[42, 52, 0, 'DED', 1]] },
-  LAD: { n: 'Louisiana Downs', st: 'LA', rg: 'S', turf: 1, m: [[22, 40, 0, 'DED', 0.85]] },
-  LRL: { n: 'Laurel Park', st: 'MD', rg: 'MA', turf: 1, m: [[1, 15, 1, 'PRX', 0.85], [24, 52, 1, 'PRX', 0.85]] },
-  PIM: { n: 'Pimlico', st: 'MD', rg: 'MA', turf: 1, m: [[16, 23, 1, 'PRX', 0.95]] },
+  BEL: { n: 'Belmont Park', st: 'NY', rg: 'NY', turf: 1, m: [[1, 13, 1, 'BELW', 1], [14, 28, 2, 'BEL', 1], [38, 49, 2, 'BELF', 1], [50, 52, 1, 'BELW', 1]] },
+  SAR: { n: 'Saratoga', st: 'NY', rg: 'NY', turf: 1, m: [[29, 36, 3, 'SAR', 1]] },
+  CD: { n: 'Churchill Downs', st: 'KY', rg: 'KY', turf: 1, m: [[17, 26, 2, 'CD', 1], [37, 39, 2, 'CD', 0.95], [44, 48, 2, 'CD', 1]] },
+  KEE: { n: 'Keeneland', st: 'KY', rg: 'KY', turf: 1, m: [[14, 16, 3, 'KEE', 1], [40, 43, 3, 'KEE', 1]] },
+  ELP: { n: 'Ellis Park', st: 'KY', rg: 'KY', turf: 1, m: [[27, 34, 1, 'ELP', 1]] },
+  KD: { n: 'Kentucky Downs', st: 'KY', rg: 'KY', turf: 1, allTurf: 1, m: [[35, 36, 3, 'KD', 1]] },
+  TP: { n: 'Turfway Park', st: 'KY', rg: 'KY', turf: 0, syn: 1, m: [[1, 13, 1, 'TP', 1], [49, 52, 1, 'TP', 1]] },
+  IND: { n: 'Horseshoe Indianapolis', st: 'IN', rg: 'KY', turf: 1, m: [[14, 45, 1, 'IND', 1]] },
+  GP: { n: 'Gulfstream Park', st: 'FL', rg: 'FL', turf: 1, m: [[1, 13, 2, 'GPC', 1], [14, 47, 1, 'GPN', 1], [48, 52, 2, 'GPC', 1]] },
+  TAM: { n: 'Tampa Bay Downs', st: 'FL', rg: 'FL', turf: 1, m: [[1, 18, 1, 'TAM', 1], [47, 52, 1, 'TAM', 1]] },
+  SA: { n: 'Santa Anita', st: 'CA', rg: 'CA', turf: 1, m: [[1, 14, 2, 'SAC', 1], [16, 25, 2, 'SAC', 0.95], [39, 44, 2, 'SAA', 1], [52, 52, 2, 'SAC', 1]] },
+  DMR: { n: 'Del Mar', st: 'CA', rg: 'CA', turf: 1, m: [[29, 36, 3, 'DMR', 1.2], [45, 48, 2, 'DMR', 1]] },
+  LRC: { n: 'Los Alamitos', st: 'CA', rg: 'CA', turf: 0, m: [[25, 27, 1, 'SAA', 0.6], [37, 38, 1, 'SAA', 0.6], [49, 50, 1, 'SAA', 0.6]] },
+  FG: { n: 'Fair Grounds', st: 'LA', rg: 'S', turf: 1, m: [[1, 12, 2, 'FG', 1], [47, 52, 2, 'FG', 1]] },
+  OP: { n: 'Oaklawn Park', st: 'AR', rg: 'S', turf: 0, m: [[1, 17, 2, 'OP', 1], [48, 52, 2, 'OP', 1]] },
+  EVD: { n: 'Evangeline Downs', st: 'LA', rg: 'S', turf: 1, m: [[14, 36, 0, 'DED', 0.85]] },
+  DED: { n: 'Delta Downs', st: 'LA', rg: 'S', turf: 0, m: [[1, 7, 0, 'DED', 1], [41, 52, 0, 'DED', 1]] },
+  LAD: { n: 'Louisiana Downs', st: 'LA', rg: 'S', turf: 1, m: [[18, 39, 0, 'DED', 0.8]] },
+  LRL: { n: 'Laurel Park', st: 'MD', rg: 'MA', turf: 1, m: [[1, 19, 1, 'LRL', 1]] },
+  PIM: { n: 'Pimlico', st: 'MD', rg: 'MA', turf: 1, m: [[20, 26, 1, 'LRL', 1.05], [37, 52, 1, 'LRL', 1]] },
   PRX: { n: 'Parx Racing', st: 'PA', rg: 'MA', turf: 1, m: [[1, 52, 1, 'PRX', 1]] },
-  PEN: { n: 'Penn National', st: 'PA', rg: 'MA', turf: 1, m: [[1, 52, 0, 'PRX', 0.6]] },
-  MTH: { n: 'Monmouth Park', st: 'NJ', rg: 'MA', turf: 1, m: [[20, 37, 1, 'PRX', 0.9]] },
-  CNL: { n: 'Colonial Downs', st: 'VA', rg: 'MA', turf: 1, m: [[29, 36, 1, 'CD', 0.65]] },
-  DEL: { n: 'Delaware Park', st: 'DE', rg: 'MA', turf: 1, m: [[22, 40, 1, 'PRX', 0.7]] },
-  CT: { n: 'Charles Town', st: 'WV', rg: 'MA', turf: 0, m: [[1, 52, 0, 'DED', 0.8]] },
-  RP: { n: 'Remington Park', st: 'OK', rg: 'S', turf: 1, m: [] }, PRM: { n: 'Prairie Meadows', st: 'IA', rg: 'S', turf: 1, m: [] },
-  TDN: { n: 'Thistledown', st: 'OH', rg: 'MA', turf: 0, m: [] }, MNR: { n: 'Mountaineer', st: 'WV', rg: 'MA', turf: 1, m: [] },
-  HOU: { n: 'Sam Houston', st: 'TX', rg: 'S', turf: 1, m: [] }, LS: { n: 'Lone Star Park', st: 'TX', rg: 'S', turf: 1, m: [] },
-  SUN: { n: 'Sunland Park', st: 'NM', rg: 'S', turf: 0, m: [] }, ZIA: { n: 'Zia Park', st: 'NM', rg: 'S', turf: 0, m: [] },
-  MVR: { n: 'Mahoning Valley', st: 'OH', rg: 'MA', turf: 0, m: [] }, EMD: { n: 'Emerald Downs', st: 'WA', rg: 'CA', turf: 0, m: [] },
-  PID: { n: 'Presque Isle Downs', st: 'PA', rg: 'MA', turf: 0, syn: 1, m: [] },
+  PEN: { n: 'Penn National', st: 'PA', rg: 'MA', turf: 1, m: [[7, 51, 0, 'PEN', 1]] },
+  MTH: { n: 'Monmouth Park', st: 'NJ', rg: 'MA', turf: 1, m: [[19, 37, 1, 'MTH', 1]] },
+  CNL: { n: 'Colonial Downs', st: 'VA', rg: 'MA', turf: 1, m: [[26, 36, 1, 'CNL', 1]] },
+  DEL: { n: 'Delaware Park', st: 'DE', rg: 'MA', turf: 1, m: [[20, 42, 1, 'DEL', 1]] },
+  CT: { n: 'Charles Town', st: 'WV', rg: 'MA', turf: 0, m: [[1, 51, 0, 'CT', 1]] },
+  MNR: { n: 'Mountaineer', st: 'WV', rg: 'MA', turf: 1, m: [[15, 49, 0, 'CT', 0.8]] },
+  TDN: { n: 'Thistledown', st: 'OH', rg: 'MA', turf: 0, m: [[16, 40, 0, 'CT', 0.85]] },
+  MVR: { n: 'Mahoning Valley', st: 'OH', rg: 'MA', turf: 0, m: [[1, 14, 0, 'CT', 0.85], [42, 52, 0, 'CT', 0.85]] },
+  PID: { n: 'Presque Isle Downs', st: 'PA', rg: 'MA', turf: 0, syn: 1, m: [[20, 42, 0, 'PEN', 1.05]] },
+  RP: { n: 'Remington Park', st: 'OK', rg: 'S', turf: 1, m: [[34, 51, 1, 'RP', 1]] },
+  PRM: { n: 'Prairie Meadows', st: 'IA', rg: 'S', turf: 1, m: [[18, 39, 1, 'RP', 1]] },
+  LS: { n: 'Lone Star Park', st: 'TX', rg: 'S', turf: 1, m: [[16, 28, 0, 'LS', 1], [37, 47, 0, 'LS', 1]] },
+  HOU: { n: 'Sam Houston', st: 'TX', rg: 'S', turf: 1, m: [[1, 13, 0, 'LS', 1.05], [51, 52, 0, 'LS', 1.05]] },
+  SUN: { n: 'Sunland Park', st: 'NM', rg: 'S', turf: 0, m: [[1, 15, 0, 'LS', 1], [50, 52, 0, 'LS', 1]] },
+  ZIA: { n: 'Zia Park', st: 'NM', rg: 'S', turf: 0, m: [[36, 49, 0, 'LS', 1]] },
+  EMD: { n: 'Emerald Downs', st: 'WA', rg: 'CA', turf: 0, m: [[18, 36, 0, 'LS', 0.95]] },
   KSA: { n: 'King Abdulaziz (Riyadh)', st: 'KSA', rg: 'INTL', turf: 1, m: [] }, MEY: { n: 'Meydan (Dubai)', st: 'UAE', rg: 'INTL', turf: 1, m: [] },
 };
 
@@ -206,7 +226,7 @@ const STAKES_SB = [
 ];
 const STAKES_RAW = [...STAKES_GEN, ...STAKES_SB];
 // Breeders' Cup (week 44, venue rotates)
-const BC_VENUES = ['DMR', 'KEE', 'SA', 'CD', 'SAR', 'DMR', 'KEE'];
+const BC_VENUES = ['BEL', 'DMR', 'KEE', 'SA', 'CD', 'BEL', 'DMR'];
 const BC_RAW = [
   ['Juvenile Turf Sprint', '2', 0, 5, 'T', 1000], ['Juvenile Fillies Turf', '2', 1, 8, 'T', 1000],
   ['Juvenile Fillies', '2', 1, 8.5, 'D', 2000], ['Juvenile Turf', '2', 0, 8, 'T', 1000],
@@ -236,112 +256,112 @@ const WAYI = {
   'Forego': 'Sprint', 'Bing Crosby': 'Sprint', 'Ballerina': 'Filly & Mare Sprint', 'Madison': 'Filly & Mare Sprint',
   'Diana': 'Filly & Mare Turf', 'First Lady': 'Filly & Mare Turf', 'Jenny Wiley': 'Filly & Mare Turf', 'Pegasus World Cup Invitational': 'Saudi Cup',
 };
-// Overnight race profiles, from fall/winter 2026 condition books (open purses in $; claiming purse = a + b * claim price)
+// Overnight race profiles from 2026-27 condition books (open purses in $; claiming purse = a + b * claim price)
 // mix: share of card by race type. fund: state-bred money — incl = part of the purse only that state's breds collect; plus = extra paid on top.
+// Ladders: research/06_condition_books.md, 10_condition_books_round3.md. IND / MTH / CNL have no book: estimated from neighbours.
 const PROFILES = {
   CD: { msw: 120000, alw: 127000, aoc: 134000, str: 83000, soc: 85000, moc: 70000, clm: [44700, 0.6], mcl: [50000, 0.2], cp: [12500, 16000, 20000, 25000, 30000, 32000, 40000, 50000, 62500, 80000], mp: [20000, 30000, 40000, 50000, 75000, 100000],
     mix: { CLM: 44, MSW: 20, MCL: 12, STR: 9, AOC: 9, ALW: 6 }, turf: 0.25, sb: 0, fund: { st: 'KY', kind: 'incl', MSW: 0.39, ALW: 0.38, AOC: 0.37, other: 0.12 } },
+
   KEE: { msw: 110000, alw: 120000, aoc: 130000, str: 63000, soc: 70000, moc: 70000, clm: [40100, 0.6], mcl: [47000, 0.25], cp: [16000, 20000, 25000, 30000, 32000, 40000, 50000, 62500, 80000, 100000], mp: [20000, 25000, 30000, 50000, 75000, 100000],
     mix: { CLM: 27, ALW: 21, MSW: 16, MCL: 15, AOC: 12, STR: 9 }, turf: 0.35, sb: 0, fund: { st: 'KY', kind: 'incl', MSW: 0.3, ALW: 0.31, AOC: 0.31, other: 0.33 } },
+
   KD: { msw: 170000, alw: 190000, aoc: 200000, str: 80000, soc: 80000, moc: 90000, clm: [60000, 0.6], mcl: [60000, 0.3], cp: [30000, 50000], mp: [50000],
     mix: { MSW: 38, AOC: 32, ALW: 19, STR: 11 }, turf: 1, sb: 0, fund: { st: 'KY', kind: 'incl', MSW: 0.47, ALW: 0.47, AOC: 0.48, other: 0.4 } },
-  BELW: { msw: 85000, alw: 93000, aoc: 87000, str: 70000, soc: 70000, moc: 75000, clm: [24200, 0.72], mcl: [23600, 0.56], cp: [12500, 16000, 17500, 20000, 30000, 30000, 40000, 40000, 50000, 55000], mp: [16000, 30000, 40000, 50000],
-    mix: { CLM: 30, MSW: 19, AOC: 18, MCL: 17, ALW: 5, STR: 5, SOC: 3, MOC: 2 }, turf: 0, syn: 1, sb: 0.21, sbMult: 1, fund: { st: 'NY', kind: 'plus', open: 0.174 } },
-  BEL: { msw: 85000, alw: 93000, aoc: 87000, str: 70000, soc: 70000, moc: 75000, clm: [24200, 0.72], mcl: [23600, 0.56], cp: [16000, 20000, 25000, 30000, 40000, 50000, 62500, 80000], mp: [30000, 40000, 50000, 75000],
-    mix: { CLM: 28, MSW: 19, AOC: 18, MCL: 15, ALW: 8, STR: 5, SOC: 4, MOC: 3 }, turf: 0.38, sb: 0.2, sbMult: 1, fund: { st: 'NY', kind: 'plus', open: 0.174 } },
-  // Saratoga 2026 overnight purses (NYRA purse-increase announcement): MSW $115k, 1X $120k, 2X $125k, maiden auction $90k,
-  // NY-bred MSW $100k (2yo NY-bred MSW $115k), NY-bred 1X $105k, 2X $110k, starter 1X $78k. Claiming scaled from Belmont.
+
+  // Saratoga 2026 overnight purse scale (NYRA): MSW $115k, 1X $120k, 2X $125k; NY-bred MSW $100k (2yo $115k), NY-bred 1X $105k, 2X $110k.
   SAR: { msw: 115000, alw: 120000, alw2: 125000, aoc: 120000, str: 78000, soc: 78000, moc: 90000, clm: [31000, 0.9], mcl: [30000, 0.7], cp: [16000, 20000, 25000, 30000, 40000, 50000, 62500, 80000], mp: [30000, 40000, 50000, 75000],
     sbP: { MSW: 100000, MSW2: 115000, ALW: 105000, ALW2: 110000 },
     mix: { CLM: 26, MSW: 22, AOC: 14, MCL: 12, ALW: 12, STR: 6, MOC: 5, SOC: 3 }, turf: 0.42, sb: 0.22, sbMult: 0.9, fund: { st: 'NY', kind: 'plus', open: 0.174 } },
+
   GPC: { msw: 57000, alw: 60000, aoc: 58000, str: 32000, soc: 30000, moc: 31000, clm: [19900, 0.48], mcl: [17600, 0.5], cp: [6250, 10000, 10000, 12500, 17500, 17500, 25000, 35000, 50000], mp: [12500, 17500, 25000, 35000, 50000],
     mix: { CLM: 35, MCL: 18, SOC: 14, MOC: 13, AOC: 10, MSW: 10 }, turf: 0.33, syn: 0.25, sb: 0.07, sbMult: 0.85, fund: { st: 'FL', kind: 'incl', MSW: 0.15, ALW: 0.15, AOC: 0.15, other: 0.15 } },
-  GPN: { msw: 50000, alw: 54000, aoc: 54000, str: 33500, soc: 33500, moc: 31750, clm: [19700, 0.48], mcl: [17600, 0.5], cp: [6250, 10000, 12500, 17500, 25000, 35000, 50000], mp: [12500, 17500, 25000, 35000, 50000],
-    mix: { CLM: 38, MCL: 28, SOC: 11, MSW: 11, MOC: 7, AOC: 5 }, turf: 0.2, syn: 0.45, sb: 0.07, sbMult: 0.85, fund: { st: 'FL', kind: 'incl', MSW: 0.15, ALW: 0.15, AOC: 0.15, other: 0.15 } },
+
   DMR: { msw: 65000, alw: 69000, aoc: 67000, str: 35000, soc: 35000, moc: 45000, clm: [15000, 0.68], mcl: [12300, 0.43], cp: [8000, 12500, 16000, 16000, 20000, 25000, 25000, 32000, 40000, 50000], mp: [16000, 32000, 40000, 50000],
     mix: { CLM: 26, MSW: 24, AOC: 23, MCL: 14, SOC: 7, MOC: 6 }, turf: 0.35, sb: 0.43, sbMult: 0.95, fund: { st: 'CA', kind: 'plus', MSW: 0.3, ALW: 0.3, AOC: 0.3, other: 0.12 } },
-  FG: { msw: 52000, alw: 53000, aoc: 54000, str: 18000, soc: 18000, moc: 30000, clm: [15100, 0.31], mcl: [10800, 0.38], cp: [5000, 5000, 7500, 10000, 12500, 15000, 20000, 30000], mp: [12500, 15000, 30000],
-    mix: { CLM: 45, MSW: 15, MCL: 12, AOC: 10, ALW: 10, SOC: 4, MOC: 3 }, turf: 0.18, sb: 0.35, sbMult: 0.9, fund: { st: 'LA', kind: 'incl', MSW: 0.03, ALW: 0.03, AOC: 0.03, other: 0.03 } },
+
   DED: { msw: 35000, alw: 37000, aoc: 36000, str: 24000, soc: 21000, moc: 23000, clm: [12100, 0.58], mcl: [11800, 0.43], cp: [4000, 5000, 5000, 7500, 10000, 10000, 20000, 25000, 30000, 50000], mp: [5000, 10000, 20000, 25000, 32000, 50000],
     mix: { CLM: 49, MCL: 20, ALW: 10, MSW: 9, STR: 6, SOC: 5, AOC: 1 }, turf: 0.15, sb: 0.37, sbMult: 1.25, fund: { st: 'LA', kind: 'incl', MSW: 0.04, ALW: 0.04, AOC: 0.04, other: 0.04 } },
+
   PRX: { msw: 50000, alw: 55000, aoc: 52000, str: 30000, soc: 40000, moc: 26000, clm: [14000, 0.42], mcl: [12000, 0.4], cp: [5000, 7500, 7500, 10000, 12500, 16000, 16000, 25000, 40000, 75000], mp: [12500, 16000, 25000, 40000],
     mix: { CLM: 55, SOC: 8, MSW: 9, MOC: 7, AOC: 7, MCL: 8, ALW: 6 }, turf: 0.2, sb: 0.22, sbMult: 1.08, fund: { st: 'PA', kind: 'plus', open: 0.4 } },
+
+  BELF: { msw: 100000, alw: 105000, aoc: 107500, str: 70000, soc: 70000, moc: 80000, clm: [26600, 0.67], mcl: [22700, 0.76], cp: [12500, 16000, 20000, 25000, 32000, 40000, 50000, 55000], mp: [20000, 30000, 40000, 50000, 75000],
+    mix: { MSW: 29, AOC: 22, CLM: 16, MCL: 13, STR: 11, ALW: 9 }, turf: 0.27, sb: 0.31, sbMult: 1, fund: { st: 'NY', kind: 'plus', open: 0.174 } },
+  BEL: { msw: 100000, alw: 105000, aoc: 107500, str: 70000, soc: 70000, moc: 80000, clm: [26600, 0.67], mcl: [22700, 0.76], cp: [12500, 16000, 20000, 25000, 32000, 40000, 50000, 62500, 80000], mp: [20000, 30000, 40000, 50000, 75000],
+    mix: { MSW: 24, AOC: 20, CLM: 22, MCL: 13, STR: 9, ALW: 9, SOC: 3 }, turf: 0.38, sb: 0.25, sbMult: 1, fund: { st: 'NY', kind: 'plus', open: 0.174 } },
+  BELW: { msw: 85000, alw: 87000, aoc: 90000, str: 65000, soc: 65000, moc: 75000, clm: [20000, 0.82], mcl: [18300, 0.756], cp: [16000, 17500, 20000, 25000, 30000, 40000, 50000, 55000], mp: [30000, 40000, 50000, 75000],
+    mix: { MSW: 26, AOC: 26, CLM: 26, MCL: 9, STR: 9, ALW: 5 }, turf: 0, syn: 0.5, sb: 0.2, sbMult: 1, fund: { st: 'NY', kind: 'plus', open: 0.174 } },
+  GPN: { msw: 50000, alw: 65000, aoc: 54500, str: 31000, soc: 31000, moc: 47500, clm: [18000, 0.487], mcl: [17500, 0.6], cp: [6250, 10000, 12500, 16000, 25000, 35000], mp: [12500, 16000, 25000, 35000, 50000],
+    mix: { CLM: 37, MCL: 27, MSW: 11, STR: 10, AOC: 8, ALW: 2 }, turf: 0.2, syn: 0.3, sb: 0.08, sbMult: 1, fund: { st: 'FL', kind: 'incl', MSW: 0.22, ALW: 0.2, AOC: 0.2, other: 0.15 } },
+  TAM: { msw: 56000, alw: 56000, aoc: 57000, str: 30000, soc: 30000, moc: 27000, clm: [18000, 0.2], mcl: [14600, 0.386], cp: [5000, 6250, 8000, 10000, 12500, 16000, 25000], mp: [10000, 16000, 25000, 32000],
+    mix: { CLM: 43, MCL: 27, AOC: 12, MSW: 9, STR: 6, ALW: 3 }, turf: 0.31, sb: 0.24, sbMult: 1, fund: { st: 'FL', kind: 'incl', MSW: 0.43, ALW: 0.42, AOC: 0.42, other: 0.25 } },
+  TP: { msw: 90000, alw: 103000, aoc: 104000, str: 35000, soc: 38000, moc: 45000, clm: [16900, 0.73], mcl: [15500, 0.48], cp: [5000, 7500, 10000, 12500, 16000, 20000, 30000, 40000], mp: [5000, 10000, 20000, 30000, 50000],
+    mix: { CLM: 46, MCL: 18, MSW: 13, AOC: 9, ALW: 6, STR: 5 }, turf: 0, sb: 0, fund: { st: 'KY', kind: 'incl', MSW: 0.5, ALW: 0.53, AOC: 0.55, other: 0.3 } },
+  // Ellis: Turfway-like KTDF ladder, but dirt + turf (user: "Ellis should be similar to Turfway")
+  ELP: { msw: 90000, alw: 100000, aoc: 102000, str: 35000, soc: 38000, moc: 45000, clm: [16900, 0.73], mcl: [15500, 0.48], cp: [5000, 7500, 10000, 12500, 16000, 20000, 30000, 40000], mp: [5000, 10000, 20000, 30000, 50000],
+    mix: { CLM: 42, MCL: 17, MSW: 16, AOC: 10, ALW: 9, STR: 6 }, turf: 0.38, sb: 0, fund: { st: 'KY', kind: 'incl', MSW: 0.5, ALW: 0.52, AOC: 0.53, other: 0.3 } },
+  OP: { msw: 95000, alw: 116000, aoc: 117000, str: 45000, soc: 45000, moc: 54000, clm: [24400, 0.474], mcl: [21500, 0.65], cp: [7500, 10000, 12500, 16000, 20000, 25000, 30000, 40000, 50000, 75000], mp: [10000, 15000, 20000, 30000, 50000],
+    mix: { CLM: 39, MCL: 14, MSW: 12, STR: 10, AOC: 9, ALW: 7 }, turf: 0, sb: 0.1, sbMult: 1.1, fund: { st: 'AR', kind: 'plus', MSW: 0.1, ALW: 0.1, AOC: 0.1, other: 0.1 } },
+  FG: { msw: 56000, alw: 57000, aoc: 58000, str: 21000, soc: 21000, moc: 33000, clm: [16000, 0.45], mcl: [13700, 0.38], cp: [5000, 5000, 7500, 10000, 12500, 15000, 20000, 30000], mp: [12500, 15000, 30000, 50000],
+    mix: { CLM: 45, MSW: 15, MCL: 12, AOC: 10, ALW: 10, SOC: 4, MOC: 3 }, turf: 0.18, sb: 0.35, sbMult: 1.1, fund: { st: 'LA', kind: 'incl', MSW: 0.03, ALW: 0.03, AOC: 0.03, other: 0.03 } },
+  PEN: { msw: 36000, alw: 37000, aoc: 39000, str: 24000, soc: 25000, moc: 22000, clm: [8000, 1.0], mcl: [12000, 0.4], cp: [4000, 5000, 7500, 10000, 12500, 16000, 20000, 25000], mp: [10000, 12500, 16000, 25000],
+    mix: { CLM: 39, STR: 27, MSW: 8, AOC: 8, MCL: 7, ALW: 4 }, turf: 0.15, sb: 0.18, sbMult: 1.1, fund: { st: 'PA', kind: 'plus', open: 0.25 } },
+  CT: { msw: 32500, alw: 37000, aoc: 33500, str: 24500, soc: 25000, moc: 20000, clm: [5300, 1.1], mcl: [8500, 0.96], cp: [4000, 5000, 7500, 10000, 12500, 15000], mp: [5000, 7500, 10000, 12500],
+    mix: { CLM: 40, ALW: 26, MSW: 12, MCL: 11, AOC: 7, STR: 3 }, turf: 0, sb: 0.36, sbMult: 1, fund: { st: 'WV', kind: 'plus', open: 0.15 } },
+  SAA: { msw: 84500, alw: 90000, aoc: 95000, str: 45000, soc: 50000, moc: 35000, clm: [10000, 1.0], mcl: [14800, 0.405], cp: [8000, 10000, 12500, 16000, 20000, 25000, 40000], mp: [8000, 16000, 25000, 50000],
+    mix: { MCL: 26, AOC: 21, MSW: 20, STR: 12, CLM: 8 }, turf: 0.5, sb: 0.25, sbMult: 0.77, fund: { st: 'CA', kind: 'plus', MSW: 0.2, ALW: 0.2, AOC: 0.2, other: 0.1 } },
+  SAC: { msw: 91000, alw: 91000, aoc: 91500, str: 39000, soc: 39000, moc: 35000, clm: [10700, 0.97], mcl: [11700, 0.467], cp: [8000, 10000, 12500, 16000, 20000, 25000, 40000, 50000], mp: [20000, 30000, 50000],
+    mix: { MSW: 25, AOC: 23, CLM: 23, STR: 14, MCL: 5 }, turf: 0.52, sb: 0.23, sbMult: 0.77, fund: { st: 'CA', kind: 'plus', MSW: 0.2, ALW: 0.2, AOC: 0.2, other: 0.1 } },
+  DEL: { msw: 50000, alw: 48000, aoc: 56000, str: 35000, soc: 35000, moc: 32000, clm: [13700, 0.457], mcl: [10800, 0.42], cp: [5000, 7500, 10000, 12500, 16000, 25000, 40000], mp: [7500, 15000, 25000, 50000],
+    mix: { STR: 31, CLM: 30, MCL: 20, MSW: 7, AOC: 6, ALW: 5 }, turf: 0.12, sb: 0.05, sbMult: 1, fund: { st: 'DE', kind: 'plus', open: 0.1 } },
+  LRL: { msw: 47000, alw: 48500, aoc: 33000, str: 36000, soc: 36000, moc: 37000, clm: [14400, 0.61], mcl: [13700, 0.667], cp: [7500, 10000, 12500, 16000, 25000, 40000, 62500], mp: [12500, 20000, 25000, 35000],
+    mix: { CLM: 40, MCL: 18, STR: 14, MSW: 11, AOC: 8, ALW: 6 }, turf: 0.37, sb: 0.03, sbMult: 1, fund: { st: 'MD', kind: 'plus', open: 0.15 } },
+  MTH: { msw: 50000, alw: 55000, aoc: 55000, str: 32000, soc: 35000, moc: 30000, clm: [14000, 0.5], mcl: [12000, 0.45], cp: [5000, 7500, 10000, 16000, 25000, 40000], mp: [12500, 25000, 40000],
+    mix: { CLM: 40, MSW: 14, MCL: 14, AOC: 12, ALW: 10, STR: 10 }, turf: 0.4, sb: 0.08, sbMult: 1.1, fund: { st: 'NJ', kind: 'plus', open: 0.1 } },
+  CNL: { msw: 55000, alw: 60000, aoc: 60000, str: 35000, soc: 35000, moc: 35000, clm: [16000, 0.5], mcl: [14000, 0.45], cp: [7500, 10000, 16000, 25000, 40000], mp: [15000, 30000, 50000],
+    mix: { CLM: 32, MSW: 18, AOC: 16, MCL: 14, ALW: 12, STR: 8 }, turf: 0.6, sb: 0.05, sbMult: 1, fund: { st: 'VA', kind: 'plus', open: 0.25 } },
+  IND: { msw: 42000, alw: 44000, aoc: 45000, str: 25000, soc: 25000, moc: 25000, clm: [11250, 0.55], mcl: [13400, 0.34], cp: [5000, 7500, 10000, 16000, 25000], mp: [7500, 15000, 25000],
+    mix: { CLM: 45, MCL: 15, MSW: 12, ALW: 12, AOC: 8, STR: 8 }, turf: 0.25, sb: 0.25, sbMult: 1.05, fund: { st: 'IN', kind: 'plus', open: 0.1 } },
+  RP: { msw: 46550, alw: 50800, aoc: 58000, str: 40000, soc: 40000, moc: 35000, clm: [11000, 0.85], mcl: [6300, 0.955], cp: [5000, 7500, 10000, 15000, 20000, 30000], mp: [7500, 15000, 30000],
+    mix: { CLM: 53, ALW: 18, MCL: 9, MSW: 7, STR: 6, AOC: 4 }, turf: 0.05, sb: 0.22, sbMult: 1.3, fund: { st: 'OK', kind: 'plus', open: 0.15 } },
+  LS: { msw: 15000, alw: 19500, aoc: 18000, str: 14000, soc: 14000, moc: 14500, clm: [8750, 0.25], mcl: [8500, 0.3], cp: [5000, 7500, 10000, 15000, 20000], mp: [5000, 10000, 20000],
+    mix: { CLM: 34, ALW: 19, MSW: 16, MCL: 15, AOC: 8, STR: 5 }, turf: 0.1, sb: 0.2, sbMult: 1.2, fund: { st: 'TX', kind: 'plus', open: 0.15 } },
 };
 const RACE_TYPE_N = { MSW: 'Maiden Special Weight', MCL: 'Maiden Claiming', MOC: 'Maiden Optional Claiming', CLM: 'Claiming', STR: 'Starter Allowance', SOC: 'Starter Optional Claiming', ALW: 'Allowance', AOC: 'Allowance Optional Claiming', STK: 'Stakes' };
+// Sales: real 2026 results (research/01_sales.md, 11_hip_by_hip.md). med = median hammer of sold horses, rna = buy-back share
+// of horses through the ring, out = share of catalog withdrawn, fe = how much sire fee drives price (KEE 0.85, regional ~0.3).
 const SALES = [
-  { wk: 2, id: 'KJAN', n: 'Keeneland January Horses of All Ages', loc: 'Lexington, KY', kind: 'mixed', tier: 1, st: 'KY' },
-  { wk: 3, id: 'OBSJ', n: 'OBS Winter Mixed Sale', loc: 'Ocala, FL', kind: 'mixed', tier: 0, st: 'FL' },
-  { wk: 6, id: 'FTFEB', n: 'Fasig-Tipton Kentucky Winter Mixed', loc: 'Lexington, KY', kind: 'mixed', tier: 1, st: 'KY' },
-  { wk: 11, id: 'OBSM', n: 'OBS March 2YOs in Training', loc: 'Ocala, FL', kind: '2yo', tier: 2, st: 'FL' },
-  { wk: 13, id: 'FTGP', n: 'Fasig-Tipton Gulfstream 2YOs', loc: 'Hallandale Beach, FL', kind: '2yo', tier: 3, st: 'FL', elite: 1 },
-  { wk: 16, id: 'OBSA', n: 'OBS Spring 2YOs in Training', loc: 'Ocala, FL', kind: '2yo', tier: 1, st: 'FL' },
-  { wk: 21, id: 'FTMA2', n: 'Fasig-Tipton Midlantic 2YOs', loc: 'Timonium, MD', kind: '2yo', tier: 1, st: 'MD' },
-  { wk: 24, id: 'OBSJN', n: 'OBS June 2YOs & Horses of Racing Age', loc: 'Ocala, FL', kind: '2yo', tier: 0, st: 'FL' },
-  { wk: 32, id: 'FTSAR', n: 'Fasig-Tipton Saratoga Select Yearlings', loc: 'Saratoga Springs, NY', kind: 'yearling', tier: 3, st: 'KY', elite: 1 },
-  { wk: 33, id: 'FTNY', n: 'Fasig-Tipton New York-Bred Yearlings', loc: 'Saratoga Springs, NY', kind: 'yearling', tier: 1, st: 'NY', sb: 1 },
-  { wk: 34, id: 'OBSAU', n: 'OBS August Yearlings', loc: 'Ocala, FL', kind: 'yearling', tier: 0, st: 'FL', sb: 1 },
-  { wk: 37, id: 'KS1', n: 'Keeneland September Yearling — Book 1', loc: 'Lexington, KY', kind: 'yearling', tier: 3, st: 'KY', elite: 1 },
-  { wk: 38, id: 'KS2', n: 'Keeneland September Yearling — Books 2–3', loc: 'Lexington, KY', kind: 'yearling', tier: 2, st: 'KY' },
-  { wk: 39, id: 'KS4', n: 'Keeneland September Yearling — Books 4–6', loc: 'Lexington, KY', kind: 'yearling', tier: 1, st: 'KY' },
-  { wk: 40, id: 'CTBA', n: 'California-Bred Yearling Sale', loc: 'California', kind: 'yearling', tier: 0, st: 'CA', sb: 1 },
-  { wk: 41, id: 'FTMAF', n: 'Fasig-Tipton Midlantic Fall Yearlings', loc: 'Timonium, MD', kind: 'yearling', tier: 0, st: 'MD', sb: 1, st2: 'PA' },
-  { wk: 42, id: 'LTBA', n: 'Louisiana-Bred Yearling Sale', loc: 'Louisiana', kind: 'yearling', tier: 0, st: 'LA', sb: 1 },
-  { wk: 45, id: 'FTNOV', n: 'Fasig-Tipton November Sale', loc: 'Lexington, KY', kind: 'breeding', tier: 3, st: 'KY', elite: 1 },
-  { wk: 46, id: 'KNOV', n: 'Keeneland November Breeding Stock', loc: 'Lexington, KY', kind: 'breeding', tier: 1, st: 'KY' },
-  { wk: 49, id: 'FTMAD', n: 'Fasig-Tipton Midlantic December Mixed', loc: 'Timonium, MD', kind: 'mixed', tier: 0, st: 'MD' },
+  { wk: 2, id: 'KJAN', n: 'Keeneland January Horses of All Ages', loc: 'Lexington, KY', kind: 'mixed', tier: 1, st: 'KY', med: 30000, rna: 0.25, out: 0.15, fe: 0.6, n0: 26 },
+  { wk: 3, id: 'OBSJ', n: 'OBS Winter Mixed Sale', loc: 'Ocala, FL', kind: 'mixed', tier: 0, st: 'FL', med: 12000, rna: 0.28, out: 0.2, fe: 0.35, n0: 22 },
+  { wk: 6, id: 'FTFEB', n: 'Fasig-Tipton Kentucky Winter Mixed', loc: 'Lexington, KY', kind: 'mixed', tier: 1, st: 'KY', med: 22000, rna: 0.24, out: 0.15, fe: 0.6, n0: 22 },
+  { wk: 11, id: 'OBSM', n: 'OBS March 2YOs in Training', loc: 'Ocala, FL', kind: '2yo', tier: 2, st: 'FL', med: 85000, rna: 0.22, out: 0.3, fe: 0.34, n0: 30 },
+  { wk: 16, id: 'OBSA', n: 'OBS Spring 2YOs in Training', loc: 'Ocala, FL', kind: '2yo', tier: 2, st: 'FL', med: 76000, rna: 0.18, out: 0.37, fe: 0.34, n0: 34 },
+  { wk: 21, id: 'FTMA2', n: 'Fasig-Tipton Midlantic 2YOs in Training', loc: 'Timonium, MD', kind: '2yo', tier: 1, st: 'MD', med: 70000, rna: 0.22, out: 0.3, fe: 0.34, n0: 28 },
+  { wk: 25, id: 'OBSJN', n: 'OBS June 2YOs & Horses of Racing Age', loc: 'Ocala, FL', kind: '2yo', tier: 0, st: 'FL', med: 25000, rna: 0.16, out: 0.25, fe: 0.3, n0: 28 },
+  { wk: 28, id: 'FTJUL', n: 'Fasig-Tipton July Selected Yearlings', loc: 'Lexington, KY', kind: 'yearling', tier: 2, st: 'KY', med: 92500, rna: 0.23, out: 0.15, fe: 0.85, n0: 24, fee: [10000, 60000] },
+  { wk: 32, id: 'FTSAR', n: 'Fasig-Tipton Saratoga Select Yearlings', loc: 'Saratoga Springs, NY', kind: 'yearling', tier: 3, st: 'KY', elite: 1, med: 525000, rna: 0.11, out: 0.1, fe: 0.85, n0: 24, fee: [40000, 300000], looks: 1.1 },
+  { wk: 33, id: 'FTNY', n: 'Fasig-Tipton New York-Bred Yearlings', loc: 'Saratoga Springs, NY', kind: 'yearling', tier: 1, st: 'NY', sb: 1, med: 100000, rna: 0.2, out: 0.12, fe: 0.4, n0: 26 },
+  { wk: 37, id: 'KS1', n: 'Keeneland September Yearling — Book 1', loc: 'Lexington, KY', kind: 'yearling', tier: 3, st: 'KY', elite: 1, med: 450000, rna: 0.23, out: 0.2, fe: 0.85, n0: 30, fee: [40000, 300000], looks: 0.9 },
+  { wk: 38, id: 'KS2', n: 'Keeneland September Yearling — Books 2–3', loc: 'Lexington, KY', kind: 'yearling', tier: 2, st: 'KY', med: 200000, rna: 0.21, out: 0.17, fe: 0.85, n0: 34, fee: [15000, 150000], looks: 0.3 },
+  { wk: 39, id: 'KS4', n: 'Keeneland September Yearling — Books 4–6', loc: 'Lexington, KY', kind: 'yearling', tier: 1, st: 'KY', med: 40000, rna: 0.15, out: 0.25, fe: 0.85, n0: 36, fee: [2500, 40000], looks: -0.3 },
+  { wk: 40, id: 'FTMAF', n: 'Fasig-Tipton Eastern Fall Yearlings', loc: 'Timonium, MD', kind: 'yearling', tier: 0, st: 'MD', sb: 1, st2: 'PA', med: 20000, rna: 0.17, out: 0.14, fe: 0.27, n0: 24 },
+  { wk: 41, id: 'CTBA', n: 'Fasig-Tipton California Fall Yearlings', loc: 'Pomona, CA', kind: 'yearling', tier: 0, st: 'CA', sb: 1, med: 15000, rna: 0.4, out: 0.15, fe: 0.3, n0: 22 },
+  { wk: 42, id: 'OBSO', n: 'OBS October Yearlings', loc: 'Ocala, FL', kind: 'yearling', tier: 0, st: 'FL', sb: 1, med: 17000, rna: 0.26, out: 0.2, fe: 0.35, n0: 26 },
+  { wk: 43, id: 'FTKYO', n: 'Fasig-Tipton Kentucky October Yearlings', loc: 'Lexington, KY', kind: 'yearling', tier: 1, st: 'KY', med: 30000, rna: 0.18, out: 0.15, fe: 0.7, n0: 30, fee: [2500, 30000], looks: -0.2 },
+  { wk: 44, id: 'LTBA', n: 'LTBA Louisiana Preferred Yearlings', loc: 'Opelousas, LA', kind: 'yearling', tier: 0, st: 'LA', sb: 1, med: 13000, rna: 0.23, out: 0.06, fe: 0.05, n0: 22 },
+  { wk: 45, id: 'FTNOV', n: 'Fasig-Tipton November Sale', loc: 'Lexington, KY', kind: 'breeding', tier: 3, st: 'KY', elite: 1, med: 300000, rna: 0.225, out: 0.12, fe: 0.85, n0: 22 },
+  { wk: 46, id: 'KNOV', n: 'Keeneland November Breeding Stock', loc: 'Lexington, KY', kind: 'breeding', tier: 1, st: 'KY', med: 55000, rna: 0.2, out: 0.15, fe: 0.8, n0: 30 },
+  { wk: 49, id: 'FTMAD', n: 'Fasig-Tipton Midlantic December Mixed', loc: 'Timonium, MD', kind: 'mixed', tier: 0, st: 'MD', med: 8000, rna: 0.3, out: 0.15, fe: 0.3, n0: 22 },
 ];
-
-const LINES = ['Royal Ruler', 'Golden Prospect', 'Northern Crown', 'Tempest', 'Meadow Star', 'Iron Duke'];
+// Sire lines (real male lines). Nick values are game approximations of well-known crosses.
+const LINES = REAL_LINES;
 const NICKS = {
-  'Golden Prospect|Northern Crown': 3, 'Tempest|Royal Ruler': 3, 'Royal Ruler|Golden Prospect': 2, 'Northern Crown|Meadow Star': 2,
-  'Meadow Star|Tempest': 2, 'Iron Duke|Golden Prospect': 2, 'Iron Duke|Tempest': 1, 'Northern Crown|Iron Duke': 1,
-  'Tempest|Meadow Star': -1, 'Golden Prospect|Iron Duke': -1, 'Meadow Star|Golden Prospect': 1, 'Royal Ruler|Iron Duke': 1,
+  'Storm Cat|A.P. Indy': 2, 'A.P. Indy|Storm Cat': 2, 'Mr. Prospector|Danzig': 1, 'Danzig|Mr. Prospector': 1, "Mr. Prospector|Sadler's Wells": 1,
+  'Storm Cat|Mr. Prospector': 1, 'Halo|Mr. Prospector': 1, "Sadler's Wells|Danzig": 1, 'A.P. Indy|Mr. Prospector': 1, 'Halo|Storm Cat': 1,
 };
-
-// AI stallions: [name, state, fee, line, distOpt, turf(-1..1), maturity(-1..1), soundness(lower=better)]
-const STALLION_SEED = [
-  ['Ironclad Monarch', 'KY', 200000, 'Golden Prospect', 8.5, -0.5, 0.4, 0.9],
-  ['Gilded Empire', 'KY', 150000, 'Northern Crown', 9.5, -0.3, 0.0, 0.95],
-  ['Copper Crown', 'KY', 125000, 'Tempest', 7.5, -0.6, 0.7, 1.0],
-  ['Thunder Ledger', 'KY', 85000, 'Royal Ruler', 9, -0.4, 0.1, 0.9],
-  ['Silent Admiral', 'KY', 65000, 'Meadow Star', 10, 0.7, -0.4, 0.85],
-  ['Prairie Sovereign', 'KY', 50000, 'Iron Duke', 9, -0.2, -0.2, 1.0],
-  ['Velvet Hammer', 'KY', 40000, 'Meadow Star', 9, 0.8, -0.3, 0.9],
-  ['Midnight Tycoon', 'KY', 30000, 'Golden Prospect', 7, -0.7, 0.8, 1.1],
-  ['Harbor Light', 'KY', 25000, 'Northern Crown', 8.5, 0.1, 0.0, 1.0],
-  ['Rebel Cadence', 'KY', 20000, 'Tempest', 6.5, -0.6, 0.9, 1.15],
-  ['Saint Tobias', 'KY', 15000, 'Meadow Star', 9.5, 0.8, -0.5, 0.9],
-  ['Cotton Express', 'KY', 12500, 'Royal Ruler', 7, -0.5, 0.6, 1.05],
-  ['Lucky Frontier', 'KY', 10000, 'Iron Duke', 8.5, -0.2, 0.0, 1.0],
-  ['Bourbon Ballad', 'KY', 7500, 'Golden Prospect', 6.5, -0.6, 0.7, 1.15],
-  ['Quiet Gambit', 'KY', 5000, 'Northern Crown', 8, 0.2, -0.1, 1.0],
-  ['Empire Verdict', 'NY', 25000, 'Royal Ruler', 9, -0.3, 0.0, 0.95],
-  ['Hudson Comet', 'NY', 15000, 'Tempest', 7, -0.6, 0.7, 1.05],
-  ['Saratoga Bandit', 'NY', 10000, 'Golden Prospect', 8, -0.4, 0.2, 1.0],
-  ['Brooklyn Pilot', 'NY', 7500, 'Meadow Star', 9, 0.6, -0.3, 0.95],
-  ['Catskill Echo', 'NY', 5000, 'Iron Duke', 7.5, -0.3, 0.3, 1.1],
-  ['Sunshine Outlaw', 'FL', 15000, 'Tempest', 6.5, -0.7, 0.9, 1.1],
-  ['Ocala Rocket', 'FL', 10000, 'Golden Prospect', 7, -0.6, 0.8, 1.1],
-  ['Gator Gambit', 'FL', 6000, 'Royal Ruler', 8, -0.3, 0.3, 1.0],
-  ['Palm Sonnet', 'FL', 3500, 'Northern Crown', 7.5, 0.0, 0.4, 1.1],
-  ['Golden Gate Tango', 'CA', 12500, 'Northern Crown', 8.5, 0.2, 0.0, 0.95],
-  ['Sierra Blaze', 'CA', 8000, 'Tempest', 6.5, -0.6, 0.8, 1.1],
-  ['Pacific Rumor', 'CA', 5000, 'Meadow Star', 9, 0.6, -0.2, 1.0],
-  ['Desert Dancer', 'CA', 2500, 'Iron Duke', 7.5, -0.2, 0.3, 1.15],
-  ['Keystone Legacy', 'PA', 10000, 'Golden Prospect', 8, -0.4, 0.3, 1.0],
-  ['Liberty Bell Run', 'PA', 5000, 'Royal Ruler', 7, -0.5, 0.5, 1.1],
-  ['Chesapeake Ruler', 'MD', 15000, 'Royal Ruler', 8.5, -0.3, 0.1, 0.95],
-  ['Old Line Spirit', 'MD', 6000, 'Northern Crown', 8, 0.1, 0.0, 1.05],
-  ['Bayou Captain', 'LA', 5000, 'Tempest', 7, -0.6, 0.6, 1.05],
-  ['Cajun Fable', 'LA', 3000, 'Iron Duke', 8, -0.2, 0.2, 1.1],
-];
-// Pensioned / deceased sires used for damsires
-const OLD_SIRES = [
-  ['Grand Meridian', 'Royal Ruler'], ['Silver Patriarch', 'Golden Prospect'], ['Northern Banner', 'Northern Crown'], ['Stormy Abbey', 'Tempest'],
-  ['Meadowlark Prince', 'Meadow Star'], ['Iron Chancellor', 'Iron Duke'], ['Brass Sovereign', 'Royal Ruler'], ['Prospect Hill', 'Golden Prospect'],
-  ['Crowned Heir', 'Northern Crown'], ['Gale Force Ten', 'Tempest'], ['Willow Meadow', 'Meadow Star'], ['Duke of Avalon', 'Iron Duke'],
-  ['Regal Decree', 'Royal Ruler'], ['Gold Rush Dancer', 'Golden Prospect'], ['Polar Crown', 'Northern Crown'], ['Hurricane Alley', 'Tempest'],
-];
+// Damsires: real sires no longer covering (pensioned / deceased / exported) — [name, line]
+const OLD_SIRES = REAL_OLD.map(o => [o[0], o[1]]);
 
 const NAME_A = ['Midnight', 'Silver', 'Royal', 'Lucky', 'Golden', 'Iron', 'Storm', 'Copper', 'Velvet', 'Thunder', 'Prairie', 'Rebel', 'Saint', 'Cotton', 'Whiskey', 'Bourbon', 'Liberty', 'Captain', 'Lady', 'Miss', 'Sir', 'Desert', 'Harbor', 'Northern', 'Southern', 'Wild', 'Brave', 'Quiet', 'Smoky', 'Dusty', 'Neon', 'Paper', 'Crimson', 'Mister', 'Majestic', 'Blue', 'Rowdy', 'Sly', 'Cajun', 'Gilded', 'Electric', 'Distant', 'Hidden', 'Savvy', 'Bold', 'Rapid', 'Lone', 'Twin', 'Rocky', 'Sunday', 'Saturday', 'Vegas', 'Moonlit', 'Frosty', 'Hot', 'Free', 'Big', 'Little', 'Sweet', 'Proud'];
 const NAME_B = ['Comet', 'Gambit', 'Ridge', 'Legacy', 'Charm', 'Echo', 'Bandit', 'Run', 'Dancer', 'Ruler', 'Outlaw', 'Ballad', 'Spirit', 'Mischief', 'Tango', 'Rhythm', 'Promise', 'Verdict', 'Pilot', 'Rumor', 'Frontier', 'Express', 'Tycoon', 'Diva', 'Sonnet', 'Fable', 'Empire', 'Kingdom', 'Rocket', 'Ember', 'Cadet', 'Blaze', 'Ticket', 'Hustle', 'Jubilee', 'Anthem', 'Maverick', 'Wager', 'Lightning', 'Harmony', 'Courage', 'Fortune', 'Mirage', 'Encore', 'Sprite', 'Rascal', 'Gospel', 'Riddle', 'Saga', 'Banner', 'Galaxy', 'Rodeo', 'Voyage', 'Stride', 'Tempo', 'Velocity', 'Lagoon', 'Boulevard', 'Parade', 'Holiday'];
@@ -350,12 +370,14 @@ const FIRST_N = ['Jim', 'Linda', 'Carlos', 'Wesley', 'Ana', 'Brad', 'Kiaran', 'T
 const LAST_N = ['Hollister', 'Duval', 'McCray', 'Baines', 'Ortiz', 'Pelletier', 'Whitcomb', 'Greer', 'Stanton', 'Varga', 'Kessler', 'Talbot', 'Merritt', 'Calloway', 'Rourke', 'Delacroix', 'Ashby', 'Fennimore', 'Galvan', 'Huxley', 'Lockhart', 'Moreau', 'Nash', 'Pruitt', 'Quintero', 'Sheffield', 'Tremont', 'Vance', 'Winslow', 'Yates', 'Boudreaux', 'Castellano', 'Dunmore', 'Ellery'];
 
 const TRAINER_TIERS = [
-  { n: 'Claiming barn', rate: 55, dev: -2.5, vet: 1.3, fit: 7, read: 0.5, jock: 0 },
-  { n: 'Regional', rate: 80, dev: -1, vet: 1.15, fit: 8, read: 0.7, jock: 0.5 },
-  { n: 'Established', rate: 100, dev: 0, vet: 1.0, fit: 9, read: 0.85, jock: 1 },
-  { n: 'Leading', rate: 125, dev: 1, vet: 0.9, fit: 10, read: 1, jock: 2, rep: 15, val: 150000 },
-  { n: 'Hall of Fame', rate: 150, dev: 2, vet: 0.8, fit: 11, read: 1.15, jock: 3, rep: 35, val: 400000 },
+  { n: 'Claiming barn', rate: 75, dev: -2.5, vet: 1.3, fit: 7, read: 0.5, jock: 0 },
+  { n: 'Regional', rate: 95, dev: -1, vet: 1.15, fit: 8, read: 0.7, jock: 0.5 },
+  { n: 'Established', rate: 120, dev: 0, vet: 1.0, fit: 9, read: 0.85, jock: 1 },
+  { n: 'Leading', rate: 150, dev: 1, vet: 0.9, fit: 10, read: 1, jock: 2, rep: 15, val: 150000 },
+  { n: 'Hall of Fame', rate: 185, dev: 2, vet: 0.8, fit: 11, read: 1.15, jock: 3, rep: 35, val: 400000 },
 ];
+// Optional real-name trainer roster (2025-26 leaders, research/05). [region, tier] -> name. Personalities in game are fictional.
+const REAL_TRAINERS = { NY4: 'Todd Pletcher', NY3: 'Chad Brown', NY2: 'Horacio DePaz', KY4: 'Steve Asmussen', KY3: 'Brad Cox', KY2: 'Brendan Walsh', FL4: 'Bill Mott', FL3: 'Saffie Joseph Jr.', CA4: 'Bob Baffert', MA3: 'Jamie Ness', MA2: 'Brittany Russell', S3: 'Mark Casse', S2: 'Mike Maker' };
 const JOCKEY_TIERS = [
   { n: 'Apprentice ("bug")', skill: 0.6, need: 0, bug: 1 },
   { n: 'Journeyman', skill: 1.0, need: 0 },
@@ -393,9 +415,9 @@ function dateStr(yr, wk) { const d = weekDate(yr, wk); return MONTHS[d.getUTCMon
 function shortDate(yr, wk) { const d = weekDate(yr, wk); return MONTHS[d.getUTCMonth()] + ' ' + d.getUTCDate(); }
 function awToYW(aw) { const yr = START_YEAR + Math.floor((aw - 1) / 52); const wk = aw - (yr - START_YEAR) * 52; return [yr, wk]; }
 const DIFF = {
-  easy: { cash: 1000000, exp: 0.85, inj: 0.7, luck: 2, agg: 0.95, label: 'Easy' },
-  medium: { cash: 250000, exp: 1, inj: 1, luck: 0, agg: 1, label: 'Medium' },
-  hard: { cash: 75000, exp: 1.15, inj: 1.25, luck: -1, agg: 1.08, label: 'Hard' },
+  easy: { cash: 5000000, exp: 0.85, inj: 0.7, luck: 2, agg: 0.95, label: 'Easy' },
+  medium: { cash: 2000000, exp: 1, inj: 1, luck: 0, agg: 1, label: 'Medium' },
+  hard: { cash: 500000, exp: 1.15, inj: 1.25, luck: -1, agg: 1.08, label: 'Hard' },
 };
 const D = () => DIFF[G.diff];
 function nid() { return 'h' + (G.nextId++); }
@@ -412,18 +434,18 @@ function newGame(opts) {
     diff: opts.diff, stable: opts.stable || 'My Stable', silks: opts.silks, home: opts.home || 'KY',
     cash: DIFF[opts.diff].cash, yr: START_YEAR, wk: 1, rep: 3, horses: [], stallions: [], trainers: [], news: [], fin: {},
     offers: [], entries: [], fields: {}, claims: [], consign: [], trophies: [], nextId: 1, market: [], mktAw: 0,
-    shares: [], road: null, v: 3, saleLots: null, saleId: null, lastRep: null, history: [], pinned: {}
+    shares: [], road: null, v: 4, realTrainers: !!opts.realTrainers, saleLots: null, saleId: null, lastRep: null, history: [], pinned: {}
   };
   initTrainers(); initStallions();
   if (opts.diff === 'easy') {
-    const s = G.stallions.find(x => x.name === 'Harbor Light');
-    const m = makeHorse({ foal: G.yr - 7, sex: 'F', sire: G.stallions.find(x => x.name === 'Prairie Sovereign'), damG: 78, bred: 'KY' });
-    m.g = 79; m.ceil = 84; m.name = 'Starter Promise'; m.status = 'mare'; m.farm = G.home; m.starts = 11; m.wins = 3; m.pl = 2; m.sh = 2; m.earn = 186400; m.blackType = 'SP'; m.dq = 76; m.retFig = 86;
+    const s = G.stallions.find(x => x.name === 'Twirling Candy') || G.stallions.find(x => x.fee >= 25000 && x.fee <= 60000);
+    const m = makeHorse({ foal: G.yr - 7, sex: 'F', sire: G.stallions.find(x => x.name === 'Speightstown') || G.stallions.find(x => x.fee >= 50000), damG: 76, bred: 'KY' });
+    m.g = 77; m.ceil = 84; m.name = 'Starter Promise'; m.status = 'mare'; m.farm = G.home; m.starts = 11; m.wins = 3; m.pl = 2; m.sh = 2; m.earn = 186400; m.blackType = 'SP'; m.dq = 76; m.retFig = 86;
     m.preg = { sid: s.id, due: 8 }; G.horses.push(m);
-    news(`Welcome! Your broodmare Starter Promise is in foal to Harbor Light, due in February.`, 'good');
+    news(`Welcome! Your broodmare Starter Promise is in foal to ${s.name}, due in February.`, 'good');
   }
   refreshMarket(); ensureRoad();
-  news(`${G.stable} is open for business. The Keeneland January sale is next week — or check the Private Market.`, 'info');
+  news(`${G.stable} is open for business. The Keeneland January sale is next week — or check the Private Market. ${G.stallions.length} real stallions are standing for 2027.`, 'info');
   prepWeek();
 }
 
@@ -432,38 +454,57 @@ function initTrainers() {
   for (const rg of Object.keys(REGION_N)) {
     const maxT = (rg === 'MA' || rg === 'S') ? 3 : 4;
     for (let t = 0; t <= maxT; t++) {
-      let n; do { n = pick(FIRST_N, r) + ' ' + pick(LAST_N, r); } while (used.has(n)); used.add(n);
+      let n = G.realTrainers ? REAL_TRAINERS[rg + t] : null; if (!n) { do { n = pick(FIRST_N, r) + ' ' + pick(LAST_N, r); } while (used.has(n)); } used.add(n);
       const T = TRAINER_TIERS[t];
       G.trainers.push({ id: 't' + rg + t, n, rg, tier: t, rate: Math.round(T.rate * (rg === 'NY' || rg === 'KY' || rg === 'CA' ? 1.05 : 0.92)) });
     }
   }
 }
-function impliedG(fee) { return 66 + 10 * Math.log10(Math.max(1000, fee) / 2500); }
-function initStallions() {
-  let i = 1;
-  for (const s of STALLION_SEED) {
-    const yrs = rint(2, 14);
-    const proven = yrs >= 4;
-    G.stallions.push({ id: 's' + (i++), name: s[0], st: s[1], fee: s[2], mkt: s[2], line: s[3], dist: s[4], turf: s[5], mat: s[6], sound: s[7], g: impliedG(s[2]) + gauss(0, proven ? 1.5 : 3.5), yrStart: START_YEAR - yrs, born: START_YEAR - yrs - 5 });
-  }
+// Sire quality vs. fee, fitted on 85 real sires (research/07): g = 2*offspringMean(AEI) - mareLevel(CI)
+function impliedG(fee) { return 67.6 + 3.65 * Math.log10(Math.max(1000, fee) / 2500); }
+const aeiToG = (aei) => 68 + 10 * Math.log(Math.max(0.2, aei)) / 0.916;
+const gToAei = (g) => Math.exp((g - 68) * 0.0916);
+const MSTN_D = { CC: 6.3, CT: 8.0, TT: 9.8 };
+function mstnFromDist(d, r = rnd) { const pCC = clamp(0.5 - (d - 6.6) * 0.35, 0.03, 0.9), pTT = clamp((d - 7.9) * 0.35, 0.02, 0.85); const x = r(); return x < pCC ? 'CC' : x < pCC + pTT ? 'TT' : 'CT'; }
+function allele(gt, r = rnd) { return gt[r() < 0.5 ? 0 : 1]; }
+function sireFromReal(row, i) {
+  const [name, st, fee, line, aei, ci, awd, book, yob, farm, btw, foals, turf, est] = row;
+  const r = srng('rs' + name);
+  const proven = aei && ci && foals >= 100;
+  const g = proven ? 2 * aeiToG(aei) - aeiToG(ci) + gauss(0, 0.6, r) : impliedG(fee) + gauss(0, foals ? 2 : 2.8, r);
+  const A = awd || clamp(7.15 + gauss(0, 0.35, r), 6.3, 8.1);
+  const dist = clamp(7.6 + (A - 7.2) * 2.8 + gauss(0, 0.3, r), 5.5, 11.5);
+  const mstn = mstnFromDist(dist, r);
+  const born = yob || START_YEAR - 5 - (foals ? 4 : Math.floor(r() * 3));
+  const yrStart = yob ? Math.min(START_YEAR, yob + 4) : born + 4;
+  return { id: 'r' + i, name, st, fee, mkt: fee, line, dist, turf: clamp(turf + gauss(0, 0.15, r), -1, 1), mat: clamp(-(A - 7.2) * 0.9 + gauss(0, 0.25, r), -1, 1), sound: clamp(gauss(1, 0.1, r), 0.75, 1.3),
+    g, mstn, yrStart, born, aei: aei || null, ci: ci || null, awd: awd || null, farm: farm || '', book0: book, btw: btw || 0, foals0: foals || 0, estFee: !!est, real: 1 };
 }
+function initStallions() { REAL_SIRES.forEach((row, i) => G.stallions.push(sireFromReal(row, i + 1))); }
 function stallion(id) { return G.stallions.find(s => s.id === id); }
 function trainer(id) { return G.trainers.find(t => t.id === id); }
 function horse(id) { return G.horses.find(h => h.id === id); }
 
 // ===================== HORSES =====================
+// Breeding-scale merit g sits POP_OFF above the Beyer scale, so the median starter's career-best fig lands in the low 60s
+const POP_OFF = 9;
 function makeHorse(o) {
   // o: {foal, sex, sire(stallion obj), dam (horse obj) | damG, damLine, bred, luck}
+  // Genetics: g = genetic merit (breeding value). Foal g = mid-parent + Mendelian noise; racing ceiling = g + environment.
+  // Variances chosen so heritability of racing class ~0.35 (research/04). MSTN 'speed gene' controls distance + maturity.
   const sire = o.sire; const dam = o.dam;
   const damG = dam ? dam.g - Math.max(0, (G.yr - dam.foal) - 16) * 0.8 : o.damG;
   const damsireLine = dam ? dam.sireLine : (o.damLine || pick(LINES));
-  const nick = (NICKS[sire.line + '|' + damsireLine] || 0) + (sire.line === damsireLine ? -1 : 0);
-  const g = (sire.g + damG) / 2 + nick * 0.9 + gauss(0, 5.5) + (o.luck || 0);
-  const ceil = g + gauss(0, 7);
-  const ddist = dam ? dam.dist : gauss(8, 1.1); const dturf = dam ? dam.turf : gauss(0, 0.45);
-  const dist = clamp((sire.dist + ddist) / 2 + gauss(0, 0.9), 5, 12);
+  const nick = (NICKS[sire.line + '|' + damsireLine] || 0) + (sire.line === damsireLine ? -0.5 : 0);
+  const g = (sire.g + damG) / 2 + nick * 0.5 + gauss(0, 4.5) + (o.luck || 0);
+  const ceil = g - POP_OFF + gauss(0, 8.7); // racing class on the Beyer scale (g is on the breeding scale)
+  const ddist = dam ? dam.dist : gauss(7.8, 1.1); const dturf = dam ? dam.turf : gauss(0, 0.45);
+  const sG = sire.mstn || mstnFromDist(sire.dist); const dG = dam ? (dam.mstn || mstnFromDist(dam.dist)) : (o.damMstn || mstnFromDist(ddist));
+  const mstn = [allele(sG), allele(dG)].sort().join('');
+  const gt = mstn === 'TC' ? 'CT' : mstn;
+  const dist = clamp(0.55 * MSTN_D[gt] + 0.45 * (sire.dist + ddist) / 2 + gauss(0, 0.6), 5, 12);
   const turf = clamp((sire.turf + dturf) / 2 + gauss(0, 0.35), -1, 1);
-  const mat = clamp((sire.mat + (dam ? dam.mat : gauss(0, 0.4))) / 2 + gauss(0, 0.4), -1, 1);
+  const mat = clamp((sire.mat + (dam ? dam.mat : gauss(0, 0.4))) / 2 + (gt === 'CC' ? 0.25 : gt === 'TT' ? -0.25 : 0) + gauss(0, 0.35), -1, 1);
   const sound = clamp((sire.sound + (dam ? dam.sound : 1)) / 2 * Math.exp(gauss(0, 0.2)), 0.55, 1.8);
   const temper = clamp(rnd() * 0.9 + 0.05, 0, 1);
   const styleW = dist < 7 ? [5, 3, 2, 1] : dist < 9 ? [3, 3, 3, 2] : [2, 3, 3, 3];
@@ -471,16 +512,19 @@ function makeHorse(o) {
   const h = {
     id: nid(), name: '', sex: o.sex || (rnd() < 0.5 ? 'C' : 'F'), foal: o.foal, sireId: sire.id, sireName: sire.name, sireLine: sire.line, sireFee: sire.fee,
     damName: dam ? dam.name : (o.damName || genName()), damId: dam ? dam.id : null, damsireName: dam ? dam.sireName : (o.damsire || pick(OLD_SIRES)[0]), damsireLine,
-    bred: o.bred || 'KY', g, ceil, dist, turf, mud: clamp(gauss(0, 0.45), -1, 1), style, sound, temper, green: temper > 0.6 && rnd() < 0.6, mat,
+    bred: o.bred || 'KY', g, ceil, dist, turf, mud: clamp(gauss(0, 0.45), -1, 1), style, sound, temper, green: temper > 0.6 && rnd() < 0.6, mat, mstn: gt,
     syn: clamp(0.5 * turf + gauss(0, 0.3), -1, 1), bleeder: rnd() < (dam && dam.bleeder ? 0.15 : 0.06), conf: 0, status: 'young', trainer: null, tSince: 0, fit: 20, lastRace: -99,
     inj: null, starts: 0, wins: 0, pl: 0, sh: 0, earn: 0, alw: 0, pp: [], works: [], know: 0, gw: [0, 0, 0, 0], sw: 0, big: 0,
     kdPts: 0, koPts: 0, tcNom: null, bcNom: false, lasix: false, blinkers: false, gelded: false, auto: { on: false, clm: false, stk: false },
-    breeder: o.breeder || 'other', dq: 0, color: pick(['Bay', 'Dark Bay', 'Chestnut', 'Gray', 'Bay', 'Chestnut', 'Dark Bay', 'Roan', 'Black']), ys: { st: 0, w: 0, e: 0 }, surg: 0, farm: o.bred || 'KY'
+    breeder: o.breeder || 'other', dq: 0, color: pick(['Bay', 'Dark Bay', 'Chestnut', 'Gray', 'Bay', 'Chestnut', 'Dark Bay', 'Roan', 'Black']), ys: { st: 0, w: 0, e: 0 }, surg: 0, farm: o.bred || 'KY',
+    // ~10% of foals have a hidden problem that stops them before they ever start (part of the 29% of foals that never race)
+    wash: rnd() < 0.1 * sound
   };
   h.dq = dam ? mareQ(dam) + gauss(0, 1) : (o.dq != null ? o.dq : damG + gauss(0, 3));
-  const exp = (sire.g + damG) / 2;
-  const cs = (h.ceil - exp) * 0.08 + (1 - h.sound) * 1.3 + gauss(0, 0.8);
-  h.conf = cs > 0.9 ? 4 : cs > 0 ? 3 : cs > -0.9 ? 2 : 1;
+  const exp = (sire.g + damG) / 2 - POP_OFF;
+  // looks = what buyers see at a sale (conformation, walk, size). Weakly tied to ability and soundness.
+  h.looks = clamp(0.85 * gauss(0, 1) + (h.ceil - exp) * 0.025 + (1 - h.sound) * 0.6 + (o.looks || 0), -3, 3.5);
+  h.conf = h.looks > 1.0 ? 4 : h.looks > 0.05 ? 3 : h.looks > -0.9 ? 2 : 1;
   return h;
 }
 function ageOf(h) { return G.yr - h.foal; }
@@ -501,30 +545,39 @@ function recentFig(h) { const f = h.pp.slice(0, 3).map(p => p.fig); return f.len
 function mareQ(m) {
   // perceived quality of a mare as a producer (what the market sees)
   const b = bestFig(m, 30) ?? m.retFig ?? null, r = recentFig(m);
-  let q = b != null ? (0.65 * b + 0.35 * (r ?? b)) * 0.8 + 15 : 68 + (m.dq - 72) * 0.4;
+  let q = b != null ? (0.65 * b + 0.35 * (r ?? b)) * 0.8 + 22 : 68 + (m.dq - 72) * 0.4;
   q += m.gw[1] * 2.5 + m.gw[2] * 1.2 + m.gw[3] * 0.8 + Math.min(m.sw, 3) * 0.6;
   if (m.blackType === 'SW') q += 2; else if (m.blackType === 'SP') q += 1;
-  q += 0.15 * (impliedG(curFee(m)) - 76) + 0.12 * (m.dq - 74);
+  q += 0.4 * (impliedG(curFee(m)) - 72) + 0.12 * (m.dq - 74);
   if (m.prodBest) q += Math.max(0, (m.prodBest - 85) * 0.25);
   return q;
 }
 function curFee(h) { const s = stallion(h.sireId); return s ? s.fee : h.sireFee; }
 
 // ===================== VALUES =====================
-function pedValue(h, breeze) {
-  const fee = curFee(h);
-  let v = fee * 2.0 * Math.pow(10, (h.dq - 72) / 25) * [0.45, 0.75, 1.1, 1.6][h.conf - 1];
-  if (h.sex === 'F') v *= 0.85; if (h.gelded) v *= 0.7;
-  const a = ageOf(h);
-  if (a === 0) v *= 0.55; else if (a >= 2) { const b = breeze ?? h.breeze; v *= b ? Math.pow(10, (10.6 - b) * 0.9) : 0.85; }
+// Sale-price model fitted on 6,311 real hips (research/11): price ∝ fee^0.85 at Keeneland (2.8x fee at $5k, 1.5x at $250k),
+// dam black type +15%, colts +27%, individual (looks) log-sd ~0.65 + buyer noise; 2yo: x0.53 per 1/5 second of breeze.
+function feePrice(fee, fe = 0.85) { return 14000 * Math.pow(Math.max(1000, fee) / 5000, fe); }
+function damFactor(h) { const q = h.dq; const cat = q >= 84 ? 1.4 : q >= 79 ? 1.15 : q >= 73 ? 0.85 : q >= 69 ? 0.82 : 1.0; return cat * Math.exp(0.02 * (q - 74)); }
+const STATE_PREM = { NY: 2.0, PA: 1.3, MD: 1.3, LA: 1.2, FL: 1.0, CA: 0.9, KY: 1, WV: 0.8, ON: 1.2 };
+function breezeFactor(b) { return Math.pow(0.53, (b - 10.2) / 0.2); }
+function pedValue(h, breeze, fe = 0.85) {
+  const fee = curFee(h); const a = ageOf(h);
+  const sexF = h.sex === 'F' ? 0.89 : 1.13;
+  let v;
+  if (a >= 2 && (breeze ?? h.breeze)) v = 76000 * Math.pow(Math.max(1000, fee) / 20000, 0.34) * breezeFactor(breeze ?? h.breeze) * Math.pow(damFactor(h), 0.6) * sexF * Math.exp(0.4 * (h.looks ?? 0));
+  else {
+    v = feePrice(fee, fe) * damFactor(h) * sexF * Math.exp(0.65 * (h.looks ?? 0));
+    if (a === 0) v *= 0.83; else if (a >= 2) v *= 0.9;
+  }
   if (a >= 3) v *= 0.4;
-  v *= ({ NY: 1.15, PA: 1.12, FL: 1.05, CA: 1.0, MD: 1.03, LA: 1.0, KY: 1 })[h.bred] || 1;
-  if (h.surg) v *= 0.7;
-  return Math.max(1500, v);
+  v *= STATE_PREM[h.bred] || 0.9;
+  if (h.gelded) v *= 0.7; if (h.surg) v *= 0.7;
+  return Math.max(1000, v);
 }
 function raceValue(h) {
   const b = bestFig(h, 8), r = recentFig(h); if (b == null) return pedValue(h);
-  const fig = 0.6 * b + 0.4 * r; let v = 12000 * Math.pow(10, (fig - 68) / 17);
+  const fig = 0.6 * b + 0.4 * r; let v = 12000 * Math.pow(10, (fig - 62) / 17);
   const a = ageOf(h); v *= a <= 3 ? 1 : a === 4 ? 0.85 : a === 5 ? 0.65 : a === 6 ? 0.45 : 0.3;
   if (h.inj) v *= h.inj.sev >= 2 ? 0.35 : 0.75; if (h.surg) v *= 0.8;
   return Math.max(2000, v);
@@ -532,13 +585,14 @@ function raceValue(h) {
 function studQ(h) {
   const b = bestFig(h, 20), r = recentFig(h); if (b == null) return 80;
   let q = 0.6 * b + 0.4 * r + Math.min(4.8, h.gw[1] * 1.2) + Math.min(1.5, h.gw[2] * 0.5) + h.big * 1.5;
-  q += 0.15 * (impliedG(curFee(h)) - 76) + 0.1 * (h.dq - 74);
+  q += 0.4 * (impliedG(curFee(h)) - 72) + 0.1 * (h.dq - 74);
   if (ageOf(h) >= 4 && h.pp.some(p => p.g === 1 && p.fin === 1 && p.age >= 4)) q += 1.5;
   if (h.surg) q -= 1;
   return q;
 }
-function studFeeFor(h) { return clamp(Math.round(50000 * Math.pow(10, (studQ(h) - 108) / 10) / 500) * 500, 0, 250000); }
-function studValue(h) { const f = studFeeFor(h); if (f < 2500) return 0; const a = ageOf(h); return f * 360 * (a <= 4 ? 1 : a <= 6 ? 0.85 : 0.6); }
+// G3 winner ~$5-10k, G1 winner ~$25-75k, champion $100k+ (2026 fee announcements)
+function studFeeFor(h) { return clamp(Math.round(50000 * Math.pow(10, (studQ(h) - 102) / 9) / 500) * 500, 0, 250000); }
+function studValue(h) { const f = studFeeFor(h); if (f < 2500) return 0; const a = ageOf(h); return f * 250 * (a <= 4 ? 1 : a <= 6 ? 0.85 : 0.6); }
 function mareValue(m) {
   const q = mareQ(m); let v = 25000 * Math.pow(10, (q - 80) / 11);
   const a = ageOf(m); if (a >= 12) v *= Math.max(0.15, 1 - (a - 11) * 0.12);
@@ -563,8 +617,10 @@ const RC = {};
 function tierAt(t, wk) { for (const m of t.m) if (wk >= m[0] && wk <= m[1]) return m[2]; return -1; }
 function meetAt(t, wk) { for (const m of t.m) if (wk >= m[0] && wk <= m[1]) return m; return null; }
 function trackCond(trk, yr, wk, surf) { const r = srng('c' + trk + yr + wk + surf)(); if (surf === 'T') return r < 0.8 ? 'Firm' : r < 0.95 ? 'Good' : 'Yielding'; if (surf === 'S') return 'Fast'; return r < 0.8 ? 'Fast' : r < 0.88 ? 'Good' : r < 0.94 ? 'Muddy' : 'Sloppy'; }
-const clmPar = (p) => 58 + 7 * Math.log2(p / 10000);
-const mclPar = (p) => 50 + 6 * Math.log2(p / 10000);
+// Beyer pars (winner's figure) recalibrated to DRF pars & BC-day PPs (research/04 §E): bottom MCL ~51, KEE MCL $30k 69,
+// MSW winners ~74-87 by circuit, ALW ~84, AOC ~92, G3/G2 ~94, G1 ~98-100. 2yo figs rise from ~72 (June) to ~79 (Oct).
+const clmPar = (p) => 58 + 7 * Math.log2(p / 5000);
+const mclPar = (p) => 51 + 6.5 * Math.log2(p / 5000);
 function parFor(r) {
   let p;
   const sub = r.sub || 'OPEN';
@@ -573,15 +629,15 @@ function parFor(r) {
   else if (r.type === 'CLM') p = clmPar(r.clm) + ({ N2L: -5, N3L: -3, NWS: -2 }[sub] || 0);
   else if (r.type === 'STR') p = clmPar(r.cap) + 4;
   else if (r.type === 'SOC') p = clmPar(r.clm) + 4;
-  else if (r.type === 'ALW') p = { N1X: 82, N2X: 86, N3X: 89, OPEN: 92 }[sub];
-  else if (r.type === 'AOC') p = { N1X: 84, N2X: 87, N3X: 90, OPEN: 92 }[sub];
-  else if (r.type === 'MSW') p = 78;
-  else if (r.type === 'STK') p = r.g ? [0, 102, 98, 95][r.g] : 92;
-  else p = [0, 102, 98, 95][r.g] ?? 92;
+  else if (r.type === 'ALW') p = { N1X: 83, N2X: 87, N3X: 90, OPEN: 92 }[sub];
+  else if (r.type === 'AOC') p = { N1X: 85, N2X: 88, N3X: 91, OPEN: 93 }[sub];
+  else if (r.type === 'MSW') p = 80;
+  else if (r.type === 'STK') p = r.g ? [0, 100, 96, 93][r.g] : 89;
+  else p = [0, 100, 96, 93][r.g] ?? 89;
   if (!r.name && r.lvl != null) { if (['MCL', 'CLM', 'SOC', 'STR'].includes(r.type)) p += clamp(2 * Math.log2(r.lvl), -3, 2); else p += clamp(9 * Math.log2(r.lvl), -12, 5); }
   if (r.tags && r.tags.includes('BIG')) p += 2; if (r.intl) p += 4; if (r.bc) p += r.name.includes('Classic') ? 3 : 1;
   if (r.sb) p -= 7;
-  if (r.age === '2') p += -14 + clamp((r.wk - 14) / 38, 0, 1) * 6;
+  if (r.age === '2') p += -10 + clamp((r.wk - 22) / 20, 0, 1) * 7;
   else if (r.age === '3') p += -6 + r.wk / 52 * 5;
   if (r.f) p -= 4;
   return Math.round(p * 10) / 10;
@@ -635,7 +691,7 @@ function weekRaces(yr, wk) {
       else if (race.sb && P.sbP && type === 'ALW' && (race.sub === 'N1X' || race.sub === 'N2X')) purse = race.sub === 'N1X' ? P.sbP.ALW : P.sbP.ALW2;
       else if (race.sb) purse *= P.sbMult || 1;
       race.purse = Math.round(purse / 500) * 500;
-      race.lvl = (P.msw * scale) / 85000;
+      race.lvl = (P.msw * scale * (P.fund && P.fund.kind === 'incl' ? 1 - (P.fund.MSW || 0) * 0.5 : 1)) / 85000;
       race.fund = P.fund && P.fund.st === t.st ? P.fund : null;
       race.cond = trackCond(code, yr, wk, race.surf);
       if (race.surf === 'T' && race.cond === 'Yielding' && r() < 0.5) { race.surf = t.syn ? 'S' : 'D'; race.cond = 'Sloppy'; race.offTurf = 1; if (race.dist > 9) race.dist = 9; if (race.dist < 6) race.dist = 6; }
@@ -747,14 +803,17 @@ function jockeyOptions(h, r) {
 
 // ---------- fields ----------
 function aiRunner(r, rr) {
+  // par = typical WINNER's figure, so the field averages well below it (avg field 7.5, figs vary ~5 pts race to race)
   const sd = r.g ? 4 : 5;
-  const rating = r.par - (r.g ? 1 : 0) + gauss(0, sd, rr);
+  const rating = r.par - (r.g ? 4.5 : 7) + gauss(0, sd, rr);
   const age = r.age === '2' ? 2 : r.age === '3' ? 3 : (r.age === '4U' ? rint(4, 7) : (rr() < 0.3 ? 3 : 3 + Math.floor(rr() * 4) + 1));
   const style = wpick(['E', 'P', 'S', 'C'], r.dist <= 7 ? [4, 3, 2, 1] : [2, 3, 3, 2], rr);
   const sire = pick(G.stallions, rr);
-  const starts = r.mdn ? (rr() < 0.35 ? 0 : rint(1, 6)) : rint(3, 25);
-  const figs = []; for (let i = 0; i < Math.min(3, starts); i++) figs.push(Math.round(rating + gauss(-1, 4, rr)));
-  return { ai: 1, name: genName(rr) + (r.intl ? pick([' (JPN)', ' (JPN)', ' (JPN)', ' (GB)', ' (IRE)', ' (KSA)', ' (UAE)', ' (FR)', '', ''], rr) : ''), age, sex: r.f ? 'F' : (rr() < 0.25 && age >= 4 ? 'G' : (r.age === '3U' || r.age === '4U') && rr() < 0.15 ? 'F' : 'C'), sireName: sire.name, rating, style, figs, starts, wins: r.mdn ? 0 : Math.max(1, Math.round(starts * clamp(0.15 + (rating - r.par) * 0.02, 0.05, 0.4))), trainerName: pick(FIRST_N, rr) + ' ' + pick(LAST_N, rr), jockeyName: pick(FIRST_N, rr) + ' ' + pick(LAST_N, rr), jk: 1 + rr() * 2.2, sireId: sire.id };
+  const minW = !r.mdn && (r.type === 'ALW' || r.type === 'AOC') ? ({ N1X: 1, N2X: 2, N3X: 3 }[r.sub] || 3) : r.mdn ? 0 : 1;
+  const maxSt = age <= 2 ? 6 : age === 3 ? 14 : (age - 2) * 9;
+  const starts = r.mdn ? (rr() < 0.35 ? 0 : Math.min(rint(1, 6), rint(1, 9))) : clamp(Math.round(Math.exp(gauss(2.1, 0.6, rr))), minW + 1, Math.max(minW + 1, maxSt));
+  const figs = []; for (let i = 0; i < Math.min(6, starts); i++) figs.push(Math.round(rating + gauss(-1 - i * 0.3, 4.5, rr)));
+  return { ai: 1, name: genName(rr) + (r.intl ? pick([' (JPN)', ' (JPN)', ' (JPN)', ' (GB)', ' (IRE)', ' (KSA)', ' (UAE)', ' (FR)', '', ''], rr) : ''), age, sex: r.f ? 'F' : (rr() < 0.25 && age >= 4 ? 'G' : (r.age === '3U' || r.age === '4U') && rr() < 0.15 ? 'F' : 'C'), sireName: sire.name, rating, style, figs, starts, wins: r.mdn ? 0 : Math.min(starts, Math.max(minW, Math.round(starts * clamp(0.15 + (rating - r.par) * 0.02, 0.05, 0.4)))), trainerName: pick(FIRST_N, rr) + ' ' + pick(LAST_N, rr), jockeyName: pick(FIRST_N, rr) + ' ' + pick(LAST_N, rr), jk: 1 + rr() * 2.2, sireId: sire.id };
 }
 function getField(r) {
   if (G.fields[r.id]) return G.fields[r.id];
@@ -786,7 +845,7 @@ function scratch(hid, rid) {
   G.entries = G.entries.filter(e => !(e.hid === hid && e.rid === rid));
   const f = G.fields[rid]; if (f) { f.mine = f.mine.filter(x => x !== hid); drawPosts(raceById(rid)); }
 }
-function publicEst(h, r) { const b = recentFig(h); if (b != null) return 0.5 * b + 0.5 * bestFig(h, 5); const t = trainer(h.trainer); return r.par - 5 + t.tier * 1.5 + (h.works.some(w => w.bullet) ? 3 : 0) + (impliedG(curFee(h)) - 74) * 0.2; }
+function publicEst(h, r) { const b = recentFig(h); if (b != null) return 0.5 * b + 0.5 * bestFig(h, 5); const t = trainer(h.trainer); return r.par - 5 + t.tier * 1.5 + (h.works.some(w => w.bullet) ? 3 : 0) + (impliedG(curFee(h)) - 71) * 0.55; }
 function oddsLadder(o) { const L = [0.2, 0.4, 0.5, 0.6, 0.8, 1, 1.2, 1.4, 1.5, 1.6, 1.8, 2, 2.5, 3, 3.5, 4, 4.5, 5, 6, 7, 8, 9, 10, 12, 15, 20, 25, 30, 40, 50, 60, 99]; let best = L[0]; for (const x of L) if (Math.abs(x - o) < Math.abs(best - o)) best = x; return best; }
 function oddsStr(o) { const m = { 0.2: '1-5', 0.4: '2-5', 0.5: '1-2', 0.6: '3-5', 0.8: '4-5', 1.2: '6-5', 1.4: '7-5', 1.5: '3-2', 1.6: '8-5', 1.8: '9-5', 2.5: '5-2', 3.5: '7-2', 4.5: '9-2' }; return m[o] || (o + '-1'); }
 function computeOdds(r, list) {
@@ -858,9 +917,9 @@ function runRace(r) {
       const h = x.h; const e = x.e;
       h.starts++; h.ys.st++; if (x.fin === 1) { h.wins++; h.ys.w++; } else if (x.fin === 2) h.pl++; else if (x.fin === 3) h.sh++;
       h.earn += share; h.ys.e += share; h.lastRace = AW(); h.know = Math.min(1, h.know + 0.14);
-      const o = OWN(h); const trainerCut = share * 0.1, jockCut = x.fin === 1 ? share * 0.1 : x.fin <= 3 ? share * 0.05 : 110;
+      const o = OWN(h); const trainerCut = share * 0.1, jockCut = x.fin === 1 ? share * 0.1 : x.fin <= 3 ? share * 0.05 : mountFee(r);
       earn('Purses', share * o); spend('Trainer & jockey %', (trainerCut + jockCut) * o);
-      let bonus = 0; if (x.fin === 1 && h.breeder === 'me' && SB_STATES.includes(h.bred)) { bonus = Math.round(share * 0.15); earn('Breeder awards', bonus); }
+      let bonus = breederAward(h, r, x.fin, share); if (bonus) earn('Breeder awards', bonus);
       const ob = Math.round(fundBonus(h, r, share) * o); if (ob) earn('State-bred owner bonuses', ob); bonus += ob;
       let betRet = 0; if (e.bet) { spend('Wagering', e.bet); if (x.fin === 1) { betRet = Math.round(e.bet * (x.odds + 1)); earn('Wagering', betRet); } }
       if (x.fin === 1) {
@@ -882,7 +941,7 @@ function runRace(r) {
       // injury check in race
       raceInjury(h, r);
       // claim check
-      if (claimable(r, e)) {
+      if (claimable(r, e) && !G.noClaim) {
         const ratio = raceValue(h) / r.clm; const p = 0.05 + 0.45 / (1 + Math.exp(-(ratio - 1.3) * 3));
         if (rnd() < p * (h.inj ? 0.3 : 1)) { res.claims.push({ hid: h.id, name: h.name, price: r.clm }); }
       }
@@ -926,7 +985,7 @@ function horseFromAI(x, r) {
   const age = x.age; const h = makeHorse({ foal: G.yr - age, sex: x.sex === 'F' ? 'F' : 'C', sire, damG: 70, bred: r.sb || pick(['KY', 'KY', 'FL', 'NY', 'PA', 'MD']) });
   h.name = x.name; if (x.sex === 'G') h.gelded = true;
   // reconcile hidden ability with displayed rating
-  h.ceil = (x.rating + gauss(0, 2.5)) / devFactor(h) + 1; h.g = h.ceil + gauss(-1, 4); h.dist = clamp(r.dist + gauss(0, 0.8), 5, 12); h.turf = r.surf === 'T' ? clamp(0.4 + gauss(0, 0.3), -1, 1) : clamp(gauss(-0.3, 0.35), -1, 1);
+  h.ceil = (x.rating + gauss(0, 2.5)) / devFactor(h) + 1; h.g = h.ceil + POP_OFF + gauss(-1, 4); h.dist = clamp(r.dist + gauss(0, 0.8), 5, 12); h.turf = r.surf === 'T' ? clamp(0.4 + gauss(0, 0.3), -1, 1) : clamp(gauss(-0.3, 0.35), -1, 1);
   h.style = x.style; h.starts = x.starts; h.wins = x.wins; h.alw = Math.max(0, x.wins - 1); h.earn = Math.round(x.starts * r.purse * 0.12 * (0.6 + rnd())); h.know = 0.5;
   h.pp = x.figs.map((f, i) => ({ aw: AW() - 4 * (i + 1), yr: G.yr, wk: G.wk, trk: r.trk, race: 'prior', g: 0, dist: r.dist, surf: r.surf, cond: 'Fast', fin: rint(1, 8), n: 9, fig: f, odds: 5, btn: 3, note: '', won: 0, age }));
   if (x.age >= 5 && rnd() < 0.3) h.sound *= 1.25;
@@ -936,9 +995,10 @@ function horseFromAI(x, r) {
 function injTypes() {
   return [
     { n: 'Bucked shins', w: [3, 6], sev: 0, cost: 0, p: 0.25, young: 1 }, { n: 'Foot bruise', w: [2, 4], sev: 0, cost: 400, p: 0.3 },
-    { n: 'Filling in an ankle', w: [3, 6], sev: 0, cost: 900, p: 0.25 }, { n: 'Knee chip — arthroscopic surgery', w: [16, 24], sev: 1, cost: 7500, p: 0.1, surg: 1 },
-    { n: 'Condylar fracture — screws inserted', w: [28, 40], sev: 2, cost: 12000, p: 0.04, surg: 1, ceil: -2.5 }, { n: 'Bowed tendon', w: [40, 56], sev: 2, cost: 3000, p: 0.04, ceil: -4 },
-    { n: 'Career-ending injury', w: [999, 999], sev: 3, cost: 6000, p: 0.012 },
+    { n: 'Filling in an ankle', w: [3, 6], sev: 0, cost: 900, p: 0.25 }, { n: 'Knee chip — arthroscopic surgery', w: [16, 24], sev: 1, cost: 7500, p: 0.12, surg: 1 },
+    { n: 'Condylar fracture — screws inserted', w: [28, 40], sev: 2, cost: 12000, p: 0.05, surg: 1, ceil: -2.5 }, { n: 'Bowed tendon', w: [40, 56], sev: 2, cost: 3000, p: 0.06, ceil: -4 },
+    { n: 'Suspensory injury', w: [24, 40], sev: 2, cost: 4000, p: 0.05, ceil: -1.5 },
+    { n: 'Career-ending injury', w: [999, 999], sev: 3, cost: 6000, p: 0.035 },
   ];
 }
 function doInjury(h, mult) {
@@ -985,48 +1045,86 @@ function knownStyle(h) { return h.starts > 0 || h.know > 0.3 ? { E: 'Early speed
 
 // ===================== SALES =====================
 function saleThisWeek() { return SALES.find(s => s.wk === G.wk); }
+function probit(p) { return Math.sqrt(2) * erfinv(2 * p - 1); } // inverse normal CDF
+function erfinv(x) { const a = 0.147, l = Math.log(1 - x * x), t = 2 / (Math.PI * a) + l / 2; return Math.sign(x) * Math.sqrt(Math.sqrt(t * t - l / a) - t); }
+// sire pool for a sale: fee band, state-bred rules (state-breds can be by out-of-state sires — they're foaled in-state)
+function salePool(sale) {
+  const live = G.stallions.filter(s => s.yrStart <= G.yr - 1);
+  if (sale.sb) {
+    const home = live.filter(s => s.st === sale.st || s.st === sale.st2);
+    const ky = live.filter(s => s.st === 'KY' && s.fee <= (sale.st === 'NY' ? 60000 : 25000));
+    return { home: home.length ? home : live, ky };
+  }
+  const [lo, hi] = sale.fee || (sale.elite ? [40000, 999999] : sale.tier >= 2 ? [10000, 150000] : sale.tier === 1 ? [2500, 60000] : [1000, 20000]);
+  let p = live.filter(s => s.fee >= lo && s.fee <= hi && (sale.st === 'KY' ? s.st === 'KY' || s.st === 'ON' : true));
+  if (p.length < 4) p = live;
+  return { home: p, ky: [] };
+}
+// sire picked in proportion to book size (mares bred) — big books produce more sale yearlings
+function pickSire(pool, r = rnd) { return wpick(pool, pool.map(s => Math.sqrt(s.book0 || s.lastBookAI || 40)), r); }
 function genSaleLots(sale) {
-  const rr = rnd; const lots = []; const N = rint(12, 18);
-  let pool = G.stallions.filter(s => !s.pid || true);
-  if (sale.sb) pool = pool.filter(s => s.st === sale.st || s.st === sale.st2);
-  const feeRange = [[0, 15000], [5000, 50000], [12500, 90000], [40000, 999999]][sale.tier];
-  let sp = pool.filter(s => s.fee >= feeRange[0] && s.fee <= feeRange[1]); if (sp.length < 3) sp = pool;
-  const damMean = [65, 70, 74, 79][sale.tier];
+  const lots = []; const N = sale.n0 || 24; const pool = salePool(sale);
+  const damMean = [66, 70, 74, 78][sale.tier] + (sale.id === 'KS1' || sale.id === 'FTSAR' ? 2 : 0);
+  const want = sale.looks || 0;
+  let hip = 1 + Math.floor(rnd() * 40) + ({ KS2: 500, KS4: 2100, FTKYO: 100 }[sale.id] || 0);
   for (let i = 0; i < N; i++) {
     let kind;
     if (sale.kind === 'yearling') kind = 'Y'; else if (sale.kind === '2yo') kind = rnd() < (sale.id === 'OBSJN' ? 0.6 : 0.95) ? '2' : 'R';
     else if (sale.kind === 'breeding') kind = rnd() < 0.55 ? 'M' : 'W'; else kind = wpick(['M', 'R', 'Y', 'W'], G.wk < 10 ? [3, 3, 3, 0] : [3, 3, 1, 2]);
-    const sire = pick(sp); const sex = rnd() < 0.5 ? 'C' : 'F';
-    const bred = sale.sb ? (sire.st) : (rnd() < 0.85 ? 'KY' : pick(['FL', 'NY', 'PA']));
-    let foal = kind === 'Y' ? G.yr - 1 : kind === '2' ? G.yr - 2 : kind === 'W' ? G.yr : kind === 'M' ? G.yr - rint(4, 13) : G.yr - rint(3, 6);
-    if (kind === 'Y' && G.wk < 10) foal = G.yr - 1;
-    const h = makeHorse({ foal, sex: kind === 'M' ? 'F' : sex, sire, damG: damMean + gauss(0, 4), bred, luck: 0 });
-    h.lotKind = kind; h.hip = 100 + i * rint(3, 9);
-    if (kind === '2') { h.breeze = Math.round((10.9 - (h.ceil * devFactor(h) - 65) * 0.03 + gauss(0, 0.18)) * 5) / 5; h.breezeDist = '1/8'; }
+    // selection: select books keep the best-looking of several candidates, late books get what's left
+    const tries = want >= 0.8 ? 3 : want >= 0.25 ? 2 : 1; let h = null;
+    for (let t = 0; t < tries; t++) {
+      const sire = sale.sb ? (rnd() < 0.62 || !pool.ky.length ? pickSire(pool.home) : pickSire(pool.ky)) : pickSire(pool.home);
+      const sex = rnd() < 0.5 ? 'C' : 'F';
+      const bred = sale.sb ? (sale.st2 && rnd() < 0.3 ? sale.st2 : sale.st) : sale.id.startsWith('OBS') || sale.id === 'FTMA2' ? (rnd() < 0.55 ? 'KY' : wpick(['FL', 'NY', 'PA', 'MD', 'LA'], [5, 2, 1, 1, 1])) : (rnd() < 0.88 ? 'KY' : pick(['FL', 'NY', 'PA', 'ON', 'VA'].filter(x => STATE_N[x])));
+      let foal = kind === 'Y' ? G.yr - 1 : kind === '2' ? G.yr - 2 : kind === 'W' ? G.yr : kind === 'M' ? G.yr - rint(4, 13) : G.yr - rint(3, 6);
+      const feeQ = clamp((Math.log10(sire.fee) - 4) * 3, -3, 4);
+      const c = makeHorse({ foal, sex: kind === 'M' ? 'F' : sex, sire, damG: damMean + feeQ + gauss(0, 4), bred, luck: 0 });
+      if (want < 0 && t === 0) c.looks = Math.min(c.looks, c.looks - 0.3 * rnd());
+      if (!h || c.looks > h.looks) h = c;
+    }
+    h.conf = h.looks > 1.0 ? 4 : h.looks > 0.05 ? 3 : h.looks > -0.9 ? 2 : 1;
+    h.lotKind = kind; hip += 1 + Math.floor(rnd() * (sale.n0 > 30 ? 9 : 5)); h.hip = hip;
+    if (kind === '2') { const z = (h.ceil - 62) / 10; h.breeze = clamp(Math.round((10.24 - 0.21 * (0.6 * z + 0.8 * gauss(0, 1))) * 5) / 5, 9.4, 11.2); h.breezeDist = '1/8'; h.pre = true; h.know = 0.15; }
     if (kind === 'R' || kind === 'M') {
-      // racing record
       const st = kind === 'M' ? rint(0, 18) : rint(2, 14); h.starts = st; h.name = genName();
       const ab = h.ceil * devFactor(h, G.yr, G.wk);
       for (let k = 0; k < Math.min(st, 6); k++) h.pp.push({ aw: AW() - 5 * (k + 1), yr: G.yr, wk: G.wk, trk: pick(Object.keys(TRACKS)), race: 'prior', g: 0, dist: 7, surf: 'D', cond: 'Fast', fin: rint(1, 7), n: 9, fig: Math.round(ab + gauss(-2, 4)), odds: 5, btn: 3, note: '', won: 0, age: ageOf(h) });
-      h.wins = Math.round(st * clamp(0.1 + (ab - 75) * 0.012, 0.03, 0.45)); h.alw = Math.max(0, h.wins - 1); h.earn = Math.round(st * 9000 * Math.pow(10, (ab - 75) / 25));
-      if (ab > 92 && rnd() < 0.6) { h.blackType = rnd() < 0.5 ? 'SW' : 'SP'; if (h.blackType === 'SW') h.sw = 1; }
-      if (kind === 'M') { h.status = 'mare'; h.retFig = bestFig(h); if (rnd() < 0.7) { const cs = pick(G.stallions.filter(s => s.fee <= Math.max(10000, feeRange[1] / 2))); h.preg = { sid: cs.id, due: awOf(G.yr + (G.wk > 30 ? 1 : 0), rint(5, 16)) }; } }
+      h.wins = Math.round(st * clamp(0.1 + (ab - 63) * 0.012, 0.03, 0.45)); h.alw = Math.max(0, h.wins - 1); h.earn = Math.round(st * 9000 * Math.pow(10, (ab - 63) / 25));
+      if (ab > 90 && rnd() < 0.6) { h.blackType = rnd() < 0.5 ? 'SW' : 'SP'; if (h.blackType === 'SW') h.sw = 1; }
+      if (kind === 'M') { h.status = 'mare'; h.retFig = bestFig(h); if (rnd() < 0.7) { const cp = G.stallions.filter(s => s.yrStart <= G.yr && s.fee <= Math.max(10000, (sale.elite ? 250000 : sale.tier >= 1 ? 40000 : 10000))); const cs = cp.length ? pickSire(cp) : pick(G.stallions); h.preg = { sid: cs.id, due: awOf(G.yr + (G.wk > 30 ? 1 : 0), rint(5, 16)) }; } }
       else { h.status = 'race'; h.fit = 80; h.know = 0.4; }
     }
-    h.mkt = marketValue(h); if (kind === 'R') h.mkt = raceValue(h);
     lots.push({ hid: h.id, h, state: 'open', vet: false, agent: false, price: 0 });
   }
+  // raw model value, then normalise to the sale's real median (book level)
+  const raw = (l) => { const h = l.h; return h.lotKind === 'M' ? mareValue(h) : h.lotKind === 'R' ? raceValue(h) : pedValue(h, undefined, sale.fe ?? 0.85); };
+  lots.forEach(l => l.raw = raw(l));
+  // outs: horses scratched from the catalog (at 2yo sales, mostly the ones that breezed slowly or vetted badly)
+  const nOut = Math.round(N * (sale.out || 0.15));
+  const outOrder = [...lots].sort((a, b) => (sale.kind === '2yo' ? (b.h.breeze || 0) - (a.h.breeze || 0) : 0) + (rnd() - 0.5) * (sale.kind === '2yo' ? 0.5 : 10) + (b.h.sound - a.h.sound));
+  outOrder.slice(0, nOut).forEach(l => l.state = 'out');
+  const srt = lots.filter(l => l.state !== 'out').map(l => l.raw).sort((a, b) => a - b); const medRaw = srt[Math.floor(srt.length / 2)];
+  // x0.88: the sale's published median is of SOLD horses (buy-backs remove the cheap end)
+  const lift = clamp(0.88 * sale.med / medRaw, 0.15, 12); G.saleLift = { id: sale.id + G.yr, lift };
+  for (const l of lots) { l.h.mkt = Math.max(1000, l.raw * lift * Math.exp(gauss(0, 0.12))); delete l.raw; l.res = reserveFor(l.h.mkt, sale); }
   return lots;
 }
+// consignor reserve: set so that ~sale.rna of horses through the ring are bought back (RNA). Hammer ~ mkt·e^N(0,.3);
+// top bidder sits ~15% above the hammer; reserve noise sd .2 → reserve offset = .14 + .36·probit(rna)
+function reserveFor(mkt, sale) { const mu = 0.14 + 0.36 * probit(clamp(sale.rna ?? 0.2, 0.03, 0.6)); return roundBid(mkt * Math.exp(mu + gauss(0, 0.2))); }
 function aiVals(lot, sale) {
-  const rr = srng('bids' + lot.h.id); const n = 3 + sale.tier * 2 + Math.floor(rr() * 4);
-  const vals = []; for (let i = 0; i < n; i++) vals.push(lot.h.mkt * Math.exp(gauss(0, 0.33, rr)) * D().agg * Math.exp((lot.h.ceil - ((stallion(lot.h.sireId)?.g ?? 75) + 74) / 2) * 0.01));
-  vals.sort((a, b) => b - a); return vals;
+  const rr = srng('bids' + lot.h.id + (lot.hid || ''));
+  const H = lot.h.mkt * Math.exp(gauss(0, 0.3, rr)) * D().agg * Math.exp((lot.h.ceil - ((stallion(lot.h.sireId)?.g ?? 70) + 72) / 2 + POP_OFF) * 0.006);
+  const vals = [H * Math.exp(0.1 + Math.abs(gauss(0, 0.08, rr))), H];
+  const n = 1 + sale.tier + Math.floor(rr() * 3); for (let i = 0; i < n; i++) vals.push(H * Math.exp(-Math.abs(gauss(0.1, 0.25, rr))));
+  return vals.sort((a, b) => b - a);
 }
 function bidInc(p) { return p < 10000 ? 500 : p < 50000 ? 1000 : p < 100000 ? 2500 : p < 250000 ? 5000 : p < 500000 ? 10000 : p < 1000000 ? 25000 : 50000; }
 function roundBid(p) { const i = bidInc(p); return Math.max(1000, Math.round(p / i) * i); }
-function reserveOf(lot) { return roundBid(lot.h.mkt * (0.35 + srng('res' + lot.h.id)() * 0.3)); }
+function reserveOf(lot) { return lot.res ?? roundBid(lot.h.mkt * 0.8); }
 function resolveLotAI(lot, sale) {
+  if (lot.state === 'out') return;
   const v = aiVals(lot, sale); const R = reserveOf(lot);
   if (v[0] < R) { lot.state = 'rna'; lot.price = roundBid(v[0]); return; }
   lot.state = 'sold'; lot.price = Math.max(R, roundBid(Math.min(v[0], v[1] + bidInc(v[1]))));
@@ -1059,10 +1157,15 @@ function consign(h, sale, reservePct) {
   G.consign.push({ hid: h.id, sale: sale.id, yr: G.wk <= sale.wk ? G.yr : G.yr + 1, wk: sale.wk, res: reservePct });
   scratchAll(h.id);
 }
+function saleLiftFor(sale) {
+  if (G.saleLift && G.saleLift.id === sale.id + G.yr) return G.saleLift.lift;
+  genSaleLots(sale); return G.saleLift.lift;
+}
 function resolveConsign(c, sale) {
   const h = horse(c.hid); if (!h) return;
-  if (sale.kind === '2yo' && ageOf(h) === 2) h.breeze = Math.round((10.9 - (ability(h) - 65) * 0.03 + gauss(0, 0.18)) * 5) / 5;
-  const M = marketValue(h); const lot = { h: { ...h, mkt: M } };
+  if (sale.kind === '2yo' && ageOf(h) === 2) { const z = (h.ceil - 62) / 10 + (h.pre ? 0.15 : -0.3); h.breeze = clamp(Math.round((10.2 - 0.21 * (0.6 * z + 0.8 * gauss(0, 1))) * 5) / 5, 9.4, 11.2); }
+  const base = h.starts ? marketValue(h) : h.status === 'mare' ? mareValue(h) : pedValue(h, undefined, sale.fe ?? 0.85);
+  const M = base * saleLiftFor(sale); const lot = { h: { ...h, mkt: M }, hid: h.id + 'c' };
   const v = aiVals(lot, sale); const R = c.res ? roundBid(M * c.res) : 0;
   const hammer = roundBid(Math.min(v[0], v[1] + bidInc(v[1])));
   const bz = h.breeze ? ` after breezing an eighth in :${h.breeze.toFixed(1).replace('.0', '').replace('.2', ' 1/5').replace('.4', ' 2/5').replace('.6', ' 3/5').replace('.8', ' 4/5')}` : '';
@@ -1080,7 +1183,7 @@ function refreshMarket() {
     h.name = genName(); h.status = 'race'; h.fit = 75; h.know = 0.35;
     const st = age === 2 ? rint(0, 2) : rint(2, 12); h.starts = st; const ab = h.ceil * devFactor(h);
     for (let k = 0; k < Math.min(st, 6); k++) h.pp.push({ aw: AW() - 4 * (k + 1), yr: G.yr, wk: G.wk, trk: pick(Object.keys(TRACKS)), race: 'prior', g: 0, dist: Math.round(h.dist * 2) / 2, surf: h.turf > 0.4 ? 'T' : 'D', cond: 'Fast', fin: rint(1, 8), n: 9, fig: Math.round(ab + gauss(-1.5, 4)), odds: 5, btn: 3, note: '', won: 0, age });
-    h.wins = Math.round(st * clamp(0.1 + (ab - 75) * 0.012, 0.03, 0.45)); h.alw = Math.max(0, h.wins - 1); h.earn = Math.round(st * 8000 * Math.pow(10, (ab - 75) / 25));
+    h.wins = Math.round(st * clamp(0.1 + (ab - 66) * 0.012, 0.03, 0.45)); h.alw = Math.max(0, h.wins - 1); h.earn = Math.round(st * 8000 * Math.pow(10, (ab - 66) / 25));
     h.ask = Math.round(marketValue(h) * (1 + rnd() * 0.25) / 500) * 500;
     G.market.push(h);
   }
@@ -1105,44 +1208,78 @@ function bookMare(m, s, how) {
   if (how === 'share') { const sh = G.shares.find(x => x.sid === s.id); sh.usedYr = G.yr; m.cover.share = 1; }
   news(`${m.name} was covered by ${s.name}${ship ? ' (shipped to ' + STATE_N[s.st] + ')' : ''}. Pregnancy check in two weeks.`, 'info');
 }
-function conceiveP(m) { const a = ageOf(m); return a <= 12 ? 0.85 : a <= 16 ? 0.75 : a <= 20 ? 0.6 : 0.45; }
+// live-foal rate ~61% of mares bred nationally (Jockey Club reports): conception x foal survival
+function conceiveP(m) { const a = ageOf(m); return a <= 12 ? 0.8 : a <= 16 ? 0.7 : a <= 20 ? 0.55 : 0.4; }
+const mareLevel = (fee) => 68.5 + 3.14 * Math.log10(Math.max(1000, fee) / 2500);
+function sireAEI(s) {
+  const yrs = G.yr - s.yrStart; const model = gToAei((s.g + mareLevel(s.fee)) / 2);
+  if (s.aei) return s.aei; return yrs >= 3 ? model : null;
+}
 function sireStats(s) {
   const yrs = G.yr - s.yrStart;
-  if (yrs < 3) return { txt: yrs <= 0 ? 'First season at stud' : 'First crop yet to race', proven: false };
-  const rr = srng('ss' + s.id + G.yr);
-  const sw = 1.5 * Math.pow(10, (s.g - 70 + gauss(0, 1.5, rr)) / 20); const ws = 55 + (s.g - 70) * 0.8 + gauss(0, 2, rr); const aes = 25000 * Math.pow(10, (s.g - 70 + gauss(0, 1.5, rr)) / 22);
-  return { txt: `${ws.toFixed(0)}% winners/starters · ${sw.toFixed(1)}% stakes winners · ${fmtK(aes)}/starter${yrs === 3 ? ' (first crop)' : ''}`, proven: true };
+  const book = s.lastBookAI || s.book0;
+  const bk = book ? ` · ${book} mares${s.lastBookAI ? '' : ' (2026)'}` : '';
+  if (yrs < 3 && !s.aei) return { txt: (yrs <= 0 ? 'First season at stud' : yrs === 1 ? 'First foals arrive this year' : 'First crop are yearlings') + bk, proven: false };
+  const aei = sireAEI(s), ci = s.ci || gToAei(mareLevel(s.fee));
+  const btw = s.foals0 >= 100 && s.btw ? s.btw / s.foals0 * 100 : clamp(3.06 + 2.29 * Math.log10(s.fee / 2500) + (aei - ci) * 3, 0.5, 14);
+  const awd = s.awd || clamp(7.2 + (s.dist - 7.6) / 2.8, 6.3, 8.2);
+  return { txt: `AEI ${aei.toFixed(2)} · CI ${ci.toFixed(2)} · ${btw.toFixed(1)}% stakes winners · AWD ${awd.toFixed(1)}f${bk}${yrs === 3 && !s.aei ? ' · first crop racing' : ''}`, proven: true, aei, ci };
 }
 function updateStallionFees() {
   for (const s of G.stallions) {
     const yrs = G.yr - s.yrStart; const imp = impliedG(s.mkt);
-    let lf = gauss(0, 0.08);
-    if (yrs >= 3) lf += 0.06 * (s.g - imp) * (yrs === 3 ? 0.7 : 1);
-    if (yrs === 2 || yrs === 3) lf -= 0.06;
+    let lf = gauss(0, 0.07);
+    // first crops racing (years 3-5) move the market most: hot young sires double, flops get halved (Vekoma $35k→$100k; Essential Quality $65k→$25k)
+    if (yrs >= 3) lf += (yrs <= 5 ? 0.09 : 0.025) * (s.g - imp);
+    if (yrs === 2 || yrs === 3) lf -= 0.08;
     if (G.yr - s.born > 20) lf -= 0.12;
-    s.mkt = clamp(s.mkt * Math.exp(lf), 1000, 350000);
+    s.mkt = clamp(s.mkt * Math.exp(clamp(lf, -0.55, 0.6)), 1000, 300000);
     if (!s.pid) s.fee = s.mkt >= 20000 ? Math.round(s.mkt / 2500) * 2500 : Math.round(s.mkt / 500) * 500;
+    if (s.aei && yrs >= 3) s.aei = Math.round((0.85 * s.aei + 0.15 * gToAei((s.g + mareLevel(s.fee)) / 2)) * 100) / 100;
+    if (!s.pid) s.lastBookAI = clamp(Math.round((s.book0 || 60) * Math.exp(gauss(0, 0.12) + clamp(lf, -0.5, 0.5) * 0.6)), 3, 290);
   }
-  // retire old AI stallions, add new ones
+  // retire old AI stallions, add new ones (new sires come from the racetrack: G1 types to KY, others to state farms)
   G.stallions = G.stallions.filter(s => s.pid || G.yr - s.born <= 24 || G.horses.some(h => h.preg?.sid === s.id || h.cover?.sid === s.id));
-  const nNew = rint(2, 4);
+  const nNew = rint(4, 7);
   for (let i = 0; i < nNew; i++) {
-    const st = wpick(['KY', 'NY', 'FL', 'CA', 'PA', 'MD', 'LA'], [6, 1.5, 1.5, 1, 0.8, 0.7, 0.6]);
-    const recG = 74 + gauss(0, 6); const fee = clamp(Math.round(2500 * Math.pow(10, (recG - 66) / 10) / 2500) * 2500 || 2500, 2500, 150000);
-    const line = pick(LINES); G.stallions.push({ id: 's' + (G.nextId++), name: genName(), st, fee, mkt: fee, line, dist: clamp(gauss(8, 1), 6, 11), turf: clamp(gauss(0, 0.5), -1, 1), mat: clamp(gauss(0, 0.5), -1, 1), sound: clamp(gauss(1, 0.12), 0.7, 1.4), g: impliedG(fee) + gauss(0, 4), yrStart: G.yr, born: G.yr - 4 });
+    const st = wpick(['KY', 'NY', 'FL', 'CA', 'PA', 'MD', 'LA'], [6, 1.2, 1.2, 1, 0.7, 0.6, 0.6]);
+    const fee = st === 'KY' ? clamp(Math.round(Math.exp(gauss(Math.log(20000), 0.9)) / 2500) * 2500, 5000, 200000) : clamp(Math.round(Math.exp(gauss(Math.log(5000), 0.5)) / 500) * 500, 1500, 15000);
+    const dist = clamp(gauss(7.8, 1.1), 5.5, 11); const line = pick(LINES);
+    G.stallions.push({ id: 's' + (G.nextId++), name: genName(), st, fee, mkt: fee, line, dist, mstn: mstnFromDist(dist), turf: clamp(gauss(-0.1, 0.45), -1, 1), mat: clamp(gauss(0, 0.45), -1, 1), sound: clamp(gauss(1, 0.12), 0.7, 1.4), g: impliedG(fee) + gauss(0, 2.8), yrStart: G.yr, born: G.yr - 4, book0: clamp(Math.round(fee / 400 + 40 + gauss(0, 20)), 15, 220), farm: '' });
   }
 }
-function retireToStud(h, mode) {
-  // mode: 'stand' keep all ; 'sell' sell outright ; 'synd' sell 75% keep 25%
-  const fee = Math.max(2500, studFeeFor(h)); const val = (studValue(h) || fee * 200) * OWN(h);
+// Where a stallion can stand (research/02): the big Kentucky farms only take Grade 1-level horses; commercial KY farms take
+// graded winners; state farms take stakes horses and pay into state programs (stallion awards + breeder awards for in-state sired).
+const STUD_FARMS = {
+  major: { n: 'Major Kentucky stud', min: 25000, base: 140, cap: 230, net: 0.8, st: 'KY' },
+  ky: { n: 'Kentucky commercial farm', min: 4000, base: 60, cap: 120, net: 0.75, st: 'KY' },
+  state: { n: 'State-bred program farm', min: 1500, base: 40, cap: 110, net: 0.7 },
+};
+function studFarmOK(h, farm) { const F = STUD_FARMS[farm.startsWith('st:') ? 'state' : farm]; return studFeeFor(h) >= F.min; }
+function retireToStud(h, mode, farm = 'ky') {
+  // mode: 'stand' keep all ; 'sell' sell outright ; 'synd' sell 75% keep 25% ; farm: 'major' | 'ky' | 'st:NY' etc.
+  const tier = farm.startsWith('st:') ? 'state' : farm; const F = STUD_FARMS[tier] || STUD_FARMS.ky;
+  const st = tier === 'state' ? farm.slice(3) : 'KY';
+  let fee = Math.max(2500, studFeeFor(h)); if (tier === 'state') fee = clamp(Math.round(fee * 0.5 / 500) * 500, 1500, 25000);
+  const val = (studValue(h) || fee * 200) * OWN(h) * (tier === 'state' ? 0.5 : 1);
   scratchAll(h.id); h.inj = null;
-  if (mode === 'sell') { earn('Stallion sales', Math.round(val)); news(`${h.name} sold to stand at a ${STATE_N[h.bred === 'KY' ? 'KY' : h.bred] || 'Kentucky'} farm for ${fmt$(val)}. Initial fee ${fmt$(fee)}.`, 'good'); G.history.push({ name: h.name, out: `Sold as stallion ${fmt$(val)}`, yr: G.yr }); removeHorse(h.id); return; }
+  if (mode === 'sell') { earn('Stallion sales', Math.round(val)); news(`${h.name} sold to stand in ${STATE_N[st]} for ${fmt$(val)}. Initial fee ${fmt$(fee)}.`, 'good'); G.history.push({ name: h.name, out: `Sold as stallion ${fmt$(val)}`, yr: G.yr }); removeHorse(h.id); return; }
   let share = OWN(h); if (mode === 'synd') { share = 0.25 * OWN(h); earn('Stallion sales', Math.round(val * 0.75)); }
-  h.status = 'stud'; h.trainer = null; h.studShare = share;
-  const st = h.bred === 'KY' || fee >= 10000 ? 'KY' : (SB_STATES.includes(h.bred) ? h.bred : 'KY');
-  const s = { id: 's' + (G.nextId++), name: h.name, st, fee, mkt: fee, line: h.sireLine, dist: h.dist, turf: h.turf, mat: h.mat, sound: h.sound, g: h.g, yrStart: G.yr + (G.wk > 24 ? 1 : 0), born: h.foal, pid: h.id };
+  h.status = 'stud'; h.trainer = null; h.studShare = share; h.studFarm = tier;
+  const s = { id: 's' + (G.nextId++), name: h.name, st, fee, mkt: fee, line: h.sireLine, dist: h.dist, mstn: h.mstn, turf: h.turf, mat: h.mat, sound: h.sound, g: h.g, yrStart: G.yr + (G.wk > 24 ? 1 : 0), born: h.foal, pid: h.id, farmTier: tier, book0: 0, farm: F.n };
   h.sid = s.id; G.stallions.push(s);
-  news(`${h.name} retires to stud in ${STATE_N[st]} at ${fmt$(fee)}${mode === 'synd' ? `; you syndicated 75% for ${fmt$(val * 0.75)}` : ''}.`, 'good');
+  news(`${h.name} retires to stud at a ${F.n.toLowerCase()} in ${STATE_N[st]} at ${fmt$(fee)}${mode === 'synd' ? `; you syndicated 75% for ${fmt$(val * 0.75)}` : ''}.`, 'good');
+}
+// stallion-owner awards from state programs, paid at year end on progeny earnings in-state
+function stallionAwards() {
+  for (const h of G.horses.filter(x => x.status === 'stud')) {
+    const s = stallion(h.sid); if (!s) continue; const pct = STALLION_AWARD[s.st] || 0; if (!pct) continue;
+    const runners = (h.books || []).filter(b => b.yr >= G.yr - 6 && b.yr <= G.yr - 3).reduce((a, b) => a + b.book * 0.61 * 0.7, 0);
+    if (runners < 1) continue;
+    const perRunner = 16000 * gToAei((s.g + mareLevel(s.fee)) / 2);
+    const amt = Math.round(runners * perRunner * 0.6 * pct * (h.studShare ?? 1));
+    if (amt > 0) { earn('Stallion awards (state program)', amt); news(`${STATE_N[s.st]} stallion awards: ${h.name}'s ~${Math.round(runners)} runners earned you ${fmt$(amt)} this year.`, 'good'); }
+  }
 }
 
 // ===================== AWARDS =====================
@@ -1181,8 +1318,8 @@ function prepWeek() {
 }
 function autoScore(h, r, est, k) {
   const fitE = est + (k > 0.25 ? distAdj(h, r.dist) + surfAdj(h, r.surf) : -Math.abs(r.dist - 7.5) * 0.4 - (r.surf === 'T' ? 2 : 0));
-  const margin = fitE - r.par; if (margin < -1.5 - Math.min(h.noSpot || 0, 6) * 0.6) return null;
-  let sc = Math.log(r.purse) * 3 - Math.abs(margin - 3) * 0.6 + (claimable(r, { optClm: mustTag(h, r) }) ? -2 : 0) + (r.mdn && h.wins === 0 ? 4 : 0) + (r.sb ? 1 : 0);
+  const margin = fitE - r.par; if (margin < -6 - Math.min(h.noSpot || 0, 6) * 0.6) return null;
+  let sc = Math.log(r.purse) * 3 - Math.abs(margin + 1) * 0.6 + (claimable(r, { optClm: mustTag(h, r) }) ? -2 : 0) + (r.mdn && h.wins === 0 ? 4 : 0) + (r.sb ? 1 : 0);
   if (k > 0.25) sc -= Math.max(0, Math.abs(r.dist - h.dist) - 1) * 2 + ((r.surf === 'T') !== (h.turf > 0.3) ? 3 : 0);
   if (r.tags && r.tags.includes('BIG')) sc += 4; if (r.tags && /[po]\d/.test(r.tags) && ageOf(h) <= 3) sc += 2;
   if (entryFees(h, r).fee > 0) sc -= 1;
@@ -1193,7 +1330,7 @@ function autoEnter() {
     if (!h.auto?.on || h.status !== 'race' || h.inj || !h.name) continue;
     if (G.entries.some(e => e.hid === h.id && raceById(e.rid) && awOf(raceById(e.rid).yr, raceById(e.rid).wk) >= AW())) continue;
     const t = trainer(h.trainer);
-    const pref = 28 - (h.sound < 0.85 ? 7 : 0) + (h.sound > 1.2 ? 7 : 0);
+    const pref = 35 - (h.sound < 0.85 ? 7 : 0) + (h.sound > 1.2 ? 7 : 0); // ~5.8 starts a year (Jockey Club)
     const k = clamp(h.know * TRAINER_TIERS[t.tier].read, 0, 1);
     const est = ability(h) + gauss(0, 6 * (1 - k) + 1.5, srng('ae' + h.id + Math.floor(AW() / 4)));
     let best = null, bs = -1e9, bw = 0;
@@ -1276,9 +1413,10 @@ function weeklyUpkeep() {
         if (h.fit > 45 && AW() !== h.lastRace && rnd() < 0.7) addWork(h);
         let p = 0.0045 * h.sound * T.vet * D().inj * (ageOf(h) === 2 ? 1.2 : 1);
         if (rnd() < p) doInjury(h, 0.6);
+        else if (h.wash && h.starts === 0 && h.tSince >= 1 && rnd() < 0.3) washOut(h);
       }
     } else if (h.status === 'farm') {
-      board += (35 * 7 + (h.inj && h.inj.sev >= 1 ? 25 * 7 : 0)) * o; h.fit = Math.max(15, h.fit - 10); h.tSince = 0;
+      board += (45 * 7 + (h.inj && h.inj.sev >= 1 ? 25 * 7 : 0)) * o; h.fit = Math.max(15, h.fit - 10); h.tSince = 0;
     } else if (h.status === 'mare') board += BOARD_RATE[h.farm || 'KY'] * 7 * o;
     else if (h.status === 'young') { board += (h.pre ? 55 : BOARD_RATE[h.farm || 'KY'] * 0.8) * 7 * o; if (h.pre) { h.fit = Math.min(60, h.fit + 3); h.know = Math.min(0.3, h.know + 0.01); } }
     else if (h.status === 'stud') board += 0;
@@ -1310,7 +1448,7 @@ function breedingTick() {
     if (m.preg && m.preg.due <= AW()) {
       const s = stallion(m.preg.sid); const pr = m.preg; m.preg = null;
       if (!s) continue;
-      if (rnd() < 0.08) { news(`Sad news: ${m.name} lost her foal by ${s.name}. No stud fee due (live foal guarantee).`, 'bad'); continue; }
+      if (rnd() < 0.12) { news(`Sad news: ${m.name} lost her foal by ${s.name}. No stud fee due (live foal guarantee).`, 'bad'); continue; }
       const f = makeHorse({ foal: G.yr, sire: s, dam: m, bred: m.farm || G.home, breeder: 'me', luck: D().luck });
       f.farm = m.farm || G.home; if (OWN(m) < 1) f.own = OWN(m); G.horses.push(f); m.foals = m.foals || []; m.foals.push(f.id);
       const fee = (s.pid || pr.ng || pr.share) ? 0 : s.fee * OWN(m); spend('Stud fees', fee);
@@ -1321,8 +1459,10 @@ function breedingTick() {
 function collectStudFees() {
   for (const h of G.horses.filter(h => h.status === 'stud')) {
     const s = stallion(h.sid); if (!s || s.yrStart > G.yr) continue;
-    const yrs = G.yr - s.yrStart; const demand = 110 * Math.pow(s.mkt / s.fee, 1.6) * (yrs < 2 ? 1.25 : 1) * (G.yr - h.foal > 18 ? 0.5 : 1);
-    const book = clamp(Math.round(demand + gauss(0, 8)), 3, 175); const gross = book * s.fee * 0.82 * (h.studShare ?? 1); const net = gross * 0.75; h.lastBook = book;
+    const F = STUD_FARMS[h.studFarm || 'ky'];
+    const yrs = G.yr - s.yrStart; const demand = F.base * Math.pow(s.mkt / s.fee, 1.6) * (yrs < 2 ? 1.25 : yrs === 3 ? 0.8 : 1) * (G.yr - h.foal > 18 ? 0.5 : 1);
+    // fees are 'live foal' — ~61% of mares bred produce a paying foal (Report of Mares Bred)
+    const book = clamp(Math.round(demand + gauss(0, 8)), 3, F.cap); const gross = book * s.fee * 0.61 * (h.studShare ?? 1); const net = gross * F.net; h.lastBook = book;
     earn('Stud fees (your stallions)', net); h.books = h.books || []; h.books.push({ yr: G.yr, book, fee: s.fee, net });
     news(`${h.name} covered ${book} mares this season at ${fmt$(s.fee)}. Your net share: ${fmt$(net)}.`, 'good');
   }
@@ -1349,7 +1489,7 @@ function reminders() {
   const s = SALES.find(x => x.wk === G.wk); if (s) news(`🔨 ${s.n} is this week. Visit the Sales tab.`, 'info');
 }
 function yearEnd() {
-  doAwards();
+  doAwards(); stallionAwards();
   G.rep = Math.max(0, G.rep * 0.92);
   G.wk = 1; G.yr++;
   for (const h of G.horses) { h.ys = { st: 0, w: 0, e: 0 }; if (ageOf(h) === 3) { h.tcNom = null; } if (ageOf(h) === 4) { h.kdPts = 0; h.koPts = 0; } h.wayi = []; }
@@ -1375,6 +1515,19 @@ function migrate() {
     for (const e of G.entries || []) if (e.fee) earn('Entry fees & shipping', e.fee);
     G.entries = []; G.fields = {}; G.claims = []; G.v = 3;
     news('📘 Condition books updated: real purses, starter & optional claiming races, conditioned claimers, Tapeta at Belmont in winter, and state-bred funds. Pending entries were refunded.', 'good');
+  }
+  if (G.v < 4) {
+    for (const e of G.entries || []) if (e.fee) earn('Entry fees & shipping', e.fee);
+    G.entries = []; G.fields = {}; G.claims = []; G.saleLots = null; G.saleId = null;
+    const keep = new Set(); for (const h of G.horses) { if (h.preg) keep.add(h.preg.sid); if (h.cover) keep.add(h.cover.sid); if (h.sid) keep.add(h.sid); }
+    const oldSh = G.shares || []; G.stallions = G.stallions.filter(s => s.pid || keep.has(s.id));
+    G.stallions.forEach(s => { if (!s.mstn) s.mstn = mstnFromDist(s.dist); s.g = s.pid ? s.g : impliedG(s.fee) + (s.g - (66 + 10 * Math.log10(Math.max(1000, s.fee) / 2500))) * 0.35; });
+    initStallions();
+    G.shares = oldSh.filter(sh => { if (stallion(sh.sid)) return true; earn('Stallion share sales', sh.paid); return false; });
+    for (const h of G.horses) { if (h.looks == null) h.looks = [0, -1.3, -0.4, 0.5, 1.4][h.conf || 2]; if (!h.mstn) h.mstn = mstnFromDist(h.dist); h.wash = false; if (h.status === 'stud' && !h.studFarm) h.studFarm = 'ky'; }
+    for (const t of G.trainers) t.rate = Math.round(TRAINER_TIERS[t.tier].rate * (t.rg === 'NY' || t.rg === 'KY' || t.rg === 'CA' ? 1.05 : 0.92));
+    G.v = 4;
+    news('🧬 Research update: 250 real stallions (2026 fees, AEI, books), real 2027 meet dates for every track, purses from 20 condition books, sales priced from 6,311 real hips (books, RNAs, outs), Beyer-style pars, the MSTN speed gene, state breeder & stallion awards, and real day rates. Your own horses are unchanged; pending entries and unused stallion shares were refunded.', 'good');
   }
   G.shares = G.shares || []; ensureRoad();
 }
@@ -1482,6 +1635,57 @@ function shuttleReturn() {
     const net = book * fee * 0.8 * 0.75 * (h.studShare ?? 1); earn('Stud fees (Southern Hemisphere)', net);
     news(`${h.name} is back from Australia after covering ${book} mares at ${fmt$(fee)} — your share ${fmt$(net)}.`, 'good');
   }
+}
+
+// ===================== v4 SYSTEMS (research build) =====================
+function mountFee(r) { return clamp(Math.round(r.purse * 0.0022 / 5) * 5, 75, 285); }
+// Never-made-it: hidden problems that stop a horse before its first start
+function washOut(h) {
+  const why = pick(['a fracture found in training — retired before ever racing', 'wobbler syndrome — not safe to race', 'a breathing problem that surgery could not fix', 'chronic soreness — vets advise retirement before a first start', 'just not a racehorse — trainer recommends a new career']);
+  h.wash = false; h.inj = { n: 'Never made it to the races', until: 1e9, sev: 3 }; scratchAll(h.id); h.status = 'farm';
+  news(`${dispName(h)}: ${why}. About 3 in 10 foals never start — it's part of the game.`, 'bad');
+}
+// Breeder awards by state program (research/02): paid to the breeder of record on in-state purse money
+function breederAward(h, r, fin, share) {
+  if (h.breeder !== 'me' || !share || fin > 3 || TRACKS[r.trk].st !== h.bred) return 0;
+  const s = stallion(h.sireId); const inSt = s && s.st === h.bred;
+  const st = h.bred; let pct = 0, cap = 1e9;
+  if (st === 'NY') { pct = (inSt ? [0.4, 0.2, 0.1] : [0.2, 0.1, 0.05])[fin - 1]; cap = inSt ? 40000 : 20000; }
+  else if (st === 'PA') pct = fin === 1 ? (inSt ? (r.mdn ? 0.5 : 0.4) : (r.mdn ? 0.25 : 0.2)) : 0;
+  else if (st === 'LA') { pct = inSt ? 0.25 : 0.2; cap = 50000; }
+  else if (st === 'MD') pct = inSt ? 0.336 : 0.24;
+  else if (st === 'FL') pct = fin === 1 ? 0.15 : 0;
+  else if (st === 'CA') pct = fin === 1 ? 0.1 : 0;
+  else if (st === 'WV') pct = fin === 1 ? 0.15 : 0;
+  return Math.round(Math.min(cap, share * pct) * OWN(h));
+}
+// Stallion-owner awards (paid yearly on progeny placings in-state)
+const STALLION_AWARD = { NY: 0.10, PA: 0.10, LA: 0.07, MD: 0.08, FL: 0.04, CA: 0.03, WV: 0.05, KY: 0 };
+// MSTN 'speed gene' test (Equinome-style)
+function testMSTN(h) { spend('Vet & farrier', 1000); h.mstnKnown = true; }
+const MSTN_N = { CC: 'C:C — sprinter (best ~5–7f), early maturing', CT: 'C:T — middle distance (7–9f)', TT: 'T:T — stayer (9f+), later maturing' };
+// Past performances for AI runners (deterministic, generated on demand)
+function aiPP(x, r) {
+  if (x._pp) return x._pp;
+  const rr = srng('aipp' + r.id + x.name); const reg = TRACKS[r.trk].rg;
+  const trks = Object.keys(TRACKS).filter(k => TRACKS[k].rg === reg && TRACKS[k].m.length); let wins = 0; const out = [];
+  let aw = awOf(r.yr, r.wk);
+  x.figs.forEach((fig, i) => {
+    aw -= 3 + Math.floor(rr() * 4);
+    const [yy, ww] = awToYW(aw);
+    const par = r.par + gauss(i * 0.3, 3, rr); const d = fig - par;
+    let fin = d > 4 ? 1 : d > 1 ? 2 : d > -2 ? 3 : d > -5 ? 4 + Math.floor(rr() * 2) : 6 + Math.floor(rr() * 4);
+    if (fin === 1 && (r.mdn || wins >= x.wins)) fin = 2; if (fin === 1) wins++;
+    const n = Math.max(fin, 6 + Math.floor(rr() * 5));
+    const surf = r.surf === 'T' ? (rr() < 0.75 ? 'T' : 'D') : r.surf === 'S' ? (rr() < 0.6 ? 'S' : 'D') : (rr() < 0.9 ? 'D' : 'T');
+    const dist = clamp(Math.round((r.dist + gauss(0, 0.8, rr)) * 2) / 2, 4.5, 12);
+    const type = r.mdn ? (r.type === 'MCL' || rr() < 0.3 ? 'MCL' : 'MSW') : r.type;
+    const cl = r.clm ? roundBid(r.clm * Math.exp(gauss(0, 0.35, rr))) : 0;
+    const race = r.name ? (rr() < 0.5 ? 'Stakes' : 'Alw ' + pick(['N2X', 'N3X', 'OC'], rr)) : ({ MSW: 'Mdn Sp Wt', MCL: 'Md Clm ' + fmtK(cl || 20000), CLM: 'Clm ' + fmtK(cl || 10000), MOC: 'Md Opt Clm', STR: 'Str Alw ' + fmtK(r.cap || 10000), SOC: 'Str Opt ' + fmtK(cl || 10000), ALW: 'Alw ' + (r.sub || 'N1X'), AOC: 'AOC ' + fmtK(cl || 50000) }[type] || type);
+    const open = trks.filter(k => meetAt(TRACKS[k], ww)); const tk = pick(open.length ? open : [r.trk], rr); const sf = (surf === 'T' && !TRACKS[tk].turf) || (surf === 'S' && !TRACKS[tk].syn && !(tk === 'BEL' || tk === 'GP')) ? 'D' : surf;
+    out.push({ yr: yy, wk: ww, trk: tk, race, dist, surf: sf, cond: sf === 'T' ? 'Firm' : rr() < 0.85 ? 'Fast' : 'Sloppy', fin, n, fig, btn: fin === 1 ? 0 : Math.max(0.2, (fin - 1) * (0.8 + rr() * 1.6)), odds: oddsLadder(Math.exp(gauss(1.6 - d * 0.08, 0.6, rr))), note: fin === 1 ? pick(['drew clear', 'gamely', 'drove clear', 'held sway'], rr) : fin <= 3 ? pick(['bid, missed', 'rallied for place', 'chased, kept on'], rr) : pick(['no factor', 'faded', 'steadied', 'wide trip', 'even'], rr) });
+  });
+  x._pp = out; return out;
 }
 
 'use strict';
@@ -1760,6 +1964,7 @@ function renderNew() {
   <div class="sw-l">Body</div><div class="sw">${SILK_COLORS.map(c => `<button class="swc ${s.c1 === c ? 'on' : ''}" style="background:${c}" data-a="ngSilk" data-k="c1" data-v="${c}"></button>`).join('')}</div>
   <div class="sw-l">Pattern colour</div><div class="sw">${SILK_COLORS.map(c => `<button class="swc ${s.c2 === c ? 'on' : ''}" style="background:${c}" data-a="ngSilk" data-k="c2" data-v="${c}"></button>`).join('')}</div>
   <div class="sw-l">Pattern</div><div class="chips">${SILK_PATTERNS.map(p => `<button class="chip ${s.pat === p ? 'on' : ''}" data-a="ngSilk" data-k="pat" data-v="${p}">${p}</button>`).join('')}</div></div></div>
+  <label class="radio"><input type="checkbox" id="ng-real" ${UI.newReal ? 'checked' : ''}> Use real trainer names (Pletcher, Cox, Brown…) — their in-game personalities are fictional</label>
   <button class="btn big" data-a="ngStart">Open the stable</button>
   <button class="btn ghost" data-a="ngImport" style="margin-top:8px;width:100%">Import a save code</button></div>`;
   paintSilks($('#view'));
@@ -1819,6 +2024,7 @@ function openHorse(id, re) {
     <dl class="kv"><dt>Trainer</dt><dd>${t ? `${esc(t.n)} · ${TRAINER_TIERS[t.tier].n} · ${REGION_N[t.rg]} · ${fmt$(t.rate)}/day` : '—'}</dd>
     <dt>Running style</dt><dd>${knownStyle(h)}</dd><dt>Equipment</dt><dd>${h.blinkers ? 'Blinkers' : 'No blinkers'}${h.bleedKnown ? ' · known bleeder' : ''}${h.gelded ? ' · gelded' : ''}</dd>
     <dt>Conformation</dt><dd>${['', 'D — some faults', 'C — average', 'B — correct', 'A — outstanding'][h.conf]}</dd>
+    <dt>Speed gene (MSTN)</dt><dd>${h.mstnKnown ? MSTN_N[h.mstn] : 'Not tested'}</dd>
     ${h.foal === roadYear() - 3 ? `<dt>Road to the Derby</dt><dd>${h.sex === 'F' ? `${h.koPts} Oaks pts · rank #${roadRank(h, 'ko')} (top 14 get in)` : `${h.kdPts} Derby pts · rank #${roadRank(h, 'kd')} (top 18 get in)`}</dd>` : ''}
     ${OWN(h) < 1 ? `<dt>Ownership</dt><dd>You own ${Math.round(OWN(h) * 100)}% — partners share costs & earnings</dd>` : ''}
     ${h.ins ? `<dt>Insurance</dt><dd>Mortality cover ${fmt$(h.ins.val)} · renews ${shortDate(...awToYW(h.ins.until))}${h.ins.auto ? '' : ' (will lapse)'}</dd>` : ''}
@@ -1831,9 +2037,37 @@ function openHorse(id, re) {
     ${h.surg ? `<dt>Vet history</dt><dd>${h.surg} surgery (buyers discount this)</dd>` : ''}</dl>`;
     if (h.works.length) body += `<h3 class="sub">Recent works</h3><table class="dtab"><tr><th>Date</th><th>Dist</th><th>Time</th><th>Rank</th></tr>${h.works.map(w => `<tr><td>${shortDate(...awToYW(w.aw))}</td><td>${w.d}</td><td>:${w.t.toFixed(2)}${w.bullet ? ' <b class="bullet">●B</b>' : ' B'}</td><td>${w.rank}/${w.total}</td></tr>`).join('')}</table>`;
   } else if (tab === 'pp') {
-    body += h.pp.length ? `<table class="dtab pp"><tr><th>Date</th><th>Trk</th><th>Race</th><th>Dist</th><th>Fin</th><th>Fig</th><th>Odds</th></tr>${h.pp.map(p => `<tr class="${p.fin === 1 ? 'w' : ''}"><td>${p.race === 'prior' ? '—' : shortDate(p.yr, p.wk).replace(' ', '&nbsp;')}</td><td>${p.trk}</td><td>${esc(p.race === 'prior' ? 'prior start' : p.race)}${p.note ? `<div class="cm">${esc(p.note)}</div>` : ''}</td><td>${distStr(p.dist)}${p.surf === 'T' ? '<sup>T</sup>' : ''}${p.cond !== 'Fast' && p.cond !== 'Firm' ? '<sup>' + p.cond[0].toLowerCase() + '</sup>' : ''}</td><td>${p.fin}/${p.n}${p.fin > 1 ? `<div class="cm">${lenStr(p.btn)}</div>` : ''}</td><td><b>${p.fig}</b></td><td>${oddsStr(p.odds)}</td></tr>`).join('')}</table>` : '<p class="pad muted">No starts yet.</p>';
+    body += h.pp.length ? `<table class="dtab pp"><tr><th>Date</th><th>Trk</th><th>Race</th><th>Dist</th><th>Fin</th><th>Odds</th><th>Fig</th></tr>${h.pp.map(ppRow).join('')}</table>` : '<p class="pad muted">No starts yet.</p>';
   } else body += horseActions(h);
   openModal(esc(dispName(h)), body, { push: !re, fn: (r) => openHorse(id, true) });
+}
+function ppRow(p) { return `<tr class="${p.fin === 1 ? 'w' : ''}"><td>${p.race === 'prior' ? '—' : shortDate(p.yr, p.wk).replace(' ', '&nbsp;')}</td><td>${p.trk}</td><td>${esc(p.race === 'prior' ? 'prior start' : p.race)}${p.note ? `<div class="cm">${esc(p.note)}</div>` : ''}</td><td>${distStr(p.dist)}${p.surf === 'T' ? '<sup>T</sup>' : p.surf === 'S' ? '<sup>AW</sup>' : ''}${p.cond && p.cond !== 'Fast' && p.cond !== 'Firm' ? '<sup>' + p.cond[0].toLowerCase() + '</sup>' : ''}</td><td>${p.fin}/${p.n}${p.fin > 1 ? `<div class="cm">${lenStr(p.btn)}</div>` : ''}</td><td>${oddsStr(p.odds)}</td><td class="figc"><b>${p.fig}</b></td></tr>`; }
+const PP_HEAD = '<tr><th>Date</th><th>Trk</th><th>Race</th><th>Dist</th><th>Fin</th><th>Odds</th><th>Fig</th></tr>';
+// AI runner past performances (tap a horse in the field)
+function openAIPP(rid, idx, re) {
+  const r = raceById(rid); const x = G.fields[rid].runners[idx]; const pp = aiPP(x, r);
+  const o = `<div class="rinfo"><b>${esc(x.name)}</b> · ${x.age}yo ${x.sex === 'F' ? 'filly/mare' : x.sex === 'G' ? 'gelding' : 'colt/horse'} · by ${esc(x.sireName)}<br>Trainer ${esc(x.trainerName)} · Jockey ${esc(x.jockeyName)}<br>Lifetime ${x.starts}: ${x.wins} wins · best fig ${x.figs.length ? Math.max(...x.figs) : '—'}</div>${pp.length ? `<table class="dtab pp">${PP_HEAD}${pp.map(ppRow).join('')}</table>` : '<p class="pad muted">First-time starter — no past performances.</p>'}`;
+  openModal(esc(x.name), o, { push: !re, fn: () => openAIPP(rid, idx, true) });
+}
+// Full-field past performances, DRF style: every runner's recent lines, figs in the right margin
+function openFieldPP(rid, re) {
+  const r = raceById(rid); const list = fieldList(r);
+  let o = `<div class="rinfo">${esc(r.name || raceLabel(r))}<br>${TRACKS[r.trk].n} · ${distStr(r.dist)} ${SURF_N[r.surf].toLowerCase()} · par ${Math.round(r.par)}</div>`;
+  for (const x of list) {
+    const sc = SADDLE[(x.post - 1) % SADDLE.length];
+    const pp = x.ai ? aiPP(x.x, r) : x.h.pp.slice(0, 6);
+    const head = x.ai ? `${x.x.age}yo · ${esc(x.x.sireName)} · ${x.x.starts}: ${x.x.wins} wins · ${esc(x.x.trainerName)}` : `yours · ${ageOf(x.h)}yo · ${esc(x.h.sireName)} · ${rec(x.h)}`;
+    o += `<h3 class="sub"><span class="pn" style="background:${sc[0]};color:${sc[1]}">${x.post}</span> ${esc(x.name)} <small>ML ${oddsStr(x.ml)}</small></h3><div class="cm pad">${head}</div>${pp.length ? `<table class="dtab pp">${PP_HEAD}${pp.slice(0, 6).map(ppRow).join('')}</table>` : '<p class="pad muted">First-time starter</p>'}`;
+  }
+  openModal('Past performances', o, { push: !re, fn: () => openFieldPP(rid, true) });
+}
+function studFarmPicker(h) {
+  const fee = studFeeFor(h); const opts = [['major', `Major Kentucky stud (Grade 1 types only) — ~${fmtK(fee)}, books 100–200`], ['ky', `Kentucky commercial farm — ~${fmtK(fee)}, books 30–100`]];
+  for (const st of FARM_STATES.filter(x => x !== 'KY')) opts.push(['st:' + st, `${STATE_N[st]} state-bred program — ~${fmtK(clamp(Math.round(fee * 0.5 / 500) * 500, 1500, 25000))}, stallion awards ${Math.round((STALLION_AWARD[st] || 0) * 100)}%, books 15–100`]);
+  const ok = opts.filter(([k]) => studFarmOK(h, k));
+  return `<label class="lab">Where will he stand?</label><select id="stud-farm" class="inp">${opts.map(([k, n]) => `<option value="${k}" ${studFarmOK(h, k) ? '' : 'disabled'} ${k === (ok[0] || [])[0] ? 'selected' : ''}>${esc(n)}${studFarmOK(h, k) ? '' : ' — not interested'}</option>`).join('')}</select>
+  <div class="note muted">State farms pay less per mare but in-state sired foals earn bigger breeder awards (e.g. NY 40/20/10% vs 20/10/5%), and the stallion owner collects state stallion awards.</div>
+  ${A('retStud', '🏠 Stand him yourself (keep all fees)', 'hi', { m: 'stand' })}${A('retStud', '🤝 Syndicate: sell 75%, keep 25%', '', { m: 'synd' })}${A('retStud', '💵 Sell stallion rights outright', '', { m: 'sell' })}`;
 }
 function studInfo(h) { const s = stallion(h.sid); if (!s) return ''; const st = sireStats(s); return `<dt>Stud fee</dt><dd>${fmt$(s.fee)} (market ~${fmt$(Math.round(s.mkt / 500) * 500)})${h.studShare < 1 ? ` · you own ${h.studShare * 100}%` : ''}</dd><dt>Progeny</dt><dd>${st.txt}</dd>${(h.books || []).length ? `<dt>Seasons</dt><dd>${h.books.map(b => `${b.yr}: ${b.book} mares → ${fmtK(b.net)}`).join('<br>')}</dd>` : ''}`; }
 function A(act, label, cls = '', data = {}) { return `<button class="btn ${cls}" data-a="${act}" data-id="${UI.hid}" ${Object.entries(data).map(([k, v]) => `data-${k}="${esc(v)}"`).join(' ')}>${label}</button>`; }
@@ -1857,6 +2091,7 @@ function horseActions(h) {
   }
   if (a === 3 && h.status === 'race' && !h.tcNom && G.wk <= 13 && h.sex === 'C') o += A('tcnom', `👑 Triple Crown nomination (${G.wk <= 4 ? '$600 early' : '$6,000 late'})`);
   if (!h.bcNom && h.status !== 'mare' && h.status !== 'stud' && a <= 4) o += A('bcnom', `🏆 Breeders' Cup nomination (${a === 0 ? '$400' : '$20,000 late'})`);
+  if (!h.mstnKnown && h.mstn) o += A('mstn', '🧬 Speed-gene test (MSTN, $1,000)');
   if (h.status === 'mare') { o += A('bookPick', '🧬 Book to a stallion', inSeason() && !h.preg ? 'hi' : '') + A('moveFarm', '🚚 Move to another state'); }
   if (h.status === 'stud') o += A('studFee', '💵 Set stud fee') + A('sellStud', '🤝 Sell stallion');
   if (h.status !== 'stud' && OWN(h) > 0.25 + 1e-9) o += A('partner', `🤝 Sell a share to partners (you own ${Math.round(OWN(h) * 100)}%)`);
@@ -1936,7 +2171,7 @@ function openRace(rid, re) {
   }
   if (f || isClaim) {
     const list = fieldList(r);
-    o += `<h3 class="sub">Field (morning line)</h3><table class="dtab fld"><tr><th>#</th><th>Horse</th><th>Last figs</th><th>ML</th>${isClaim ? '<th></th>' : ''}</tr>${list.map(x => { const sc = SADDLE[(x.post - 1) % SADDLE.length]; if (!x.ai) return `<tr class="me"><td><span class="pn" style="background:${sc[0]};color:${sc[1]}">${x.post}</span></td><td><b>${esc(x.name)}</b><div class="cm">yours</div></td><td>${x.h.pp.slice(0, 3).map(p => p.fig).join(' ') || 'debut'}</td><td>${oddsStr(x.ml)}</td>${isClaim ? '<td></td>' : ''}</tr>`; const ai = x.x; const idx = f ? f.runners.indexOf(ai) : G.fields[rid].runners.indexOf(ai); const slip = G.claims.some(c => c.rid === rid && c.idx === idx); return `<tr><td><span class="pn" style="background:${sc[0]};color:${sc[1]}">${x.post}</span></td><td>${esc(ai.name)}<div class="cm">${ai.age}yo ${ai.sex === 'F' ? 'f' : ai.sex === 'G' ? 'g' : 'c'} · ${esc(ai.sireName)} · ${ai.starts ? ai.starts + ': ' + ai.wins + ' wins' : 'firster'} · ${esc(ai.trainerName)}</div></td><td>${ai.figs.join(' ') || '—'}</td><td>${oddsStr(x.ml)}</td>${isClaim ? `<td>${slip ? '<span class="ok">slip in</span>' : `<button class="btn xs" data-a="claimForm" data-rid="${rid}" data-i="${idx}">Claim</button>`}</td>` : ''}</tr>`; }).join('')}</table>`;
+    o += `<h3 class="sub">Field (morning line) <button class="btn xs ghost" data-a="fieldpp" data-rid="${rid}">Full past performances</button></h3><div class="note muted">Tap a horse for its past performances.</div><table class="dtab fld"><tr><th>#</th><th>Horse</th><th>Last figs</th><th>ML</th>${isClaim ? '<th></th>' : ''}</tr>${list.map(x => { const sc = SADDLE[(x.post - 1) % SADDLE.length]; if (!x.ai) return `<tr class="me"><td><span class="pn" style="background:${sc[0]};color:${sc[1]}">${x.post}</span></td><td><a data-a="horse" data-id="${x.h.id}"><b>${esc(x.name)}</b></a><div class="cm">yours</div></td><td>${x.h.pp.slice(0, 3).map(p => p.fig).join(' ') || 'debut'}</td><td>${oddsStr(x.ml)}</td>${isClaim ? '<td></td>' : ''}</tr>`; const ai = x.x; const idx = f ? f.runners.indexOf(ai) : G.fields[rid].runners.indexOf(ai); const slip = G.claims.some(c => c.rid === rid && c.idx === idx); return `<tr><td><span class="pn" style="background:${sc[0]};color:${sc[1]}">${x.post}</span></td><td><a data-a="aipp" data-rid="${rid}" data-i="${idx}">${esc(ai.name)}</a><div class="cm">${ai.age}yo ${ai.sex === 'F' ? 'f' : ai.sex === 'G' ? 'g' : 'c'} · ${esc(ai.sireName)} · ${ai.starts ? ai.starts + ': ' + ai.wins + ' wins' : 'firster'} · ${esc(ai.trainerName)}</div></td><td>${ai.figs.slice(0, 3).join(' ') || '—'}</td><td>${oddsStr(x.ml)}</td>${isClaim ? `<td>${slip ? '<span class="ok">slip in</span>' : `<button class="btn xs" data-a="claimForm" data-rid="${rid}" data-i="${idx}">Claim</button>`}</td>` : ''}</tr>`; }).join('')}</table>`;
   } else if (awOf(r.yr, r.wk) >= AW()) o += `<button class="btn ghost wide" data-a="viewField" data-rid="${rid}">Preview probable field</button>`;
   openModal(r.name ? esc(r.name) : `Race ${r.rn} · ${r.trk}`, o, { push: !re, fn: () => openRace(rid, true) });
 }
@@ -1972,6 +2207,8 @@ function vSales() {
   const sale = saleThisWeek();
   if (sale && G.saleLots) {
     o += `<div class="salehead"><div class="sh-k">This week · ${sale.loc}</div><div class="sh-n">${sale.n}</div>${sale.elite && G.rep < 10 && G.cash < 1e6 ? '<div class="warnbox">Select sale: buyers need credit approval (reputation 10+ or $1M cash).</div>' : ''}</div>`;
+    const nOut = G.saleLots.filter(l => l.state === 'out').length;
+    o += `<div class="note muted">2026 result: median ${fmtK(sale.med)} · ${Math.round(sale.rna * 100)}% RNA (bought back) · ${Math.round(sale.out * 100)}% of the catalog withdrawn. Showing ${G.saleLots.length} hips${nOut ? `, ${nOut} out` : ''}. Prices follow sire fee${sale.fe >= 0.7 ? ' strongly' : ' only a little at this regional sale'}, the dam, sex and the individual${sale.kind === '2yo' ? ' — and above all the breeze time (each 1/5 second slower ≈ half the price)' : ''}.</div>`;
     o += G.saleLots.map((l, i) => lotRow(l, i)).join('');
   } else o += '<div class="note">No auction this week. Upcoming sales are below — you can consign horses ahead of time.</div>';
   o += `<h2 class="sec">Private market <span>${G.market.length}</span></h2><div class="note muted">Horses of racing age offered privately by other owners. Refreshes monthly.</div>` + G.market.map((h, i) => `<div class="hcard" data-a="mkt" data-i="${i}"><div class="hc-m"><div class="hn">${esc(h.name)}</div><div class="hs">${ageOf(h)}yo ${sexLabel(h)} · ${esc(h.sireName)} — ${esc(h.damName)} · ${h.bred}-bred</div><div class="hs">${h.starts ? `${rec(h)} · figs ${h.pp.slice(0, 3).map(p => p.fig).join(', ')}` : 'Unraced'}</div></div><div class="hc-r"><div class="earn">${fmtK(h.ask)}</div><div class="hs">asking</div></div></div>`).join('');
@@ -1983,7 +2220,7 @@ function vSales() {
 function lotTitle(l) { const h = l.h; const k = { Y: 'yearling', '2': '2yo', W: 'weanling', M: 'broodmare', R: ageOf(h) + 'yo' }[l.h.lotKind || 'Y'] || ''; return `Hip ${h.hip} · ${h.name ? esc(h.name) + ' · ' : ''}${k} ${h.sex === 'F' ? (k === 'broodmare' ? '' : 'filly') : 'colt'}`; }
 function estRange(m) { return `${fmtK(roundBid(m * 0.6))}–${fmtK(roundBid(m * 1.5))}`; }
 function lotRow(l, i) {
-  const h = l.h; const st = l.state === 'sold' ? `<b>${fmtK(l.price)}</b><small>sold</small>` : l.state === 'rna' ? `<b>RNA</b><small>${fmtK(l.price)}</small>` : l.state === 'mine' ? `<b class="good">${fmtK(l.price)}</b><small>yours!</small>` : `<b>${estRange(h.mkt)}</b><small>estimate</small>`;
+  const h = l.h; const st = l.state === 'out' ? `<b class="muted">OUT</b><small>withdrawn</small>` : l.state === 'sold' ? `<b>${fmtK(l.price)}</b><small>sold</small>` : l.state === 'rna' ? `<b>RNA</b><small>${fmtK(l.price)}</small>` : l.state === 'mine' ? `<b class="good">${fmtK(l.price)}</b><small>yours!</small>` : `<b>${estRange(h.mkt)}</b><small>estimate</small>`;
   return `<div class="rrow" data-a="lot" data-i="${i}"><div class="rr-l"><div class="rr-t">${lotTitle(l)}</div><div class="rr-s">${esc(h.sireName)} — ${esc(h.damName)} (${esc(h.damsireName)})${h.bred !== 'KY' ? ' · ' + h.bred + '-bred' : ''}${h.breeze ? ' · breezed :' + breezeStr(h.breeze) : ''}${h.preg ? ' · in foal to ' + esc(stallion(h.preg.sid)?.name) : ''}</div></div><div class="rr-r">${st}</div></div>`;
 }
 function breezeStr(b) { const w = Math.floor(b), fr = Math.round((b - w) * 5); return w + (fr ? ` ${fr}/5` : ''); }
@@ -2004,7 +2241,8 @@ function openLot(i, re) {
   <dt>Estimate</dt><dd>${estRange(h.mkt)}</dd>
   ${l.vet ? `<dt>Vet (X-rays & scope)</dt><dd><b>${h.sound < 0.85 ? 'Clean — no issues' : h.sound < 1.15 ? 'Minor findings, acceptable' : h.sound < 1.4 ? '⚠️ Sesamoiditis / OCD lesion noted' : '⛔ Significant findings — risky'}</b>${h.bleeder && rnd() < 0.5 ? ' · scope shows some blood' : ''}</dd>` : ''}
   ${l.agent ? `<dt>Your agent</dt><dd><b>${agentView(h)}</b></dd>` : ''}</dl>`;
-  if (l.state === 'open' || l.state === 'live') {
+  if (l.state === 'out') o += '<div class="note">Withdrawn from the sale (scratched by the consignor).</div>';
+  else if (l.state === 'open' || l.state === 'live') {
     o += `<div class="btnrow">${l.vet ? '' : `<button class="btn ghost sm" data-a="lotVet" data-i="${i}">Vet review ($500)</button>`}${l.agent ? '' : `<button class="btn ghost sm" data-a="lotAgent" data-i="${i}">Agent inspection (${fmt$(agentFee(h))})</button>`}</div>`;
     const blocked = sale.elite && G.rep < 10 && G.cash < 1e6;
     o += blocked ? '<div class="warnbox">You are not credit-approved for this select sale yet.</div>' : `<button class="btn big" data-a="auction" data-i="${i}">Bid on this horse</button>`;
@@ -2047,14 +2285,14 @@ function vBreed() {
   else {
     o += `<div class="chips scroll">${['all', ...FARM_STATES].map(s => `<button class="chip sm ${UI.bst === s ? 'on' : ''}" data-a="bst" data-s="${s}">${s === 'all' ? 'All states' : s}</button>`).join('')}</div>`;
     const list = G.stallions.filter(s => UI.bst === 'all' || s.st === UI.bst).sort((a, b) => b.fee - a.fee);
-    o += list.map(s => `<div class="rrow" data-a="stud" data-sid="${s.id}"><div class="rr-l"><div class="rr-t">${esc(s.name)}${s.pid ? ' <span class="bt">yours</span>' : ''}</div><div class="rr-s">${STATE_N[s.st]} · ${s.line} line · ${studTraits(s)}</div><div class="rr-s">${sireStats(s).txt}</div></div><div class="rr-r"><b>${fmtK(s.fee)}</b><small>fee</small></div></div>`).join('');
+    o += list.map(s => `<div class="rrow" data-a="stud" data-sid="${s.id}"><div class="rr-l"><div class="rr-t">${esc(s.name)}${s.pid ? ' <span class="bt">yours</span>' : ''}</div><div class="rr-s">${STATE_N[s.st] || s.st}${s.farm ? ' · ' + esc(s.farm) : ''} · ${s.line} line · ${studTraits(s)}</div><div class="rr-s">${sireStats(s).txt}</div></div><div class="rr-r"><b>${fmtK(s.fee)}</b><small>${s.estFee ? 'fee (est.)' : 'fee'}</small></div></div>`).join('');
   }
   return o;
 }
 function studTraits(s) { return [s.dist <= 7 ? 'speed' : s.dist >= 9.5 ? 'stamina' : 'middle distance', s.turf > 0.4 ? 'turf' : s.turf < -0.3 ? 'dirt' : 'versatile', s.mat > 0.4 ? 'precocious' : s.mat < -0.3 ? 'late-maturing' : ''].filter(Boolean).join(' · '); }
 function openStud(sid, re) {
   const s = stallion(sid); const mares = G.horses.filter(h => h.status === 'mare');
-  let o = `<dl class="kv"><dt>Stands</dt><dd>${STATE_N[s.st]} · ${G.yr - s.yrStart > 0 ? `${G.yr - s.yrStart} seasons at stud` : 'new to stud'}</dd><dt>Fee</dt><dd><b>${fmt$(s.fee)}</b> live foal</dd><dt>Sire line</dt><dd>${s.line}</dd><dt>Type</dt><dd>${studTraits(s)}</dd><dt>Progeny</dt><dd>${sireStats(s).txt}</dd>${s.st !== 'KY' ? `<dt>Note</dt><dd>Foals are state-bred where the mare foals — ship your mare to ${STATE_N[s.st]} to make them ${s.st}-breds.${s.st === 'MD' ? ' Foals are eligible for the Maryland Million.' : ''}</dd>` : ''}</dl>`;
+  let o = `<dl class="kv"><dt>Stands</dt><dd>${s.farm ? esc(s.farm) + ', ' : ''}${STATE_N[s.st] || s.st} · ${G.yr - s.yrStart > 0 ? `${G.yr - s.yrStart} seasons at stud` : 'new to stud'}</dd><dt>Fee</dt><dd><b>${fmt$(s.fee)}</b> live foal</dd><dt>Sire line</dt><dd>${s.line}</dd><dt>Type</dt><dd>${studTraits(s)}</dd>${s.estFee ? '<dt>Note</dt><dd>2026 fee not published — estimated from his book size</dd>' : ''}<dt>Speed gene</dt><dd>${s.mstn ? 'Likely ' + s.mstn.replace('CC', 'C:C (sprint)').replace('CT', 'C:T (middle)').replace('TT', 'T:T (stamina)') : '—'}</dd><dt>Progeny</dt><dd>${sireStats(s).txt}</dd>${s.st !== 'KY' ? `<dt>Note</dt><dd>Foals are state-bred where the mare foals — ship your mare to ${STATE_N[s.st]} to make them ${s.st}-breds.${s.st === 'MD' ? ' Foals are eligible for the Maryland Million.' : ''}</dd>` : ''}</dl>`;
   const sh = G.shares.find(x => x.sid === sid);
   if (!s.pid) o += sh ? `<div class="note">You own a share: one free season every year (unused seasons are sold for you each June). ${sh.usedYr === G.yr ? 'This year\'s season is used.' : ''} <button class="btn xs ghost" data-a="sellShare" data-sid="${sid}">Sell share (${fmtK(shareSalePrice(s))})</button></div>` : canBuyShare(s) ? `<div class="note muted">Buy a lifetime share for ${fmt$(shareCost(s))}: one season a year, every year. Its value moves with his fee. <button class="btn xs" data-a="buyShare" data-sid="${sid}">Buy share</button></div>` : '';
   if (mares.length) o += '<h3 class="sub">Book a mare</h3>' + mares.map(m => { const [ok, why] = canBook(m, s); const useShare = sh && sh.usedYr !== G.yr; return `<div class="erow"><div><b>${esc(m.name)}</b><div class="hs">${ageOf(m)}yo · by ${esc(m.sireName)} · nick <b>${nickGrade(s, m)}</b>${ok ? '' : ' · ' + esc(why)}</div></div>${ok ? (useShare ? `<button class="btn sm" data-a="doBook" data-id="${m.id}" data-sid="${sid}" data-how="share">Use share</button>` : `<div class="bk"><button class="btn sm" data-a="doBook" data-id="${m.id}" data-sid="${sid}">Book</button>${s.pid ? '' : `<button class="btn xs ghost" data-a="doBook" data-id="${m.id}" data-sid="${sid}" data-how="ng">No-guarantee ${fmtK(s.fee * 0.7)} now</button>`}</div>`) : ''}</div>`; }).join('') + (s.pid ? '' : '<div class="note muted">"Book" pays the full fee only if a live foal is born. A no-guarantee season costs 30% less but is paid now — no refund if she doesn\'t get in foal.</div>');
@@ -2081,7 +2319,7 @@ function vOffice() {
 }
 function helpHtml() {
   return `<div class="help"><p><b>The loop:</b> each tap of <i>Advance week</i> runs your entered races, pays the bills, ages the horses and moves the calendar. The racing calendar, sales and stakes follow the real US season.</p>
-  <p><b>Buying:</b> state-bred & lower-book sales are cheap and full of state-bred runners; Keeneland Book 1, Saratoga Select and the Fasig-Tipton Gulfstream 2yo sale are where the elite pedigrees go. Pay for a vet review to dodge unsound horses and an agent's inspection for a read on talent. You can also buy privately or claim a horse.</p>
+  <p><b>Buying:</b> state-bred & lower-book sales are cheap and full of state-bred runners; Keeneland Book 1 and Saratoga Select are where the elite pedigrees go. Each sale is priced from its real 2026 results — median, buy-back (RNA) rate and withdrawn hips — and a horse's price follows its sire's fee, the dam, sex, looks and (at 2yo sales) the breeze time. Pay for a vet review to dodge unsound horses and an agent's inspection for a read on talent. You can also buy privately or claim a horse.</p>
   <p><b>Racing:</b> break the maiden (MSW or maiden claiming), then climb: claiming → allowance (N1X, N2X) → optional claimers → stakes → graded stakes. State-breds have restricted races with richer purses for the quality. "Par" is the field's typical figure — compare it with your horse's figures.</p>
   <p><b>Trainers:</b> better barns develop horses closer to their ceiling, keep them sounder, read them better (their comments get more accurate) and attract better jockeys. Elite barns are picky.</p>
   <p><b>Health:</b> run too often and injuries come. Turn horses out to recover. Bleeders improve on Lasix, but 2yo races and stakes are Lasix-free.</p>
@@ -2093,6 +2331,8 @@ function helpHtml() {
   <p><b>Big races:</b> the full 2026 US stakes calendar (600+ graded & listed races) with real age conditions — early-season older-horse races are 4&up. New York races at Belmont year-round except the Saratoga summer meet. The Saudi Cup (Feb) and Dubai World Cup (Mar) are invitation-only; win the Pegasus to get the Saudi invite.</p>
   <p><b>Ownership tools:</b> sell shares to partners to spread risk, insure valuable horses (about 3.5% a year), shuttle stallions to Australia for a second season, and buy lifetime stallion shares or no-guarantee seasons.</p>
   <p><b>State-bred bonuses:</b> NY, PA, FL, MD, CA and LA-breds earn owner bonuses on top of purses in their home state, and Kentucky-breds get KTDF supplements in Kentucky (big ones at Kentucky Downs). Rates are approximations of the real programs.</p>
+  <p><b>Figures & PPs:</b> every horse gets a Beyer-style speed figure every start (right-hand column of a PP). "Par" is what the winner usually runs. Tap any horse in a field for its past performances, or open the full field PPs.</p>
+  <p><b>Stallions:</b> the directory holds 250 real stallions with 2026 fees, AEI/CI (progeny earnings index vs. the mares they got), average winning distance and book size. A retired colt can stand at a major Kentucky farm (Grade 1 types), a Kentucky commercial farm, or a state-bred program farm with stallion awards. The MSTN 'speed gene' test tells sprinters (C:C) from stayers (T:T).</p>
   <p><b>Selling:</b> consign to a sale (set a reserve), take a private offer, or sell to a trader at a discount. Pinhooking — buying weanlings and reselling as yearlings or 2yos — is a real way to profit.</p></div>`;
 }
 
@@ -2118,9 +2358,9 @@ function watchRace(i) {
 const ACT = {
   tab: d => { UI.tab = d.t; if ($('#modal').classList.contains('hidden')) render(); else closeModal(); window.scrollTo(0, 0); },
   close: () => closeModal(), back: () => backModal(),
-  ngDiff: d => { UI.newName = $('#ng-name').value; UI.newHome = $('#ng-home').value; UI.newDiff = d.d; renderNew(); },
+  ngDiff: d => { UI.newName = $('#ng-name').value; UI.newHome = $('#ng-home').value; UI.newReal = $('#ng-real')?.checked; UI.newDiff = d.d; renderNew(); },
   ngSilk: d => { UI.newName = $('#ng-name').value; UI.newHome = $('#ng-home').value; UI.newSilks[d.k] = d.v; renderNew(); },
-  ngStart: () => { const name = $('#ng-name').value.trim() || 'Blue Ridge Racing'; newGame({ diff: UI.newDiff || 'medium', stable: name, silks: { ...UI.newSilks }, home: $('#ng-home').value }); UI.tab = 'stable'; render(); saveNow(); openModal('Welcome to the backstretch', helpHtml() + '<button class="btn big" data-a="close">Let\'s go</button>', { push: false }); },
+  ngStart: () => { const name = $('#ng-name').value.trim() || 'Blue Ridge Racing'; newGame({ diff: UI.newDiff || 'medium', stable: name, silks: { ...UI.newSilks }, home: $('#ng-home').value, realTrainers: $('#ng-real')?.checked }); UI.tab = 'stable'; render(); saveNow(); openModal('Welcome to the backstretch', helpHtml() + '<button class="btn big" data-a="close">Let\'s go</button>', { push: false }); },
   ngImport: () => ACT.import(),
   advance: () => { const rep = advanceWeek(); render(); saveNow(); if (rep.races.length || rep.news.length) openReport(rep); else toast('Quiet week.'); },
   report: () => openReport(),
@@ -2158,11 +2398,13 @@ const ACT = {
   doConsign: d => { const h = horse(d.id); const s = SALES.find(x => x.id === d.s); consign(h, s, +$('#cs-r').value); toast('Consigned to ' + s.n); closeModal(); scheduleSave(); },
   retire: d => { const h = horse(d.id); let o = '';
     if (h.sex === 'F') o += `<p class="pad">Retire ${esc(h.name)} to your broodmare band? (est. broodmare value ${fmt$(mareValue({ ...h, status: 'mare' }))})</p>${A('retMare', '🧬 Retire to broodmare', 'hi')}`;
-    else if (!h.gelded) { const fee = studFeeFor(h); o += fee >= 2500 ? `<p class="pad">Farms think ${esc(h.name)} would stand for about <b>${fmt$(fee)}</b>. Stallion value ~<b>${fmt$(studValue(h))}</b>.</p>${A('retStud', '🏠 Stand him yourself (keep all fees)', 'hi', { m: 'stand' })}${A('retStud', '🤝 Syndicate: sell 75%, keep 25%', '', { m: 'synd' })}${A('retStud', '💵 Sell stallion rights outright', '', { m: 'sell' })}` : `<p class="pad">No stud farm is interested — his race record and pedigree don't justify a stud fee. Consider a second career.</p>`; }
+    else if (!h.gelded) { const fee = studFeeFor(h); o += fee >= 2500 ? `<p class="pad">Farms think ${esc(h.name)} would stand for about <b>${fmt$(fee)}</b>. Stallion value ~<b>${fmt$(studValue(h))}</b>.</p>${studFarmPicker(h)}` : `<p class="pad">No stud farm is interested — his race record and pedigree don't justify a stud fee. Consider a second career.</p>`; }
     o += `<p class="pad muted">Or find a second career (eventing, hunters, pleasure riding) through a Thoroughbred aftercare program — $2,000 donation, horse leaves your stable.</p>${A('retOTTB', '🐎 Rehome via aftercare ($2,000)')}`;
     openModal('Retire ' + esc(h.name), o); },
   retMare: d => { const h = horse(d.id); scratchAll(h.id); h.status = 'mare'; h.trainer = null; h.farm = G.home; h.retFig = bestFig(h); h.inj = h.inj && h.inj.sev === 3 ? null : h.inj; h.auto.on = false; toast(h.name + ' joins the broodmare band'); closeModal(); scheduleSave(); },
-  retStud: d => { const h = horse(d.id); retireToStud(h, d.m); closeModal(); scheduleSave(); },
+  retStud: d => { const h = horse(d.id); const f = $('#stud-farm')?.value || 'ky'; if (!studFarmOK(h, f)) { toast('That farm won\'t take him'); return; } retireToStud(h, d.m, f); closeModal(); scheduleSave(); },
+  mstn: d => { const h = horse(d.id); testMSTN(h); toast('MSTN: ' + h.mstn.replace('CC', 'C:C').replace('CT', 'C:T').replace('TT', 'T:T')); openHorse(h.id, true); scheduleSave(); },
+  aipp: d => openAIPP(d.rid, +d.i), fieldpp: d => openFieldPP(d.rid),
   retOTTB: d => { const h = horse(d.id); spend('Aftercare donations', 2000); G.history.push({ name: h.name, out: 'Retired to a second career', yr: G.yr }); removeHorse(h.id); closeModal(); toast('Thank you for supporting aftercare 💚'); scheduleSave(); },
   pension: d => ACT.retOTTB(d),
   offerAcc: d => { const of = G.offers.find(o => o.hid === d.id); const h = horse(d.id); earn(of.stud ? 'Stallion sales' : 'Horse sales', of.amt); G.history.push({ name: h.name, out: `Sold privately ${fmt$(of.amt)}`, yr: G.yr }); removeHorse(h.id); toast('Sold for ' + fmt$(of.amt)); closeModal(); scheduleSave(); },
