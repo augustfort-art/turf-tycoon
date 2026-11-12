@@ -1,4 +1,4 @@
-const CACHE = 'turf-tycoon-v19';
+const CACHE = 'turf-tycoon-v20';
 const CORE = ['./', './index.html', './manifest.webmanifest', './icon-192.png', './icon-512.png', './apple-touch-icon.png'];
 const APP = new URL('./', self.location).href, PAGE = new URL('./index.html', self.location).href;
 
