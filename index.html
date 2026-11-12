@@ -214,6 +214,7 @@ tr.me td,.erow.me,.race.me{background:rgba(226,184,88,.16)}
 .own.star{font-weight:600}
 .tut.mini{padding:9px 12px;margin-bottom:2px}.tut.mini .tut-d{font-size:12.5px;margin:3px 0 7px;color:var(--muted)}.tut.mini .tut-h b{font-size:14px}
 .resc.spoil{border-style:dashed}.resc.spoil .fpos{color:var(--muted)}.spoil-n{font-size:13px;color:var(--muted);margin:2px 2px 10px;display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.re .shp{color:var(--warn,#a5671b);margin-left:6px;font-weight:600}
 </style>
 </head>
 <body>
@@ -912,9 +913,8 @@ function entryFees(h, r) {
   if (r.bc && !h.bcNom && !(h.wayi || []).includes(r.bcName)) { const f = Math.round(r.purse * 0.09); fee += f; notes.push(['BC supplemental (not nominated)', f]); }
   if (r.bc && (h.wayi || []).includes(r.bcName)) { fee = 0; notes = [['Win & You\'re In — fees paid', 0]]; }
   if (r.tags && r.tags.includes('TC') && !h.tcNom) { const f = r.name.startsWith('Kentucky') ? 200000 : r.name.startsWith('Preakness') ? 150000 : 50000; fee += f; notes.push(['Triple Crown supplement', f]); }
-  const t = trainer(h.trainer); const trg = TRACKS[r.trk].rg;
-  let base = t.rg; if ((base === 'NY' || base === 'KY') && G.wk <= 13 && r.wk <= 13) base = 'FL';
-  if (trg !== base) { const f = (trg === 'CA') !== (base === 'CA') ? 6500 : 2500; fee += f; notes.push(['Shipping', f]); }
+  const t = trainer(h.trainer); const sh = t ? shipCost(t, r) : 0;
+  if (sh) { fee += sh; notes.push([`Shipping (${REGION_N[shipFrom(t, r)]} → ${TRACKS[r.trk].n})`, sh]); }
   const o = OWN(h); if (o < 1 && fee) { notes.push([`Partners pay ${Math.round((1 - o) * 100)}%`, -Math.round(fee * (1 - o))]); fee = Math.round(fee * o); }
   return { fee, notes };
 }
@@ -1473,11 +1473,15 @@ function prepWeek() {
 // money: win chance from the horse's edge over the race's par, the share of the purse it can actually collect (state-bred-only
 // money), claim risk and costs. Weaker barns plan fewer weeks ahead, stay on their home circuit, overrate their horses
 // (so they overmatch them), ignore fine print and choose more erratically. Elite barns find the soft spots.
+// Where a barn is stabled for a race week: its home region, except the bigger New York and Kentucky outfits,
+// which winter in Florida (Jan–Mar). Racing in the home region never costs shipping.
+function winterFL(t, wk) { return (t.rg === 'NY' || t.rg === 'KY') && t.tier >= 3 && wk <= 13; }
+function shipFrom(t, r) { const trg = TRACKS[r.trk].rg; if (r.intl || trg === 'INTL' || trg === t.rg) return null; const w = winterFL(t, r.wk); if (w && trg === 'FL') return null; return w ? 'FL' : t.rg; }
+function shipCost(t, r) { const from = shipFrom(t, r); if (!from) return 0; return (TRACKS[r.trk].rg === 'CA') !== (from === 'CA') ? 6500 : 2500; }
 const REG_NEAR = { NY: ['MA', 'FL'], KY: ['S', 'MA', 'FL'], FL: ['NY', 'KY'], CA: [], MA: ['NY', 'KY'], S: ['KY'], INTL: [] };
 function trainerReach(t, r) {
   const T = TRAINER_TIERS[t.tier]; const trg = TRACKS[r.trk].rg; if (trg === 'INTL') return T.reach >= 2;
-  let home = t.rg; if ((home === 'NY' || home === 'KY') && r.wk <= 13) home = 'FL'; // NY & KY barns winter in Florida
-  if (trg === home || trg === t.rg) return true; if (T.reach >= 2) return true; return T.reach >= 1 && (REG_NEAR[t.rg] || []).includes(trg);
+  if (!shipFrom(t, r)) return true; if (T.reach >= 2) return true; return T.reach >= 1 && (REG_NEAR[t.rg] || []).includes(trg);
 }
 // Each race's field is a little stronger or weaker than its class par (who happens to enter). Good barns watch the
 // entries and know who's pointing where, so they see much of this; small barns don't.
@@ -1502,8 +1506,7 @@ function spotValue(h, r, est, k, t) {
   const claim = claimable(r, { optClm: mustTag(h, r) });
   if (claim) { const val = raceValue(h); ev -= Math.max(0.2 * val, val - r.clm) * claimProb(h, r) * T.risk; } // losing a useful horse costs more than the gap to the tag
   ev -= entryFees(h, r).fee;
-  { const trg = TRACKS[r.trk].rg; let home = t.rg; if ((home === 'NY' || home === 'KY') && r.wk <= 13) home = 'FL';
-    if (trg !== home && trg !== t.rg && trg !== 'INTL') ev *= (REG_NEAR[t.rg] || []).includes(trg) ? 0.85 : 0.72; } // shipping is a hassle: trainers ship for a real edge
+  if (shipFrom(t, r)) ev *= (REG_NEAR[t.rg] || []).includes(TRACKS[r.trk].rg) ? 0.85 : 0.72; // shipping is a hassle: trainers ship for a real edge
   if (k > 0.25 && skill >= 1) ev *= Math.exp(-Math.max(0, Math.abs(r.dist - h.dist) - 1) * 0.15 - ((r.surf === 'T') !== (h.turf > 0.3) && Math.abs(h.turf) > 0.3 ? 0.2 : 0));
   return { sc: Math.log(Math.max(200, ev)) + gauss(0, T.jit, srng('jit' + h.id + r.id)), pW: winChance(margin), margin, claim, ev, soft: fieldSoft(r) * SOFT_SEE[t.tier] };
 }
@@ -2533,7 +2536,7 @@ function openReport(rep) {
   const hideNames = rep.races.filter((_, i) => hid[i]).flatMap(res => res.mine.map(m => m.name)).filter(Boolean);
   const spoils = n => hideNames.some(nm => n.t.includes(nm));
   const shown = rep.news.filter(n => !spoils(n)); const held = rep.news.length - shown.length;
-  o += shown.length ? '<h3 class="sub">This week</h3>' + shown.map(n => `<div class="news ${n.type}">${esc(n.t)}</div>`).join('') : held ? '' : '<p class="pad muted">A quiet week at the barn.</p>';
+  o += shown.length ? '<h3 class="sub">This week</h3>' + shown.map(n => `<div class="news ${n.type}">${esc(n.t)}</div>`).join('') : held || rep.races.length ? '' : '<p class="pad muted">A quiet week at the barn.</p>';
   if (held) o += `<p class="pad muted">${held} news item${held > 1 ? 's' : ''} about your runners will show once you see the result${nHid > 1 ? 's' : ''}.</p>`;
   o += '<button class="btn big" data-a="close">Continue</button>';
   UI.rep = rep; UI.holding = nHid > 0; renderTop();
@@ -2751,6 +2754,7 @@ function raceNum(r) { const sc = r.name ? ['#0e3b2c', '#e2b858'] : SADDLE[(r.rn 
 function raceRow(r, h, opts = {}) {
   let el = ''; if (h) { const [ok, why] = eligible(h, r); el = ok ? `<span class="ok">Eligible</span>` : `<span class="no">${esc(why)}</span>`; if (!ok && UI.f.elig && !opts.all) return ''; }
   const mine = G.entries.filter(e => e.rid === r.id).map(e => horse(e.hid)?.name).filter(Boolean);
+  if (h && el) { const t = trainer(h.trainer); const sc = t ? shipCost(t, r) : 0; if (sc) el += ` <span class="shp">Ships · ${fmtK(sc)}</span>`; }
   const title = r.name ? esc(r.name) : `${r.sb ? r.sb + '-bred ' : ''}${RACE_TYPE_N[r.type]}${r.clm && r.type !== 'STR' ? ' ' + fmtK(r.clm) : ''}`;
   const cond = r.name ? '' : condText(r);
   return `<div class="race" data-a="race" data-rid="${r.id}">${raceNum(r)}<div class="rc"><div class="rt">${r.name ? '' : `<span class="ty ty-${TYPE_TAG[r.type]}">${TYPE_TAG[r.type]}</span>`}${title}</div>
@@ -2844,6 +2848,7 @@ function spotWhy(h, sp, est, k) {
   if (sp.soft != null && Math.abs(sp.soft) >= 1.5) out.push(sp.soft < 0 ? ['good', 'Soft field expected'] : ['warn', 'Tough field expected']);
   const rest = (awOf(r.yr, r.wk) - h.lastRace) * 7; if (h.starts) out.push([rest < 28 ? 'warn' : 'ok', `${rest} days rest`]);
   if (sp.claim) out.push(['warn', `Claimable for ${fmtK(r.clm)}`]);
+  { const t = trainer(h.trainer); const sc = t ? shipCost(t, r) : 0; if (sc) out.push(['warn', `Ships · ${fmtK(sc)}`]); }
   if (r.surf === 'T' && k > 0.35) out.push([h.turf > 0.3 ? 'good' : h.turf < -0.3 ? 'bad' : 'ok', h.turf > 0.3 ? 'Should like turf' : h.turf < -0.3 ? 'Turf a question' : 'Turf unknown']);
   if (k > 0.3) { const dd = Math.abs(r.dist - h.dist); out.push([dd <= 1 ? 'good' : dd <= 2 ? 'ok' : 'warn', dd <= 1 ? 'Ideal trip' : dd <= 2 ? 'Fair trip' : 'Trip a concern']); }
   if (r.fund && r.fund.kind === 'incl' && h.bred !== r.fund.st) out.push(['warn', `Part purse ${r.fund.st}-bred only`]);
