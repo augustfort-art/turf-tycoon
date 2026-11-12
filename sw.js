@@ -1,4 +1,4 @@
-const CACHE = 'turf-tycoon-v29';
+const CACHE = 'turf-tycoon-v30';
 const CORE = ['./', './index.html', './manifest.webmanifest', './icon-192.png', './icon-512.png', './apple-touch-icon.png'];
 const APP = new URL('./', self.location).href, PAGE = new URL('./index.html', self.location).href;
 
@@ -35,9 +35,12 @@ self.addEventListener('fetch', e => {
   // opening the app: newest page when online, saved page when offline (or the network is too slow / erroring)
   if (req.mode === 'navigate') {
     e.respondWith((async () => {
+      const live = fetch(new Request(url.origin + url.pathname, { cache: 'no-cache', credentials: 'same-origin' }));
+      // even if we fall back to the saved copy on a slow connection, save the fresh page when it lands for next time
+      e.waitUntil(live.then(r => { if (r.ok && !r.redirected) return caches.open(CACHE).then(c => c.put(PAGE, r.clone())); }).catch(() => {}));
       try {
-        const r = await net(url.origin + url.pathname, 4000);
-        if (r.ok && !r.redirected) { const copy = r.clone(); caches.open(CACHE).then(c => c.put(PAGE, copy)); return r; }
+        const r = await Promise.race([live.then(x => x.clone()), new Promise((_, rej) => setTimeout(() => rej(new Error('timeout')), 6000))]);
+        if (r.ok && !r.redirected) return r;
         if (r.ok) return new Response(await r.blob(), { headers: r.headers }); // Safari won't show a redirected response from a worker
         const saved = await cachedPage(); return saved || r;
       } catch (err) {
