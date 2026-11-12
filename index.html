@@ -1453,7 +1453,7 @@ function doAwards() {
   });
   if (hoty) { champs.push({ t: 'Horse of the Year', h: hoty.name, o: hoty.o, me: hoty.me }); if (hoty.me) { G.trophies.push({ yr: G.yr, t: 'Horse of the Year', h: hoty.name }); G.rep = Math.min(100, G.rep + 8); news(`🏆🏆 ${hoty.name} is ${G.yr} Horse of the Year!`, 'good'); } else news(`${G.yr} Horse of the Year: ${hoty.name} (${hoty.o}).`, 'info'); }
   const tbl = typeof standings === 'function' ? standings() : []; const top = tbl[0];
-  if (top) { champs.push({ t: 'Outstanding Owner', h: top.n, o: top.n, me: top.me }); if (top.me) { G.trophies.push({ yr: G.yr, t: 'Eclipse Award — Outstanding Owner', h: G.stable }); G.rep = Math.min(100, G.rep + 6); news(`🏆 ${G.stable} wins the Eclipse Award as Outstanding Owner — leading earner in North America!`, 'good'); } else { const myRank = tbl.findIndex(x => x.me) + 1; news(`${G.yr} Outstanding Owner: ${top.n} (${fmtK(top.e)}). You finished #${myRank} of ${tbl.length} on the owner table.`, 'info'); } }
+  if (top) { champs.push({ t: 'Outstanding Owner', h: top.n, o: fmtK(top.e) + ' in purses', me: top.me }); if (top.me) { G.trophies.push({ yr: G.yr, t: 'Eclipse Award — Outstanding Owner', h: G.stable }); G.rep = Math.min(100, G.rep + 6); news(`🏆 ${G.stable} wins the Eclipse Award as Outstanding Owner — leading earner in North America!`, 'good'); } else { const myRank = tbl.findIndex(x => x.me) + 1; news(`${G.yr} Outstanding Owner: ${top.n} (${fmtK(top.e)}). You finished #${myRank} of ${tbl.length} on the owner table.`, 'info'); } }
   G.champs = G.champs || {}; G.champs[G.yr] = champs;
 }
 function repTitle(r) { return r >= 70 ? 'Racing Dynasty' : r >= 45 ? 'Major Owner' : r >= 25 ? 'Established Owner' : r >= 10 ? 'Up-and-Comer' : 'Hobbyist'; }
@@ -1796,7 +1796,7 @@ function roadRank(h, which) { const b = roadBoard(which); const i = b.findIndex(
 function roadField(r, rr) {
   const which = r.tags.includes('KD') ? 'kd' : 'ko'; const cap = which === 'kd' ? 20 : 14;
   const board = roadBoard(which).filter(x => !x.mine).slice(0, cap - 1);
-  const runners = board.map(b => { const a = aiRunner(r, rr); const pe = G.road[which].find(q => q.n === b.n); a.name = b.n; a.rating = r.par - 1 + ((pe ? pe.r : 88) - (which === 'kd' ? 88 : 84)) * 0.8 + gauss(0, 1.5, rr); a.figs = a.figs.map(() => Math.round(a.rating + gauss(-1, 3, rr))); return a; });
+  const runners = board.map(b => { const a = aiRunner(r, rr); const pe = G.road[which].find(q => q.n === b.n); a.name = b.n; a.rating = r.par - 1 + ((pe ? pe.r : 88) - (which === 'kd' ? 88 : 84)) * 0.8 + gauss(0, 1.5, rr); a.figs = a.figs.map(() => Math.round(a.rating + gauss(-1, 3, rr))); const o = typeof pickOwner === 'function' ? pickOwner(rr, true) : null; if (o) a.owner = o.n; return a; });
   G.fields[r.id] = { runners, mine: [] }; return G.fields[r.id];
 }
 // ---- mortality insurance
@@ -1926,14 +1926,15 @@ function initRivals() {
 }
 function newStar(d) {
   const o = pickOwner(rnd, true); const age = d[0] === '2' ? 2 : d[0] === '3' ? 3 : rint(4, 6);
-  return { id: 'st' + (G.nextId++), name: genName(), div: d, owner: o ? o.n : 'Private owner', q: gauss(0, 3), age, sex: d.endsWith('F') ? 'F' : 'C', pts: 0, purse: 0, starts: 0, wins: 0, last: -99 };
+  let nm = genName(), k = 0; while (k++ < 20 && G.stars.some(z => z.name === nm)) nm = genName();
+  return { id: 'st' + (G.nextId++), name: nm, div: d, owner: o ? o.n : 'Private owner', q: gauss(0, 3), age, sex: d.endsWith('F') ? 'F' : 'C', pts: 0, purse: 0, starts: 0, wins: 0, last: -99 };
 }
 function topUpStars(d) { const n = G.stars.filter(s => s.div === d).length; for (let i = n; i < 4; i++) G.stars.push(newStar(d)); }
 function starRating(r, s) { const g1 = r.g === 1 ? r.par : r.par + (r.g === 2 ? 4 : r.g === 3 ? 7 : 9); return g1 - 2 + s.q - Math.max(0, s.age - 5) * 1.5; }
 // put eligible stars into a graded field (they replace generic runners)
 function injectStars(r, runners, rr) {
   if (!r.name || !r.g || !G.stars) return;
-  const d = raceDiv(r); const pool = G.stars.filter(s => s.div === d && AW() - s.last >= 3);
+  const d = raceDiv(r); const busy = starsBusy(r); const ra = awOf(r.yr, r.wk); const pool = G.stars.filter(s => s.div === d && ra - s.last >= 5 && !busy.has(s.id));
   let slot = 0;
   for (const s of pool) { if (slot >= runners.length - 1) break; if (rr() > (r.g === 1 ? 0.75 : 0.45)) continue;
     const x = runners[slot++]; const rating = starRating(r, s);
@@ -1942,14 +1943,18 @@ function injectStars(r, runners, rr) {
 }
 function creditStar(id, r, fin) {
   const s = (G.stars || []).find(z => z.id === id); if (!s) return;
-  s.starts++; s.last = awOf(r.yr, r.wk); const big = r.tags && r.tags.includes('BIG') || r.bc;
+  const big = r.tags && r.tags.includes('BIG') || r.bc;
   s.pts += ptsFor(r.g, fin, big); const share = r.purse * ([0.6, 0.2, 0.11, 0.06, 0.03][fin - 1] || 0); s.purse += share;
   const o = G.rivals.find(x => x.n === s.owner); if (o) { o.ys.e += share; if (fin === 1) { o.ys.gw++; o.ys.w++; } }
   if (fin === 1) s.wins++;
 }
+function starRan(id, r) { const s = (G.stars || []).find(z => z.id === id); if (s) { s.starts++; s.last = awOf(r.yr, r.wk); } }
+// stars already drawn into another field the same week can't run twice
+function starsBusy(r) { const B = new Set(); for (const [rid, f] of Object.entries(G.fields || {})) { if (rid === r.id || !f || !f.runners) continue; const o = raceById(rid); if (o && o.yr === r.yr && o.wk === r.wk) for (const x of f.runners) if (x.star) B.add(x.star); } return B; }
 // simulate graded stakes that you didn't run in
 function simStakes(r) {
-  const d = raceDiv(r); const pool = G.stars.filter(s => s.div === d && AW() - s.last >= 3 && rnd() < (r.g === 1 ? 0.75 : 0.45));
+  const d = raceDiv(r); const ra = awOf(r.yr, r.wk); const pool = G.stars.filter(s => s.div === d && ra - s.last >= 5 && rnd() < (r.g === 1 ? 0.75 : 0.45));
+  pool.forEach(s => starRan(s.id, r));
   const perf = pool.map(s => ({ s, p: starRating(r, s) + gauss(0, 4.5) }));
   for (let i = 0; i < 4; i++) perf.push({ s: null, p: r.par + 1 - i * 2.5 + gauss(0, 3) });
   perf.sort((a, b) => b.p - a.p);
@@ -1966,8 +1971,8 @@ function rivalsWeek(rep, runIds, resById) {
     const f = Math.max(0, gauss(1, 0.35)); o.ys.e += o.e / 45 * 0.8 * f; o.ys.st += o.st / 45 * f; o.ys.w += o.w / 45 * f;
   }
   for (const r of weekRaces(G.yr, G.wk)) {
-    if (!r.name || !r.g || r.rn !== 0 || (r.tags && (r.tags.includes('KD') || r.tags.includes('KO')))) continue;
-    if (runIds.has(r.id)) { const res = resById[r.id]; if (!res) continue; res.runners.forEach(x => { if (x.star && x.fin <= 3) creditStar(x.star, r, x.fin); }); const w = res.runners.find(x => x.fin === 1); if (w) logStakes(r, w.name, w.mine ? G.stable : (w.owner || 'Private owner'), w.mine); }
+    if (!r.name || !r.g || r.rn !== 0 || r.intl) continue;
+    if (runIds.has(r.id)) { const res = resById[r.id]; if (!res) continue; res.runners.forEach(x => { if (x.star) { starRan(x.star, r); if (x.fin <= 3) creditStar(x.star, r, x.fin); } }); const w = res.runners.find(x => x.fin === 1); if (w) logStakes(r, w.name, w.mine ? G.stable : (w.owner || 'Private owner'), w.mine); }
     else simStakes(r);
   }
 }
@@ -3156,10 +3161,10 @@ function vStandings() {
     }
   } else if (ss === 'gw') {
     const L = (G.stakesLog || []).slice(0, 60);
-    o += L.length ? L.map(x => `<div class="race ${x.mine ? 'me' : ''}"><div class="rnum"><span class="ty ty-G${x.g}">G${x.g}</span><small>${shortDate(x.yr, x.wk)}</small></div><div class="rc"><div class="rt">${esc(x.race)}</div><div class="rs">${esc(x.horse)} · ${esc(x.owner)} · ${TRACKS[x.trk] ? TRACKS[x.trk].n : x.trk}</div></div></div>`).join('') : emptyState('No graded stakes run yet this season.', 'Winners of every graded race show up here, yours included.');
+    o += L.length ? L.map(x => `<div class="race ${x.mine ? 'me' : ''}"><div class="rnum"><span class="ty ty-STK">G${x.g}</span><small>${shortDate(x.yr, x.wk)}</small></div><div class="rc"><div class="rt">${esc(x.race)}</div><div class="rs">${esc(x.horse)} · ${esc(x.owner)} · ${TRACKS[x.trk] ? TRACKS[x.trk].n : x.trk}</div></div></div>`).join('') : emptyState('No graded stakes run yet this season.', 'Winners of every graded race show up here, yours included.');
   } else {
     const ys = Object.keys(G.champs || {}).map(Number).sort((a, b) => b - a);
-    o += ys.length ? ys.map(y => `<h3 class="sub">${y} champions</h3>` + G.champs[y].map(c => `<div class="erow ${c.o === G.stable ? 'me' : ''}"><div>${c.o === G.stable ? '🏆 ' : ''}<b>${esc(c.h)}</b><div class="hs">${esc(c.t)} · ${esc(c.o)}</div></div></div>`).join('')).join('') : emptyState('Championships are decided at the end of the season.', 'Win graded stakes to build a case in your horse\'s division.');
+    o += ys.length ? ys.map(y => `<h3 class="sub">${y} champions</h3>` + G.champs[y].map(c => `<div class="erow ${c.me ? 'me' : ''}"><div>${c.me ? '🏆 ' : ''}<b>${esc(c.h)}</b><div class="hs">${esc(c.t)} · ${esc(c.o)}</div></div></div>`).join('')).join('') : emptyState('Championships are decided at the end of the season.', 'Win graded stakes to build a case in your horse\'s division.');
   }
   return o;
 }
