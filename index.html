@@ -213,6 +213,7 @@ body.newgame #top{min-height:0;padding-bottom:6px}
 tr.me td,.erow.me,.race.me{background:rgba(226,184,88,.16)}
 .own.star{font-weight:600}
 .tut.mini{padding:9px 12px;margin-bottom:2px}.tut.mini .tut-d{font-size:12.5px;margin:3px 0 7px;color:var(--muted)}.tut.mini .tut-h b{font-size:14px}
+.resc.spoil{border-style:dashed}.resc.spoil .fpos{color:var(--muted)}.spoil-n{font-size:13px;color:var(--muted);margin:2px 2px 10px;display:flex;gap:8px;align-items:center;flex-wrap:wrap}
 </style>
 </head>
 <body>
@@ -2228,8 +2229,16 @@ function render() {
   const v = $('#view'); v.innerHTML = tutCard() + ({ stable: vStable, races: vRaces, sales: vSales, breed: vBreed, office: vOffice })[UI.tab]();
   paintSilks(v);
 }
+// while the week report has hidden results open, the header holds back that week's race money and reputation
+function spoilHold() {
+  const rep = UI.rep; if (!UI.holding || !rep || G.showRes) return null;
+  const idx = rep.races.map((_, i) => i).filter(i => repHidden(rep, i)); if (!idx.length) return null;
+  let c = 0; idx.forEach(i => rep.races[i].mine.forEach(m => { c += (m.share || 0) + (m.bonus || 0) + (m.betRet || 0); }));
+  return { cash: G.cash - c, rep: rep.rep0 != null ? rep.rep0 : G.rep };
+}
 function renderTop() {
-  $('#top').innerHTML = `<div class="tl">${silkIcon(G.silks, 26)}<div><div class="sn">${esc(G.stable)}</div><div class="sd">${dateStr(G.yr, G.wk)} · Wk ${G.wk}</div></div></div><div class="tr"><div class="cash ${G.cash < 0 ? 'neg' : ''}">${fmt$(G.cash)}</div><div class="rep">${repTitle(G.rep)} · ${G.rep.toFixed(0)}</div></div>`;
+  const H = spoilHold(); const cash = H ? H.cash : G.cash, rp = H ? H.rep : G.rep;
+  $('#top').innerHTML = `<div class="tl">${silkIcon(G.silks, 26)}<div><div class="sn">${esc(G.stable)}</div><div class="sd">${dateStr(G.yr, G.wk)} · Wk ${G.wk}</div></div></div><div class="tr"><div class="cash ${cash < 0 ? 'neg' : ''}">${fmt$(cash)}</div><div class="rep">${repTitle(rp)} · ${rp.toFixed(0)}</div></div>`;
   paintSilks($('#top')); syncTop();
 }
 // header height without the status-bar inset (the inset itself is added in CSS with env(), which iOS may only resolve after load)
@@ -2254,7 +2263,7 @@ function openModal(title, html, opts = {}) {
   UI.curFn = opts.fn || null;
   $('.sheet-t').innerHTML = title; $('.sheet-b').innerHTML = html; $('#modal').classList.remove('hidden'); $('.sheet-b').scrollTop = 0; $('#back').style.visibility = UI.stack.length ? 'visible' : 'hidden'; paintSilks($('.sheet-b'));
 }
-function closeModal() { if (UI.anim) { UI.anim.stop(); UI.anim = null; } $('#modal').classList.add('hidden'); UI.stack = []; UI.curFn = null; render(); }
+function closeModal() { if (UI.anim) { UI.anim.stop(); UI.anim = null; } UI.holding = false; $('#modal').classList.add('hidden'); UI.stack = []; UI.curFn = null; render(); }
 function backModal() { if (UI.anim) { UI.anim.stop(); UI.anim = null; } const p = UI.stack.pop(); if (!p) return closeModal(); if (p.fn) { UI.curFn = p.fn; p.fn(true); } else { $('.sheet-t').innerHTML = p.t; $('.sheet-b').innerHTML = p.b; UI.curFn = null; } $('#back').style.visibility = UI.stack.length ? 'visible' : 'hidden'; paintSilks($('.sheet-b')); }
 function refreshModal() { if (UI.curFn && !$('#modal').classList.contains('hidden')) UI.curFn(true); }
 function confirmBox(msg, yesLabel, act, data = {}) {
@@ -2511,21 +2520,30 @@ function helpHtml() {
 }
 
 // ---------- WEEK REPORT ----------
+function repHidden(rep, i) { return !G.showRes && rep.races[i].mine.length > 0 && !(rep.seen || []).includes(i); }
 function openReport(rep) {
   rep = rep || G.lastRep; if (!rep) return;
   let o = '';
-  if (rep.races.length) o += rep.races.map((res, i) => res.mine.map(m => `<div class="resc ${m.fin === 1 ? 'win' : m.fin <= 3 ? 'itm' : ''}"><div class="resc-h"><span class="fpos">${ordinal(m.fin)}</span><div><b>${esc(m.name)}</b><div class="hs">${esc(res.label)} · ${TRACKS[res.trk].n} · ${distStr(res.dist)} ${SURF_N[res.surf].toLowerCase()}</div></div></div>
+  const hid = rep.races.map((_, i) => repHidden(rep, i)); const nHid = hid.filter(Boolean).length;
+  if (nHid) o += `<div class="spoil-n">${nHid > 1 ? `${nHid} races ran this week — results hidden until you watch.` : 'Results hidden until you watch.'}${nHid > 1 ? ' <button class="btn xs ghost" data-a="reveal" data-i="all">Show all results</button>' : ''}</div>`;
+  if (rep.races.length) o += rep.races.map((res, i) => hid[i] ? `<div class="resc spoil"><div class="resc-h"><span class="fpos">?</span><div><b>${res.mine.map(m => esc(m.name)).join(' & ')}</b><div class="hs">${esc(res.label)} · ${TRACKS[res.trk].n} · ${distStr(res.dist)} ${SURF_N[res.surf].toLowerCase()} · ${res.runners.length} runners</div></div></div>
+  <div class="btnrow"><button class="btn sm" data-a="watch" data-i="${i}">▶ Watch the race</button><button class="btn sm ghost" data-a="reveal" data-i="${i}">Show result</button></div></div>` : res.mine.map(m => `<div class="resc ${m.fin === 1 ? 'win' : m.fin <= 3 ? 'itm' : ''}"><div class="resc-h"><span class="fpos">${ordinal(m.fin)}</span><div><b>${esc(m.name)}</b><div class="hs">${esc(res.label)} · ${TRACKS[res.trk].n} · ${distStr(res.dist)} ${SURF_N[res.surf].toLowerCase()}</div></div></div>
   <div class="hs">${m.fin === 1 ? `Won by ${lenStr(res.runners[1]?.btn || 0)}` : `Beaten ${lenStr(m.btn)}`} · fig <b>${m.fig}</b> · ${oddsStr(m.odds)} · ${esc(m.comment)}${m.share ? ` · <b class="good">${fmt$(m.share)}</b>` : ''}${m.bonus ? ` + bonuses ${fmt$(m.bonus)}` : ''}${m.fundNote ? ` · <i>${esc(m.fundNote)}</i>` : ''}${m.bet ? (m.betRet ? ` · bet paid ${fmt$(m.betRet)}` : ` · lost ${fmt$(m.bet)} bet`) : ''}</div>
   <button class="btn sm" data-a="watch" data-i="${i}">▶ Watch the race</button></div>`).join('') || `<div class="resc"><b>Claim race:</b> ${esc(res.label)} at ${TRACKS[res.trk].n} <button class="btn sm" data-a="watch" data-i="${i}">▶ Watch</button></div>`).join('');
-  o += rep.news.length ? '<h3 class="sub">This week</h3>' + rep.news.map(n => `<div class="news ${n.type}">${esc(n.t)}</div>`).join('') : '<p class="pad muted">A quiet week at the barn.</p>';
+  const hideNames = rep.races.filter((_, i) => hid[i]).flatMap(res => res.mine.map(m => m.name)).filter(Boolean);
+  const spoils = n => hideNames.some(nm => n.t.includes(nm));
+  const shown = rep.news.filter(n => !spoils(n)); const held = rep.news.length - shown.length;
+  o += shown.length ? '<h3 class="sub">This week</h3>' + shown.map(n => `<div class="news ${n.type}">${esc(n.t)}</div>`).join('') : held ? '' : '<p class="pad muted">A quiet week at the barn.</p>';
+  if (held) o += `<p class="pad muted">${held} news item${held > 1 ? 's' : ''} about your runners will show once you see the result${nHid > 1 ? 's' : ''}.</p>`;
   o += '<button class="btn big" data-a="close">Continue</button>';
-  UI.rep = rep;
-  openModal(`Week of ${shortDate(rep.yr, rep.wk)}, ${rep.yr}`, o, { push: false });
+  UI.rep = rep; UI.holding = nHid > 0; renderTop();
+  openModal(`Week of ${shortDate(rep.yr, rep.wk)}, ${rep.yr}`, o, { push: false, fn: () => openReport(UI.rep) });
 }
 function watchRace(i) {
   const res = UI.rep.races[i];
   openModal('🏁 ' + TRACKS[res.trk].n, '<div class="racehost"></div>');
-  const host = $('.racehost'); UI.anim = playRace(host, res);
+  const host = $('.racehost'); const rep = UI.rep;
+  UI.anim = playRace(host, res, () => { rep.seen = [...new Set([...(rep.seen || []), i])]; scheduleSave(); const r = host.querySelector('.race-res'); if (r) r.insertAdjacentHTML('beforeend', '<button class="btn big" data-a="back">Back to the week</button>'); });
 }
 
 // ---------- ACTIONS ----------
@@ -2536,9 +2554,10 @@ const ACT = {
   ngSilk: d => { UI.newName = $('#ng-name').value; UI.newHome = $('#ng-home').value; UI.newSilks[d.k] = d.v; renderNew(); },
   ngStart: () => { const name = $('#ng-name').value.trim() || 'Blue Ridge Racing'; newGame({ diff: UI.newDiff || 'medium', stable: name, silks: { ...UI.newSilks }, home: $('#ng-home').value, realTrainers: !!$('#ng-real')?.checked }); UI.tab = 'stable'; render(); saveNow(); openModal('Welcome to the backstretch', helpHtml() + '<button class="btn big" data-a="close">Let\'s go</button>', { push: false }); },
   ngImport: () => ACT.import(),
-  advance: () => { const rep = advanceWeek(); render(); saveNow(); if (rep.races.length || rep.news.length) openReport(rep); else toast('Quiet week.'); },
+  advance: () => { const rep0 = G.rep; const rep = advanceWeek(); rep.rep0 = rep0; const hide = rep.races.some((_, i) => repHidden(rep, i)); UI.rep = rep; UI.holding = hide; render(); saveNow(); if (rep.races.length || rep.news.length) openReport(rep); else { render(); toast('Quiet week.'); } },
   report: () => openReport(),
   watch: d => watchRace(+d.i),
+  reveal: d => { const rep = UI.rep; if (!rep) return; rep.seen = d.i === 'all' ? rep.races.map((_, i) => i) : [...new Set([...(rep.seen || []), +d.i])]; scheduleSave(); openReport(rep); },
   horse: d => { UI.htab = 'pro'; openHorse(d.id); },
   htab: d => { UI.htab = d.t; openHorse(UI.hid, true); },
   findRace: d => { UI.tab = 'races'; UI.rsub = 'book'; UI.rh = d.id; UI.rhHide = true; closeModal(); },
@@ -3032,6 +3051,7 @@ function vOffice() {
     o += `<div class="card"><div class="hs">Difficulty <b>${DIFF[G.diff].label}</b> · <b id="savestat">${cloud.status === 'cloud' ? 'Saved to your account' : 'Saved in this browser'}</b> · last backup file ${G.lastBackup ? shortDate(...awToYW(G.lastBackup)) : 'never'}</div>
     <h3 class="sub">Backups</h3><div class="btnrow"><button class="btn sm" data-a="dlBackup">Save backup file</button><button class="btn ghost sm" data-a="ulBackup">Load backup file</button><input type="file" id="bkfile" accept=".json,application/json,text/plain" hidden></div>
     <div class="btnrow"><button class="btn ghost sm" data-a="export">Copy save code</button><button class="btn ghost sm" data-a="import">Paste save code</button><button class="btn ghost sm" data-a="snaps">Restore a snapshot</button></div>
+    <h3 class="sub">Race results</h3><label class="tgl"><input type="checkbox" data-a="spoilTgl" ${G.showRes ? '' : 'checked'}> Hide results until I watch the race or tap Show result</label>
     <h3 class="sub">Help</h3><div class="btnrow"><button class="btn ghost sm" data-a="help">How to play</button><button class="btn ghost sm" data-a="tutRestart">Restart getting-started guide</button><button class="btn ghost sm" data-a="saveHelp">How saving works</button></div>
     <h3 class="sub">Danger zone</h3><div class="btnrow"><button class="btn ghost sm danger" data-a="newgame">Start a new game</button></div></div>`;
   }
@@ -3105,6 +3125,7 @@ Object.assign(ACT, {
   rsub: d => { UI.rsub = d.t; render(); window.scrollTo(0, 0); },
   bsub: d => { UI.bsub = d.t; render(); },
   ssub: d => { UI.ssub = d.v; render(); },
+  spoilTgl: () => { G.showRes = !G.showRes; scheduleSave(); render(); toast(G.showRes ? 'Results shown straight away' : 'Results hidden until you watch'); },
   tutNext: () => { G.tut.step++; G.tut.wk0 = AW(); scheduleSave(); render(); },
   tutSkip: () => { G.tut.step = 99; scheduleSave(); render(); toast('Guide hidden — restart it any time in Office → Save & settings'); },
   tutRestart: () => { G.tut = { step: 1, wk0: AW() }; scheduleSave(); UI.tab = 'stable'; render(); window.scrollTo(0, 0); },
