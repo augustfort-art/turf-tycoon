@@ -89,9 +89,6 @@ table.dtab{width:100%;border-collapse:collapse;font-size:12.5px;background:var(-
 .resc{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:10px 12px;margin-bottom:8px}.resc.win{border-color:var(--brass);background:#fff8e3}.resc.itm{border-color:#bcd2b5}
 .resc-h{display:flex;gap:10px;align-items:center;margin-bottom:4px}.fpos{font-family:'DM Serif Display';font-size:24px;color:var(--g);min-width:44px}.resc .btn{margin-top:7px}
 .racehost{min-height:300px}.race-head{margin-bottom:6px}.rh-title{font-weight:700;font-size:14px}.rh-sub{font-size:12px;color:var(--muted)}
-.race-cv{display:block;margin:0 auto;border-radius:12px;background:#3a7a49}.race-order{display:flex;gap:3px;justify-content:center;margin:8px 0 4px;min-height:22px}
-.race-call{background:#14261d;color:#f1ead6;border-radius:10px;padding:9px 11px;font-size:14px;min-height:62px}.race-call b{color:var(--brass2)}.me-call{display:block;color:#9be29b;font-size:13px;margin-top:3px}
-.race-ctl{display:flex;gap:6px;justify-content:center;margin:8px 0}.race-ctl .btn{min-width:48px}
 .official{text-align:center;font-family:'Barlow Condensed';font-weight:700;letter-spacing:3px;background:#c22;color:#fff;border-radius:6px;padding:3px;margin:10px 0 6px}
 table.rtab{width:100%;border-collapse:collapse;font-size:12.5px;background:var(--card)}.rtab th{font-size:10.5px;text-transform:uppercase;color:var(--muted);text-align:left;padding:4px}.rtab td{padding:4px;border-bottom:1px solid #eee3cc;vertical-align:top}.rtab tr.me td{background:#fff4d6;font-weight:600}.rtab .nm{max-width:150px}
 #toast{position:fixed;left:50%;top:70px;transform:translate(-50%,-20px);background:#14261d;color:#fff;padding:9px 16px;border-radius:20px;font-size:14px;z-index:99;opacity:0;transition:.25s;pointer-events:none;max-width:90%;text-align:center}#toast.show{opacity:1;transform:translate(-50%,0)}
@@ -232,6 +229,42 @@ body.tv #top{padding-left:max(14px,calc((100vw - 900px) / 2 + 14px));padding-rig
 body.tv .sheet{max-width:900px}
 body.tv .adv{max-width:876px}
 body.tv .tab{max-width:170px}
+
+/* race view: side-on broadcast */
+.sheet.wide{max-width:1100px}body.tv .sheet.wide{max-width:900px}
+.rv-stage{position:relative;border-radius:12px;overflow:hidden;background:#000;margin-top:6px}
+.rv-cv{display:block;width:100%}
+.rv-lb{position:absolute;left:8px;bottom:8px;background:rgba(18,22,40,.86);border:1px solid rgba(255,255,255,.18);border-radius:10px;color:#fff;font-size:11px;min-width:190px;max-width:46%;overflow:hidden;font-family:system-ui,-apple-system,sans-serif}
+.rv-lbh{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:5px 7px;background:linear-gradient(90deg,#3a1650,#1b1d38)}
+.rv-lbh .rn{font-weight:700;letter-spacing:.3px;line-height:1.15;text-transform:uppercase;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.rv-lbh .rn small{display:block;font-weight:400;opacity:.8;font-size:10px;text-transform:none}
+.rv-lbh .call{border:1.5px solid rgba(255,255,255,.7);border-radius:12px;padding:2px 8px;text-align:center;font-weight:700;line-height:1.1;min-width:58px;flex:none}
+.rv-lbh .call small{display:block;font-weight:600;font-size:9.5px;opacity:.9;white-space:nowrap}
+.rv-row{display:flex;align-items:center;gap:5px;padding:2px 6px;border-top:1px solid rgba(255,255,255,.08)}
+.rv-row .n,.rv-res .n{width:17px;height:15px;border-radius:3px;text-align:center;font-weight:700;font-size:10px;line-height:15px;flex:none;display:inline-block}
+.rv-row .sk{width:18px;height:12px;border-radius:2px;flex:none}
+.rv-row .nm{flex:1;font-weight:600;text-transform:uppercase;letter-spacing:.2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0}
+.rv-row .mg{width:32px;text-align:right;opacity:.9;font-variant-numeric:tabular-nums;font-size:10.5px;flex:none}
+.rv-row .od{opacity:.85;font-variant-numeric:tabular-nums;flex:none;min-width:26px;text-align:right}
+.rv-row.me{background:rgba(242,194,48,.28)}.rv-row .pos{width:24px;opacity:.8;font-size:10px;flex:none}
+.rv-lb .pc,.rv-res .pc{font-weight:700;padding:0 4px;border-radius:3px;margin-right:2px}.pc.fast{background:#e2504a;color:#fff}.pc.slow{background:#3f7fd0;color:#fff}.pc.average{background:rgba(255,255,255,.22)}
+.rv-lb .fav{background:#f2e8c8;color:#3a2a00;font-size:9px;font-weight:700;padding:0 4px;border-radius:3px;flex:none}
+.rv-ctl{display:flex;gap:6px;flex-wrap:wrap;justify-content:center;margin:8px 0}.rv-ctl .btn.on{background:var(--g);color:#fff}.rv-ctl .btn:disabled{opacity:.4}
+.rv-res{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:min(620px,94%);max-height:94%;overflow:auto;background:rgba(18,22,40,.95);color:#fff;border:1px solid rgba(255,255,255,.18);border-radius:12px;font:12.5px system-ui,-apple-system,sans-serif;display:none;text-align:left}
+.rv-res.show{display:block}
+.rv-rh{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:8px 12px;background:linear-gradient(90deg,#3a1650,#1b1d38)}
+.rv-rh b{font-size:14px;letter-spacing:.4px}.rv-rh small{display:block;opacity:.8;font-size:11px;margin-top:1px}.rv-rh .ft{font-weight:700;font-variant-numeric:tabular-nums;font-size:15px}
+.rv-fr{padding:5px 12px;font-size:11.5px;opacity:.9;border-bottom:1px solid rgba(255,255,255,.08)}
+.rv-ph{padding:6px 12px;background:rgba(242,194,48,.16);color:#f6d76b;font-weight:600}
+.rv-res table{width:100%;border-collapse:collapse}.rv-res td{padding:4px 6px;border-top:1px solid rgba(255,255,255,.08);vertical-align:top}
+.rv-res td.p{width:22px;text-align:center;font-weight:700}.rv-res td.rv-bt,.rv-res td.fg,.rv-res td.od{text-align:right;white-space:nowrap;font-variant-numeric:tabular-nums}.rv-res td.fg b{font-size:13px}
+.rv-res .n{margin-right:6px}.rv-res .cm{color:#c3c9d6;font-size:11px}.rv-res tr.me{background:rgba(242,194,48,.22)}.rv-res .hd td{opacity:.6;font-size:10.5px;border-top:none}
+.rv-ft{display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap;padding:8px 12px;border-top:1px solid rgba(255,255,255,.12)}
+.rv-ft .btn{background:rgba(255,255,255,.14);color:#fff;border:0}
+.rv-stage.phone{overflow:visible;background:none}.rv-stage.phone .rv-cv{border-radius:12px}
+.rv-stage.phone .rv-lb{position:static;margin-top:8px;font-size:12px;max-width:none}.rv-stage.phone .rv-row{padding:4px 8px}
+.rv-stage.phone .rv-res{position:static;transform:none;width:auto;max-height:none;margin-top:8px}
+body.tv .rv-res{position:static;transform:none;width:auto;max-height:none;margin-top:8px} /* on the TV the card sits below the race so the right stick can scroll it */
 </style>
 </head>
 <body>
@@ -240,8 +273,8 @@ body.tv .tab{max-width:170px}
 <nav id="tabs"></nav>
 <div id="modal" class="hidden"><div class="sheet"><div class="sheet-h"><button id="back" aria-label="Back">‹</button><span class="sheet-t"></span><button class="x" aria-label="Close">✕</button></div><div class="sheet-b"></div></div></div>
 <div id="toast"></div>
-<script>const APP_VER = 'v37';
-const APP_BUILD = 'v37 · 2026-11-14';
+<script>const APP_VER = 'v38';
+const APP_BUILD = 'v38 · 2026-11-15';
 // Generated: 2026 US graded/listed stakes (TOBA list) with conditions; NY racing at Belmont except the Saratoga meet
 const STAKES_GEN = [[1,"BEL","Busanda","L","3",1,9,"D",150,"","o20"],[1,"GP","Smile Sprint","L","4U",0,6,"D",125,"",""],[1,"GP","Gulfstream Park Turf Sprint","L","4U",0,5.5,"T",125,"",""],[1,"OP","Smarty Jones","L","3",0,8,"D",200,"","p10"],[1,"SA","San Vicente",2,"3",0,7,"D",200,"",""],[1,"SA","Las Flores",3,"4U",1,6,"D",100,"",""],[2,"BEL","Stymie","L","4U",0,8,"D",125,"",""],[2,"SA","Las Cienegas",3,"4U",1,6.5,"T",103,"",""],[2,"SA","Santa Ynez","L","3",1,7,"D",100,"","o10"],[3,"BEL","Queens County","L","4U",0,8,"D",125,"",""],[3,"FG","Lecomte",3,"3",0,8.5,"D",194,"","p20"],[3,"FG","Louisiana",3,"4U",0,8.5,"D",170,"",""],[3,"FG","Silverbulletday","L","3",1,8.5,"D",150,"","o20"],[3,"SA","La Canada",3,"4U",1,8.5,"D",100,"",""],[4,"BEL","Glen Cove",3,"3",1,7,"D",175,"",""],[4,"BEL","Autumn Days","L","4U",1,5.5,"T",125,"",""],[4,"FG","Colonel E. R. Bradley","L","4U",0,8,"T",125,"",""],[4,"GP","Pegasus World Cup Invitational",1,"4U",0,9,"D",2933,"",""],[4,"GP","Pegasus World Cup Turf Invitational",1,"4U",0,9,"T",952,"",""],[4,"GP","Pegasus World Cup Filly and Mare Turf Invitational",2,"4U",1,8.5,"T",486,"",""],[4,"GP","Inside Information",2,"4U",1,7,"D",210,"",""],[4,"GP","La Prevoyante",3,"4U",1,12,"T",150,"",""],[4,"GP","Fred W. Hooper",3,"4U",0,8,"D",150,"",""],[4,"GP","William L. Mcknight",3,"4U",0,12,"T",200,"",""],[4,"HOU","Houston Ladies Classic",3,"4U",1,8.5,"D",300,"",""],[4,"LRL","General George","L","4U",0,7,"D",125,"",""],[4,"OP","Southwest",3,"3",0,8.5,"D",1000,"","p20"],[4,"OP","Martha Washington","L","3",1,8,"D",200,"","o20"],[4,"OP","Tinsel","L","4U",0,8,"D",125,"",""],[4,"SA","San Pasqual",2,"4U",0,9,"D",201,"",""],[4,"SA","John Shear","L","3",0,6,"D",125,"",""],[5,"BEL","Withers","L","3",0,9,"D",250,"","p20"],[5,"BEL","Fall Highweight","L","4U",0,6,"D",125,"",""],[5,"GP","Holy Bull",3,"3",0,8.5,"D",250,"","p20"],[5,"GP","Forward Gal",3,"3",1,7,"D",155,"","o20"],[5,"SA","Santa Monica",2,"4U",1,7,"D",196,"",""],[5,"SA","Robert B. Lewis",3,"3",0,8.5,"D",200,"","p20"],[5,"SA","Megahertz",3,"4U",1,8,"T",101,"",""],[5,"SA","Thunder Road",3,"4U",0,8,"T",102,"",""],[5,"SA","Las Virgenes","L","3",1,8,"D",92,"","o20"],[5,"TAM","Endeavour",3,"4U",1,8.5,"T",150,"",""],[5,"TAM","Tampa Bay",3,"4U",0,8.5,"T",150,"",""],[6,"FG","Woodchopper","L","3",0,8,"T",125,"",""],[6,"GP","Janus","L","4U",0,5.5,"T",125,"",""],[6,"SA","San Marcos",3,"4U",0,10,"T",101,"",""],[6,"SA","Astra","L","4U",1,11,"T",125,"",""],[6,"TAM","Sam F. Davis","L","3",0,8.5,"D",250,"","p20"],[6,"TAM","Suncoast","L","3",1,8.5,"D",150,"","o20"],[6,"TP","Leonatus","L","3",0,8.5,"S",150,"","p10"],[7,"FG","Risen Star",2,"3",0,9,"D",500,"","p50"],[7,"FG","Rachel Alexandra",2,"3",1,8.5,"D",282,"","o50"],[7,"FG","Mineshaft",3,"4U",0,8.5,"D",248,"",""],[7,"FG","Fair Grounds",3,"4U",0,9,"T",175,"",""],[7,"GP","Royal Delta",3,"4U",1,8.5,"D",150,"",""],[7,"HOU","John B. Connally Turf Cup","L","4U",0,11,"T",125,"",""],[7,"KSA","Saudi Cup",1,"4U",0,9,"D",20000,"","BIG INTL"],[7,"OP","Temperence Hill","L","4U",0,10,"D",125,"",""],[7,"SA","Palos Verdes","L","4U",0,6,"D",100,"",""],[7,"TP","Cincinnati Trophy","L","3",1,8.5,"S",150,"","o20"],[8,"OP","Rebel",2,"3",0,8.5,"D",1250,"","p50"],[8,"OP","Honeybee",3,"3",1,8.5,"D",500,"","o50"],[8,"OP","Razorback",3,"4U",0,8.5,"D",500,"",""],[8,"SUN","Sunland Park Derby","L","3",0,9,"D",400,"","p20"],[8,"SUN","Sunland Park Oaks","L","3",1,8.5,"D",200,"","o20"],[8,"TP","Prairie Bayou","L","4U",0,8.5,"S",125,"",""],[9,"BEL","Gotham",3,"3",0,8,"D",300,"","p50"],[9,"BEL","Tom Fool",3,"4U",0,6,"D",175,"",""],[9,"FG","Tom Benson Memorial","L","4U",1,8,"T",125,"",""],[9,"FG","Colonel Power","L","4U",0,5.5,"T",125,"",""],[9,"GP","Fountain of Youth",2,"3",0,8.5,"D",402,"","p50"],[9,"GP","Davona Dale",2,"3",1,8,"D",200,"","o50"],[9,"GP","Mac Diarmida",2,"4U",0,11,"T",200,"",""],[9,"GP","Herecomesthebride",3,"3",1,8.5,"T",205,"",""],[9,"GP","Honey Fox",3,"4U",1,8,"T",150,"",""],[9,"GP","The Very One",3,"4U",1,11,"T",150,"",""],[9,"GP","Gulfstream Park Mile",3,"4U",0,8,"D",202,"",""],[9,"GP","Canadian Turf",3,"4U",0,8,"T",150,"",""],[9,"SA","Santa Anita Handicap",1,"4U",0,10,"D",302,"",""],[9,"SA","San Felipe",2,"3",0,8.5,"D",300,"","p50"],[9,"SA","Buena Vista",2,"4U",1,8,"T",200,"",""],[9,"SA","Frank E. Kilroe Mile",2,"4U",0,8,"T",301,"",""],[9,"SA","Santa Ysabel",3,"3",1,8.5,"D",98,"","o50"],[9,"SA","Kona Gold","L","4U",0,6,"D",125,"",""],[9,"TP","John Battaglia Memorial","L","3",0,8.5,"S",200,"","p20"],[9,"TP","Latonia","L","4U",1,8.5,"S",125,"",""],[10,"BEL","Busher","L","3",1,8.5,"D",200,"","o50"],[10,"GP","Hurricane Bertie",3,"4U",1,6.5,"D",163,"",""],[10,"OP","Azeri",2,"4U",1,8.5,"D",400,"",""],[10,"SA","Beholder Mile",1,"3U",1,8,"D",301,"",""],[10,"SA","San Simeon",3,"3U",0,6.5,"T",101,"",""],[10,"SA","Angels Flight","L","3",1,6,"D",125,"",""],[10,"TAM","Hillsborough",2,"4U",1,9,"T",200,"",""],[10,"TAM","Tampa Bay Derby",3,"3",0,8.5,"D",350,"","p50"],[10,"TAM","Florida Oaks",3,"3",1,8.5,"T",150,"",""],[10,"TAM","Challenger",3,"4U",0,8.5,"D",95,"",""],[10,"TP","Big Daddy","L","4U",0,7,"S",125,"",""],[11,"CNL","Virginia Derby","L","3",0,9,"D",500,"","p50"],[11,"CNL","Virginia Oaks","L","3",1,8.5,"D",300,"","o50"],[11,"OP","Whitmore",3,"4U",0,6,"D",250,"",""],[11,"SA","Santa Ana",3,"4U",1,10,"T",101,"",""],[12,"FG","Louisiana Derby",2,"3",0,9.5,"D",1000,"","p100"],[12,"FG","Fair Grounds Oaks",2,"3",1,8.5,"D",396,"","o100"],[12,"FG","New Orleans Classic",2,"4U",0,9,"D",480,"",""],[12,"FG","Muniz Memorial Classic",2,"4U",0,9,"T",300,"",""],[12,"FG","Buddy Diliberto Memorial","L","4U",0,8,"T",125,"",""],[12,"LRL","Henry S. Clark","L","4U",0,8,"T",125,"",""],[12,"OP","Essex",3,"4U",0,8.5,"D",500,"",""],[12,"OP","Carousel","L","4U",1,7,"D",125,"",""],[12,"OP","Fifth Season","L","4U",0,8,"D",125,"",""],[12,"SA","San Luis Rey",3,"4U",0,12,"T",100,"",""],[12,"TP","Jeff Ruby Steaks",3,"3",0,9,"S",776,"","p100"],[12,"TP","Kentucky Cup Classic",3,"4U",0,9,"S",290,"",""],[12,"TP","Bourbonette Oaks","L","3",1,8,"S",250,"","o50"],[13,"BEL","Gold Fever","L","3",0,7,"D",125,"",""],[13,"BEL","Athenia","L","4U",1,8,"T",125,"",""],[13,"GP","Florida Derby",1,"3",0,9,"D",1020,"","p100"],[13,"GP","Gulfstream Park Oaks",2,"3",1,8.5,"D",250,"","o100"],[13,"GP","Orchid",3,"4U",1,12,"T",150,"",""],[13,"GP","Ghostzapper",3,"4U",0,8.5,"D",150,"",""],[13,"GP","Pan American",3,"4U",0,12,"T",200,"",""],[13,"GP","Ginger Brew","L","3",1,9,"T",125,"",""],[13,"MEY","Dubai World Cup",1,"4U",0,10,"D",12000,"","BIG INTL"],[13,"OP","Arkansas Derby",1,"3",0,9,"D",1500,"","p100"],[13,"OP","Fantasy",2,"3",1,8.5,"D",750,"","o100"],[13,"OP","Oaklawn Mile",3,"4U",0,8,"D",500,"",""],[13,"OP","Pippin","L","4U",1,8.5,"D",125,"",""],[13,"SA","Wilshire",3,"3U",1,8,"T",101,"",""],[13,"SA","San Carlos",3,"3U",0,7,"D",100,"",""],[13,"TAM","Pelican","L","4U",0,6,"D",125,"",""],[14,"BEL","Wood Memorial",2,"3",0,9,"D",750,"","p100"],[14,"BEL","Carter",2,"4U",0,7,"D",300,"",""],[14,"BEL","Gazelle",3,"3",1,9,"D",200,"","o100"],[14,"BEL","Distaff",3,"4U",1,7,"D",170,"",""],[14,"KEE","Blue Grass",1,"3",0,9,"D",1226,"","p100"],[14,"KEE","Ashland",1,"3",1,8.5,"D",743,"","o100"],[14,"KEE","Madison",1,"4U",1,7,"D",623,"",""],[14,"KEE","Appalachian",2,"3",1,8,"T",500,"",""],[14,"KEE","Beaumont",2,"3",1,7,"D",365,"",""],[14,"KEE","Shakertown",2,"3U",0,5.5,"T",377,"",""],[14,"KEE","Transylvania",3,"3",0,8.5,"T",598,"",""],[14,"KEE","Commonwealth",3,"4U",0,7,"D",350,"",""],[14,"SA","Santa Anita Derby",1,"3",0,9,"D",500,"","p100"],[14,"SA","Santa Anita Oaks",2,"3",1,8.5,"D",200,"","o100"],[14,"SA","Monrovia",3,"3U",1,6.5,"D",101,"",""],[14,"SA","Sweet Life","L","3",1,7,"D",125,"",""],[15,"GP","Sugar Swirl","L","4U",1,6,"D",125,"",""],[15,"KEE","Jenny Wiley",1,"4U",1,8.5,"T",522,"",""],[15,"KEE","Maker's Mark Mile",1,"4U",0,8,"T",552,"",""],[15,"KEE","Giant's Causeway",2,"3U",1,5.5,"T",271,"",""],[15,"KEE","Lexington",3,"3",0,8.5,"D",400,"","p20"],[15,"KEE","Palisades","L","3",0,6,"D",125,"",""],[15,"OP","Apple Blossom",1,"4U",1,8.5,"D",1250,"",""],[15,"OP","Count Fleet Sprint",3,"3U",0,6,"D",500,"",""],[15,"OP","King Cotton","L","4U",0,6,"D",125,"",""],[16,"BEL","Turnback The Alarm","L","4U",1,8.5,"D",125,"",""],[16,"CD","American","L","3U",0,8,"T",103,"","","X"],[16,"KEE","Doubledogdare",2,"4U",1,8.5,"D",293,"",""],[16,"KEE","Elkhorn",2,"4U",0,12,"T",314,"",""],[16,"KEE","Limestone",3,"3",1,6.5,"D",175,"",""],[16,"KEE","Ben Ali",3,"4U",0,9.5,"D",300,"",""],[16,"OP","Oaklawn Handicap",2,"4U",0,9,"D",1250,"",""],[16,"OP","American","L","3U",0,8,"T",103,"","","X"],[16,"SA","John C. Harris",3,"3",1,6.5,"D",175,"",""],[16,"SA","Santa Maria",3,"4U",1,8.5,"D",201,"",""],[16,"SA","Californian",3,"3U",0,9,"D",98,"",""],[16,"SA","American",3,"3U",0,8,"T",103,"",""],[16,"SA","Providencia","L","3",1,9,"T",101,"",""],[17,"CD","Hanshin",3,"4U",0,8.5,"D",175,"",""],[17,"CD","Seneca Overnight","L","3",1,8.5,"D",125,"",""],[17,"GP","Tropical Park Oaks","L","3",1,8,"T",125,"",""],[17,"KEE","Bewitch",3,"4U",1,12,"T",290,"",""],[17,"SA","Senorita",3,"3",1,6.5,"T",102,"",""],[17,"SA","Royal Heroine",3,"4U",1,8,"T",103,"",""],[18,"BEL","Beaugay",3,"3U",1,8.5,"T",175,"",""],[18,"BEL","Sheepshead Bay",3,"4U",1,11,"T",170,"",""],[18,"BEL","Vagrancy",3,"3U",1,6.5,"D",175,"",""],[18,"BEL","Westchester",3,"3U",0,8,"D",175,"",""],[18,"BEL","Fort Marcy",3,"4U",0,9,"T",194,"",""],[18,"CD","Kentucky Derby",1,"3",0,10,"D",5000,"","KD TC BIG"],[18,"CD","American Turf",1,"3",0,8.5,"T",925,"",""],[18,"CD","Kentucky Oaks",1,"3",1,9,"D",1500,"","KO BIG"],[18,"CD","La Troienne",1,"4U",1,8.5,"D",992,"",""],[18,"CD","Derby City Distaff",1,"4U",1,7,"D",1000,"",""],[18,"CD","Turf Classic",1,"4U",0,9,"T",934,"",""],[18,"CD","Churchill Downs Stakes",1,"4U",0,7,"D",935,"",""],[18,"CD","Pat Day Mile",2,"3",0,8,"D",540,"",""],[18,"CD","Edgewood",2,"3",1,8.5,"T",575,"",""],[18,"CD","Eight Belles",2,"3",1,7,"D",580,"",""],[18,"CD","Churchill Distaff Turf Mile",2,"3U",1,8,"T",741,"",""],[18,"CD","Unbridled Sidney",2,"3U",1,5.5,"T",330,"",""],[18,"CD","Alysheba",2,"4U",0,8.5,"D",750,"",""],[18,"CD","Twin Spires Turf Sprint",2,"3U",0,5.5,"T",570,"",""],[18,"CD","Modesty",3,"4U",1,9,"T",378,"",""],[18,"PIM","Hilltop","L","3",1,8.5,"T",125,"",""],[18,"PIM","Allaire Dupont Distaff","L","4U",1,8.5,"D",125,"",""],[18,"PRM","Iowa Oaks","L","3",1,8.5,"D",125,"",""],[18,"SA","Charles Whittingham",2,"3U",0,10,"T",201,"",""],[19,"BEL","Ruffian",2,"4U",1,8,"D",200,"",""],[19,"BEL","Man o' War",2,"4U",0,11,"T",400,"",""],[19,"BEL","Peter Pan",3,"3",0,9,"D",200,"",""],[19,"BEL","Runhappy",3,"4U",0,6,"D",170,"",""],[19,"BEL","John A. Nerud",3,"3U",0,6,"D",194,"",""],[19,"CD","Mamzelle",3,"3",1,5.5,"T",225,"",""],[19,"IND","Jonathan B. Schuster Memorial","L","4U",0,8,"T",125,"",""],[19,"PIM","Chick Lang","L","3",0,7,"D",125,"",""],[20,"BEL","Top Flight","L","4U",1,9,"D",125,"",""],[20,"CD","Louisville",3,"4U",0,12,"T",241,"",""],[20,"PIM","Preakness Stakes",1,"3",0,9.5,"D",2000,"","TC BIG"],[20,"PIM","Black-Eyed Susan",2,"3",1,9,"D",300,"",""],[20,"PIM","Miss Preakness",3,"3",1,6,"D",150,"",""],[20,"PIM","Gallorette",3,"3U",1,8.5,"T",99,"",""],[20,"PIM","Pimlico Special",3,"3U",0,9.5,"D",250,"",""],[20,"PIM","Dinner Party",3,"3U",0,8.5,"T",500,"",""],[20,"PIM","Maryland Sprint",3,"3U",0,6,"D",100,"",""],[20,"PIM","Jim Mckay Turf Sprint","L","4U",0,5.5,"T",125,"",""],[20,"SA","Honeymoon","L","3",1,9,"T",102,"",""],[21,"BEL","Toboggan","L","4U",0,7,"D",125,"",""],[21,"CD","Winning Colors",3,"4U",1,6,"D",250,"",""],[21,"CD","Audubon","L","3",0,8,"T",125,"",""],[21,"CD","Tepin","L","3",1,8,"T",125,"",""],[21,"CD","Leslie's Lady Overnight","L","3",1,6,"D",125,"",""],[21,"GP","Army Mule","L","4U",0,6.5,"D",125,"",""],[21,"LS","Steve Sexton Mile",3,"3U",0,8,"D",400,"",""],[21,"SA","Gamely",1,"3U",1,9,"T",302,"",""],[21,"SA","Shoemaker Mile",1,"3U",0,8,"T",302,"",""],[21,"SA","Santa Margarita",2,"4U",1,9,"D",200,"",""],[21,"SA","Hollywood Gold Cup",2,"3U",0,10,"D",201,"",""],[22,"CD","Shawnee",2,"4U",1,8.5,"D",271,"",""],[22,"CD","Regret",3,"3",1,9,"T",273,"",""],[22,"CD","Mint Julep",3,"4U",1,8.5,"T",237,"",""],[22,"CD","Blame",3,"4U",0,9,"D",270,"",""],[22,"CD","Arlington",3,"3U",0,8.5,"T",274,"",""],[22,"CD","Aristides",3,"3U",0,6,"D",275,"",""],[22,"CD","Roxelana","L","4U",1,7,"D",125,"",""],[22,"GP","Kitten's Joy","L","3",0,9,"T",125,"",""],[22,"GP","Tropical Park Derby","L","3",0,8.5,"T",125,"",""],[22,"SA","Triple Bend",3,"4U",0,7,"D",98,"",""],[22,"SA","Mizdirection","L","4U",1,5.5,"T",125,"",""],[23,"BEL","Belmont Stakes",1,"3",0,12,"D",2000,"","TC BIG"],[23,"BEL","Woody Stephens",1,"3",0,7,"D",500,"",""],[23,"BEL","Acorn",1,"3",1,9,"D",485,"",""],[23,"BEL","Ogden Phipps",1,"4U",1,9,"D",500,"",""],[23,"BEL","Just a Game",1,"4U",1,8,"T",500,"",""],[23,"BEL","New York",1,"4U",1,9.5,"T",750,"",""],[23,"BEL","Metropolitan Handicap",1,"3U",0,8,"D",970,"",""],[23,"BEL","Manhattan",1,"4U",0,9,"T",1000,"",""],[23,"BEL","Jaipur",1,"3U",0,5.5,"T",500,"",""],[23,"BEL","Wonder Again",2,"3",1,8,"T",261,"",""],[23,"BEL","Bed O' Roses",2,"4U",1,7,"D",300,"",""],[23,"BEL","Intercontinental",2,"4U",1,5.5,"T",200,"",""],[23,"BEL","Belmont Gold Cup",2,"4U",0,14,"T",250,"",""],[23,"BEL","Pennine Ridge",3,"3",0,8,"T",300,"",""],[23,"BEL","Soaring Softly",3,"3",1,5.5,"T",175,"",""],[23,"BEL","Poker",3,"4U",0,8,"T",300,"",""],[23,"BEL","True North",3,"4U",0,6.5,"D",400,"",""],[23,"CD","Matt Winn",3,"3",0,8.5,"D",387,"",""],[23,"CD","Maxfield",3,"3",0,6.5,"D",175,"",""],[23,"GP","Swale","L","3",0,7,"D",125,"",""],[23,"MTH","Monmouth","L","4U",0,8,"T",125,"",""],[23,"PIM","Skipat","L","4U",1,6.5,"D",125,"",""],[23,"SA","Summertime Oaks",3,"3",1,8.5,"D",196,"",""],[24,"BEL","Bay Shore","L","3",0,6.5,"D",125,"",""],[24,"CD","Isaac Murphy Marathon","L","4U",0,10,"D",125,"",""],[24,"CD","Bet On Sunshine","L","4U",0,7,"D",125,"",""],[24,"DEL","Delaware Oaks",3,"3",1,8.5,"D",300,"",""],[24,"MTH","Eatontown",3,"3U",1,8.5,"T",148,"",""],[24,"MTH","Salvator Mile",3,"3U",0,8,"D",150,"",""],[24,"SA","San Juan Capistrano",3,"3U",0,14,"T",100,"",""],[24,"SA","Daytona",3,"4U",0,6.5,"T",101,"",""],[24,"TDN","Lady Jacqueline","L","4U",1,8.5,"D",125,"",""],[25,"CD","Chicago",2,"4U",1,7,"D",250,"",""],[25,"TDN","Ohio Derby",3,"3",0,9,"D",500,"",""],[26,"CD","Stephen Foster",1,"4U",0,9,"D",940,"",""],[26,"CD","Fleur de Lis",2,"4U",1,9,"D",499,"",""],[26,"CD","Wise Dan",2,"3U",0,8.5,"T",499,"",""],[26,"CD","Kelly's Landing",3,"3U",0,6.5,"D",220,"",""],[26,"MNR","West Virginia Governor's","L","4U",0,8.5,"D",125,"",""],[26,"MVR","Steel Valley Sprint","L","3",0,6,"D",125,"",""],[26,"PEN","Penn Mile",3,"3",0,8,"T",400,"",""],[27,"BEL","Belmont Derby",1,"3",0,10,"T",750,"",""],[27,"BEL","Belmont Oaks",1,"3",1,10,"T",500,"",""],[27,"BEL","Suburban",2,"4U",0,10,"D",400,"",""],[27,"BEL","Brooklyn",2,"4U",0,11,"D",200,"",""],[27,"BEL","Manila",3,"3",0,8,"T",200,"",""],[27,"BEL","Victory Ride",3,"3",1,6.5,"D",163,"",""],[27,"BEL","Kelso",3,"4U",0,8,"T",175,"",""],[27,"BEL","Dwyer","L","3",0,8,"D",186,"",""],[27,"DEL","Delaware Handicap",3,"3U",1,9.5,"D",500,"",""],[27,"DEL","Robert G. Dick Memorial",3,"3U",1,11,"T",250,"",""],[27,"ELP","Ellis Park Derby","L","3",0,8.5,"D",125,"",""],[27,"ELP","Ky Downs Preview Ladies Turf Mile","L","3U",1,8,"T",125,"",""],[27,"ELP","Ky Downs Preview Turf Cup","L","3U",0,11,"T",125,"",""],[27,"EMD","Longacres Mile","L","3U",0,8.5,"D",125,"",""],[27,"IND","Indiana Derby",3,"3",0,8.5,"D",300,"",""],[27,"IND","Indiana Oaks",3,"3",1,8.5,"D",200,"",""],[27,"IND","Michael G. Schaefer Memorial","L","3U",0,8,"D",125,"",""],[27,"LRC","Great Lady M.",2,"3U",1,6.5,"D",201,"",""],[27,"MTH","Pegasus","L","3",0,8.5,"D",125,"",""],[27,"PRM","Prairie Meadows Cornhusker Handicap",3,"3U",0,9,"D",300,"",""],[28,"ELP","Ky Downs Preview Ladies Turf Sprint","L","3U",1,5.5,"T",125,"",""],[28,"ELP","Ky Downs Preview Turf Sprint","L","3U",0,5.5,"T",125,"",""],[28,"GP","Via Borghese","L","3U",1,11,"T",125,"",""],[28,"SAR","Diana",1,"3U",1,9,"T",485,"",""],[28,"SAR","Bowling Green",2,"4U",0,11,"T",186,"",""],[28,"SAR","Sanford",3,"2",0,6,"D",175,"",""],[28,"SAR","Quick Call",3,"3",0,5.5,"T",175,"",""],[28,"SAR","Coronation Cup",3,"3",1,5.5,"T",175,"",""],[28,"SAR","Harvey Pack","L","3U",0,5.5,"T",125,"",""],[29,"CNL","Old Dominion Oaks","L","3",1,8.5,"T",125,"",""],[29,"DMR","San Clemente",2,"3",1,8,"T",202,"",""],[29,"ELP","Groupie Doll","L","3U",1,9,"D",125,"",""],[29,"GP","Colonel Liam","L","3",0,9,"T",125,"",""],[29,"GP","Sweetest Chant","L","3",1,8,"T",125,"",""],[29,"GP","Sand Springs","L","3U",1,8,"T",125,"",""],[29,"LRL","Frank J. De Francis Memorial Dash","L","3U",0,6,"D",125,"",""],[29,"MTH","Haskell",1,"3",0,9,"D",1018,"",""],[29,"MTH","Molly Pitcher",2,"3U",1,8.5,"D",495,"",""],[29,"MTH","United Nations",2,"3U",0,11,"T",612,"",""],[29,"MTH","Matchmaker",3,"3U",1,9,"T",300,"",""],[29,"MTH","Monmouth Cup",3,"3U",0,9,"D",396,"",""],[29,"MTH","Lady's Secret","L","3U",1,9,"D",125,"",""],[29,"SAR","Coaching Club American Oaks",1,"3",1,9,"D",465,"",""],[29,"SAR","Shuvee",2,"4U",1,9,"D",200,"",""],[29,"SAR","Honorable Miss",2,"3U",1,6,"D",200,"",""],[29,"SAR","Caress",2,"4U",1,5.5,"T",175,"",""],[29,"SAR","Alfred G. Vanderbilt",2,"3U",0,6,"D",400,"",""],[29,"SAR","Schuylerville","L","2",1,7,"D",125,"",""],[29,"SAR","Smart And Fancy","L","3U",1,5.5,"T",125,"",""],[29,"SAR","Bernard Baruch","L","3U",0,8,"T",125,"",""],[30,"CNL","Van Clief","L","3U",0,5.5,"T",125,"",""],[30,"DMR","Bing Crosby",1,"3U",0,6,"D",402,"",""],[30,"DMR","San Diego",2,"3U",0,8.5,"D",301,"",""],[30,"DMR","Eddie Read",2,"3U",0,9,"T",251,"",""],[30,"DMR","Cougar II",3,"3U",0,12,"D",100,"",""],[30,"GP","Dania Beach","L","3",0,8,"T",125,"",""],[30,"GP","Gulfstream Park Sprint","L","3U",0,6,"D",125,"",""],[30,"MTH","Monmouth Oaks",3,"3",1,8.5,"D",252,"",""],[30,"SAR","Jim Dandy",2,"3",0,9,"D",485,"",""],[30,"SAR","National Museum of Racing Hall of Fame",2,"3",0,8,"T",400,"",""],[30,"SAR","Amsterdam",2,"3",0,6.5,"D",200,"",""],[30,"SAR","Glens Falls",2,"3U",1,12,"T",250,"",""],[30,"SAR","Lake George",3,"3",1,8.5,"T",175,"",""],[31,"DMR","Clement L. Hirsch",1,"3U",1,8.5,"D",401,"",""],[31,"DMR","Thoroughbred Aftercare Alliance","L","2",0,8,"T",125,"",""],[31,"DMR","La Jolla Handicap","L","3",0,9,"T",125,"",""],[31,"DMR","Desi Arnaz","L","2",1,7,"D",125,"",""],[31,"DMR","Del Mar Juvenile Fillies Turf","L","2",1,8,"T",125,"",""],[31,"ELP","Pucker Up","L","3",1,9,"T",399,"",""],[31,"MNR","West Virginia Derby",3,"3",0,9,"D",400,"",""],[31,"PRM","Iowa Derby","L","3",0,9,"D",125,"",""],[31,"SAR","Saratoga Derby Invitational",1,"3",0,9.5,"T",750,"",""],[31,"SAR","Test",1,"3",1,7,"D",500,"",""],[31,"SAR","Whitney",1,"3U",0,9,"D",1000,"",""],[31,"SAR","Fourstardave",1,"3U",0,8,"T",750,"",""],[31,"SAR","Saratoga Special",2,"2",0,6.5,"D",186,"",""],[31,"SAR","Troy",2,"3U",0,5.5,"T",300,"",""],[31,"SAR","Adirondack",3,"2",1,6.5,"D",170,"",""],[32,"CNL","Arlington Million",1,"3U",0,10,"T",1000,"",""],[32,"CNL","Secretariat",2,"3",0,8,"T",500,"",""],[32,"CNL","Beverly D.",2,"3U",1,9.5,"T",500,"",""],[32,"DMR","Yellow Ribbon",2,"3U",1,8.5,"T",202,"",""],[32,"DMR","Best Pal",3,"2",0,6,"D",150,"",""],[32,"DMR","Sorrento",3,"2",1,6,"D",151,"",""],[32,"SAR","Sword Dancer",1,"4U",0,12,"T",750,"",""],[32,"SAR","Saratoga Oaks Invitational",2,"3",1,9.5,"T",500,"",""],[32,"SAR","Ballston Spa",2,"4U",1,8.5,"T",300,"",""],[32,"SAR","Mahony",3,"3",0,5.5,"T",175,"",""],[32,"SAR","Bolton Landing","L","2",1,8,"T",125,"",""],[32,"SAR","Wild Applause","L","3",1,8.5,"T",125,"",""],[33,"DMR","Del Mar Oaks",1,"3",1,9,"T",303,"",""],[33,"DMR","Ctt And Toc","L","3U",1,11,"T",125,"",""],[33,"DMR","Daisycutter Handicap","L","3U",1,5.5,"T",125,"",""],[33,"MTH","Philip H. Iselin",3,"3U",0,8.5,"D",245,"",""],[33,"SAR","Alabama",1,"3",1,10,"D",600,"",""],[33,"SAR","Birdstone","L","3U",0,10,"D",125,"",""],[34,"CT","Charles Town Oaks",2,"3",1,7,"D",750,"",""],[34,"CT","Charles Town Classic",2,"4U",0,9,"D",1000,"",""],[34,"CT","Robert Hilton Memorial","L","3",0,6.5,"D",125,"",""],[34,"DMR","Pat O'Brien",2,"3U",0,7,"D",252,"",""],[34,"DMR","Rancho Bernardo",3,"3U",1,6.5,"D",126,"",""],[34,"DMR","Shared Belief","L","3",0,8.5,"D",125,"",""],[34,"ELP","Ky Downs Preview Mint Millions Turf Mile","L","3U",0,8,"T",125,"",""],[34,"ELP","Jeff Hall Memorial","L","3U",0,6.5,"D",125,"",""],[34,"GP","H. Allen Jerkens Memorial","L","3",0,7,"D",500,"","","X"],[34,"RP","Remington Park Oaks","L","3",1,9,"D",125,"",""],[34,"SAR","Travers",1,"3",0,10,"D",1250,"","BIG"],[34,"SAR","H. Allen Jerkens Memorial",1,"3",0,7,"D",500,"",""],[34,"SAR","Personal Ensign",1,"3U",1,9,"D",500,"",""],[34,"SAR","Ballerina",1,"3U",1,7,"D",500,"",""],[34,"SAR","Forego",1,"4U",0,7,"D",500,"",""],[34,"SAR","Lake Placid",2,"3",1,8.5,"T",200,"",""],[35,"DMR","Pacific Classic",1,"3U",0,10,"D",1002,"",""],[35,"DMR","Del Mar Derby",2,"3",0,9,"T",301,"",""],[35,"DMR","Del Mar Mile",2,"3U",0,8,"T",303,"",""],[35,"DMR","Del Mar Handicap",2,"3U",0,11,"T",301,"",""],[35,"DMR","Green Flash",2,"3U",0,5,"T",153,"",""],[35,"DMR","Torrey Pines",3,"3",1,8,"D",151,"",""],[35,"GP","Suwannee River","L","3U",1,8,"T",125,"",""],[35,"MTH","Miss Liberty","L","3U",1,8,"T",125,"",""],[35,"SAR","Hopeful",1,"2",0,7,"D",300,"",""],[35,"SAR","Spinaway",1,"2",1,7,"D",300,"",""],[35,"SAR","With Anticipation",3,"2",0,8.5,"T",175,"",""],[35,"SAR","Prioress",3,"3",1,6,"D",200,"",""],[35,"SAR","Tremont","L","2",0,7,"D",125,"",""],[35,"SAR","Saranac","L","3",0,8,"T",125,"",""],[35,"SAR","P. G. Johnson","L","2",1,8,"T",125,"",""],[35,"SAR","Lure","L","3U",0,8,"T",125,"",""],[36,"CNL","Old Dominion Derby",3,"3",0,9,"T",504,"",""],[36,"DMR","Del Mar Futurity",1,"2",0,7,"D",301,"",""],[36,"DMR","Del Mar Debutante",1,"2",1,7,"D",301,"",""],[36,"DMR","John C. Mabee",2,"3U",1,9,"T",251,"",""],[36,"DMR","Del Mar Juvenile Turf",3,"2",0,8,"T",104,"",""],[36,"DMR","Senator Ken Maddy","L","3U",1,5.5,"T",125,"",""],[36,"KD","Ladies Turf Sprint",1,"3U",1,6.5,"T",1378,"",""],[36,"KD","Nashville Derby",2,"3",0,10.5,"T",2337,"",""],[36,"KD","Franklin-Simpson",2,"3",0,6.5,"T",1847,"",""],[36,"KD","Music City",2,"3",1,6.5,"T",1767,"",""],[36,"KD","Ladies Turf",2,"3U",1,8,"T",1495,"",""],[36,"KD","Kentucky Turf Cup",2,"3U",0,12,"T",1995,"",""],[36,"KD","Kentucky Turf Sprint",2,"3U",0,6,"T",1797,"",""],[36,"KD","Dueling Grounds Oaks",3,"3",1,10.5,"T",1000,"",""],[36,"KD","Ladies Marathon Invitational",3,"3U",1,10.5,"T",1300,"",""],[36,"KD","Mint Millions",3,"3U",0,8,"T",1800,"",""],[36,"KD","Kentucky Downs Juvenile Fillies","L","2",1,8,"T",500,"",""],[36,"SAR","Galway","L","3",1,6.5,"D",125,"",""],[36,"SAR","Perfect Sting","L","3U",1,8,"T",125,"",""],[37,"BEL","Jockey Club Oaks Invitational",3,"3",1,11,"T",350,"",""],[37,"CD","Locust Grove",2,"3U",1,8.5,"D",379,"",""],[37,"CD","Iroquois",3,"2",0,8,"D",255,"","p10"],[37,"CD","Pocahontas",3,"2",1,8,"D",292,"","o10"],[37,"CD","Bashford Manor","L","2",0,7,"D",125,"",""],[37,"CD","Opening Verse","L","3U",0,8,"T",125,"",""],[37,"KD","Kentucky Downs Juvenile Sprint","L","2",0,5.5,"T",500,"",""],[37,"KD","Juvenile Mile","L","2",0,8,"T",500,"",""],[38,"BEL","Noble Damsel","L","3U",1,8,"T",175,"",""],[38,"BEL","Excelsior","L","3U",0,10,"D",125,"",""],[38,"CD","Dogwood",3,"3",1,7,"D",269,"",""],[38,"CD","Open Mind","L","3U",1,6,"D",125,"",""],[38,"GP","Princess Rooney",3,"3U",1,7,"D",210,"",""],[38,"PID","Presque Isle Downs Masters",2,"3U",1,6.5,"S",300,"",""],[38,"PRX","Pennsylvania Derby",1,"3",0,9,"D",1000,"",""],[38,"PRX","Cotillion",1,"3",1,8.5,"D",1000,"",""],[38,"PRX","Gallant Bob",2,"3",0,6,"D",400,"",""],[38,"PRX","Turf Monster",3,"3U",0,5,"T",250,"",""],[38,"PRX","Greenwood Cup","L","3U",0,12,"D",200,"",""],[39,"BEL","Jockey Club Gold Cup",1,"3U",0,10,"D",1000,"",""],[39,"BEL","Joe Hirsch Turf Classic",1,"3U",0,12,"T",485,"",""],[39,"BEL","Pilgrim",2,"2",0,8.5,"T",200,"",""],[39,"BEL","Gallant Bloom",2,"3U",1,6.5,"D",250,"",""],[39,"BEL","Woodward",2,"3U",0,9,"D",372,"",""],[39,"BEL","Vosburgh",3,"3U",0,7,"D",250,"",""],[39,"CD","Lukas Classic",2,"3U",0,9,"D",500,"",""],[39,"CD","Ack Ack",3,"3U",0,8,"D",356,"",""],[39,"CD","Debutante","L","2",1,7,"D",125,"",""],[39,"CD","Keertana","L","3U",1,11,"T",125,"",""],[39,"RP","Oklahoma Derby",3,"3",0,9,"D",400,"",""],[39,"SA","Goodwood",1,"3U",0,9,"D",1001,"",""],[39,"SA","Zenyatta",2,"3U",1,8.5,"D",200,"",""],[39,"SA","City of Hope Mile",2,"3U",0,8,"T",202,"",""],[39,"SA","John Henry Turf Championship",2,"3U",0,10,"T",753,"",""],[39,"SA","Santa Anita Sprint Championship",2,"3U",0,6,"D",201,"",""],[39,"SA","Eddie D",2,"3U",0,6.5,"T",753,"",""],[39,"SA","Speakeasy","L","2",0,8,"T",125,"",""],[39,"SA","Blue Norther","L","2",1,8,"T",125,"",""],[39,"ZIA","Zia Park Derby","L","3",0,8.5,"D",125,"",""],[40,"BEL","Champagne",1,"2",0,8,"D",500,"","p10"],[40,"BEL","Frizette",1,"2",1,8,"D",400,"","o10"],[40,"BEL","Jockey Club Derby Invitational",2,"3",0,10,"D",500,"",""],[40,"BEL","Miss Grillo",2,"2",1,8.5,"T",200,"",""],[40,"BEL","Beldame",2,"3U",1,9,"D",243,"",""],[40,"BEL","Flower Bowl",2,"3U",1,11,"T",500,"",""],[40,"BEL","Futurity",3,"2",0,6,"T",175,"",""],[40,"BEL","Matron",3,"2",1,6,"T",175,"",""],[40,"BEL","Waya",3,"3U",1,11,"T",200,"",""],[40,"BEL","Belmont Turf Sprint",3,"3U",0,6,"T",200,"",""],[40,"BEL","Chelsey Flower","L","2",1,8,"T",125,"",""],[40,"BEL","Artie Schiller","L","3U",0,8,"T",125,"",""],[40,"DEL","Cape Henlopen","L","3U",0,11,"T",125,"",""],[40,"KEE","Breeders' Futurity",1,"2",0,8.5,"D",594,"","p10"],[40,"KEE","Alcibiades",1,"2",1,8.5,"D",600,"","o10"],[40,"KEE","Spinster",1,"3U",1,9,"D",600,"",""],[40,"KEE","First Lady",1,"3U",1,8,"T",729,"",""],[40,"KEE","Turf Mile",1,"3U",0,8,"T",1066,"",""],[40,"KEE","Bourbon",2,"2",0,8.5,"T",348,"",""],[40,"KEE","Jessamine",2,"2",1,8.5,"T",350,"",""],[40,"KEE","Thoroughbred Club of America",2,"3U",1,6,"D",340,"",""],[40,"KEE","Sycamore",2,"3U",0,12,"T",290,"",""],[40,"KEE","Phoenix",2,"3U",0,6,"D",314,"",""],[40,"KEE","Woodford",2,"3U",0,5.5,"T",320,"",""],[40,"KEE","Lafayette","L","3",0,6.5,"D",125,"",""],[40,"OP","Matron","L","2",1,6,"T",175,"","","X"],[40,"SA","American Pharoah",1,"2",0,8.5,"D",301,"","p10"],[40,"SA","Oak Leaf",2,"2",1,8.5,"D",201,"","o10"],[40,"SA","Rodeo Drive",2,"3U",1,10,"T",201,"",""],[40,"SA","Zuma Beach",3,"2",0,8,"T",102,"",""],[40,"SA","Surfer Girl",3,"2",1,8,"T",101,"",""],[40,"SA","Chillingworth",3,"3U",1,6.5,"D",98,"",""],[40,"SA","Affirmed","L","3",0,8.5,"D",125,"",""],[40,"SA","Possibly Perfect","L","3U",1,11,"T",125,"",""],[40,"SA","Desert Stormer","L","3U",1,6,"D",125,"",""],[41,"BEL","Sands Point",3,"3",1,9,"T",200,"",""],[41,"BEL","Central Park","L","2",0,8,"T",125,"",""],[41,"BEL","Knickerbocker","L","3U",0,9,"T",170,"",""],[41,"GP","Rampart","L","3U",1,9,"D",125,"",""],[41,"KEE","Queen Elizabeth II Challenge Cup",1,"3",1,9,"T",719,"",""],[41,"KEE","Raven Run",2,"3",1,7,"D",340,"",""],[41,"KEE","Franklin",2,"3U",1,5.5,"T",303,"",""],[42,"BEL","Nashua","L","2",0,8.5,"D",125,"",""],[42,"BEL","Memories Of Silver","L","3",1,8,"T",125,"",""],[42,"BEL","Aqueduct Turf Sprint Championship","L","3U",0,5.5,"T",125,"",""],[42,"KEE","Valley View",2,"3",1,8.5,"T",318,"",""],[42,"KEE","Perryville",3,"3",0,7,"D",259,"",""],[42,"KEE","Dowager",3,"3U",1,12,"T",297,"",""],[42,"SA","China Doll","L","3",1,8,"T",125,"",""],[42,"SA","Santa Barbara","L","3U",1,11,"T",125,"",""],[43,"BEL","Mother Goose",2,"3",1,9,"D",243,"",""],[43,"BEL","Forty Niner",3,"3U",0,8,"D",250,"",""],[43,"BEL","Bold Ruler",3,"3U",0,6,"D",175,"",""],[43,"CD","Street Sense",3,"2",0,8,"D",198,"","p10"],[43,"GP","Silks Run","L","3U",0,5.5,"T",125,"",""],[43,"KEE","Bryan Station",2,"3U",0,8,"T",592,"",""],[43,"KEE","Indian Summer",3,"2",0,8,"T",175,"",""],[43,"KEE","Fayette",3,"3U",0,9,"D",350,"",""],[43,"KEE","Myrtlewood","L","2",1,8.5,"D",125,"",""],[43,"SA","Twilight Derby",2,"3",0,9,"T",201,"",""],[43,"SA","Autumn Miss",3,"3",1,8,"T",103,"",""],[44,"CD","Rags to Riches","L","2",1,8.5,"D",200,"","o10"],[44,"DMR","Bayakoa (Los Alamitos)",3,"3U",1,8,"D",201,"",""],[44,"DMR","Goldikova",3,"3U",1,8,"T",303,"",""],[44,"OP","Bayakoa (Los Alamitos)",3,"3U",1,8,"D",201,"","","X"],[44,"SA","Eddie Logan","L","2",0,8,"T",125,"",""],[45,"BEL","Red Smith",2,"3U",0,11,"T",300,"",""],[45,"BEL","Hill Prince",3,"3",0,9,"T",200,"",""],[45,"BEL","Pebbles",3,"3",1,8,"T",175,"",""],[45,"BEL","Long Island",3,"3U",1,11,"T",300,"",""],[45,"CD","River City",3,"3U",0,9,"T",291,"",""],[45,"CD","Chorleywood","L","3U",0,11,"T",125,"",""],[46,"BEL","Tempted","L","2",1,8.5,"D",125,"",""],[46,"CD","Fern Creek","L","2",1,8.5,"D",125,"",""],[46,"CD","Mighty Beau","L","3U",0,5.5,"T",125,"",""],[46,"DMR","Bob Hope","L","2",0,7,"D",100,"",""],[46,"PRX","Parx Dirt Mile","L","3U",0,8,"D",125,"",""],[47,"BEL","Pumpkin Pie","L","3U",1,6.5,"D",125,"",""],[47,"BEL","Danger's Hour","L","3U",0,8,"T",125,"",""],[47,"BEL","Gravesend","L","3U",0,6,"D",125,"",""],[47,"CD","Commonwealth Turf",3,"3U",0,8.5,"T",286,"",""],[47,"CD","Chilukki",3,"3U",1,8,"D",298,"",""],[47,"CD","William Walker","L","3",0,7,"D",125,"",""],[47,"CD","Anchorage Overnight","L","3U",1,8,"T",125,"",""],[47,"CD","Dream Supreme","L","3U",1,6.5,"D",125,"",""],[47,"DMR","Native Diver",3,"3U",0,9,"D",101,"",""],[47,"DMR","Red Carpet","L","3U",1,11,"T",101,"",""],[47,"PRX","Cathryn Sophia","L","3",1,9,"D",125,"",""],[48,"BEL","Comely",3,"3",1,9,"D",194,"",""],[48,"BEL","Winter Memories",3,"3",1,8.5,"T",175,"",""],[48,"BEL","Elusive Quality","L","3U",0,5.5,"T",125,"",""],[48,"CD","Kentucky Jockey Club",2,"2",0,8.5,"D",381,"","p10"],[48,"CD","Golden Rod",2,"2",1,8.5,"D",400,"","o10"],[48,"CD","Mrs. Revere",2,"3",1,8.5,"T",292,"",""],[48,"CD","Clark",2,"3U",0,9,"D",600,"",""],[48,"CD","Falls City",3,"3U",1,9,"D",400,"",""],[48,"CD","Cardinal","L","3U",1,9,"T",265,"",""],[48,"DMR","Hollywood Derby",1,"3",0,9,"T",303,"",""],[48,"DMR","Matriarch",1,"3U",1,8,"T",303,"",""],[48,"DMR","Seabiscuit",2,"3U",0,8.5,"T",204,"",""],[48,"DMR","Hollywood Turf Cup",2,"3U",0,12,"T",202,"",""],[48,"DMR","Cecil B. DeMille",3,"2",0,8,"T",102,"",""],[48,"DMR","Jimmy Durante",3,"2",1,8,"T",103,"",""],[48,"FG","Tenacious","L","3U",0,8,"D",125,"",""],[49,"BEL","Remsen",2,"2",0,9,"D",250,"","p10"],[49,"BEL","Demoiselle",2,"2",1,9,"D",250,"","o10"],[49,"BEL","Cigar Mile",2,"3U",0,8,"D",500,"",""],[49,"BEL","Go for Wand","L","3U",1,8,"D",200,"",""],[49,"BEL","License Fee","L","3U",1,5.5,"T",125,"",""],[49,"FG","Pago Hop","L","3",1,9,"T",125,"",""],[49,"FG","Duncan F. Kenner","L","3U",0,5.5,"T",125,"",""],[49,"LRC","Starlet",2,"2",1,8.5,"D",201,"","o10"],[50,"GP","Mucho Macho Man","L","3",0,9,"D",125,"",""],[50,"GP","Sanibel Island","L","3",1,8,"T",125,"",""],[50,"LRC","Los Alamitos Futurity",2,"2",0,8.5,"D",200,"","p10"],[50,"RP","Remington Springboard Mile","L","2",0,8,"D",400,"","p10"],[50,"TP","Holiday Inaugural","L","3U",1,7,"S",125,"",""],[51,"FG","Gun Runner","L","2",0,8.5,"D",150,"","p10"],[51,"FG","Untapable","L","2",1,8.5,"D",150,"","o10"],[51,"GP","Harlan's Holiday",3,"3U",0,8.5,"D",150,"",""],[51,"GP","Ft. Lauderdale",3,"3U",0,9,"T",200,"",""],[51,"GP","Pulpit","L","2",0,8,"T",125,"",""],[51,"LRC","Los Alamitos Derby","L","3",0,8.5,"D",125,"",""],[51,"LRL","Barbara Fritchie","L","3U",1,6,"D",125,"",""],[52,"BEL","Plenty Of Grace","L","3U",1,8,"T",125,"",""],[52,"FG","Albert M. Stall Memorial","L","3U",1,8,"T",125,"",""],[52,"GP","Mr. Prospector",3,"3U",0,7,"D",125,"",""],[52,"GP","Appleton","L","3U",0,8,"T",125,"",""],[52,"SA","Malibu",1,"3",0,7,"D",301,"",""],[52,"SA","American Oaks",1,"3",1,10,"T",300,"",""],[52,"SA","La Brea",1,"3",1,7,"D",302,"",""],[52,"SA","Mathis Mile",2,"3",0,8,"T",201,"",""],[52,"SA","Laffit Pincay Jr.",2,"3U",0,8.5,"D",200,"",""],[52,"SA","Robert J. Frankel",3,"3U",1,9,"T",101,"",""],[52,"SA","San Gabriel",3,"3U",0,9,"T",201,"",""],[52,"SA","Joe Hernandez",3,"3U",0,6.5,"T",204,"",""]];
 
@@ -2290,98 +2323,238 @@ function paceFractions(res, runners) {
     return { x, t: tL, z, lab: z >= 1 ? 'Fast' : z <= -1 ? 'Slow' : 'Average' };
   });
 }
+// ---- side-on broadcast view ----
+// The camera runs alongside the field. Every horse's path comes from the real result: its final time, its running style
+// (an early-speed bend), how wide the trip comment says it went, and whether a speed horse stopped.
+const RV_SURF = {
+  fast: { top: '#a8724a', bot: '#c48c5f', line: 'rgba(90,55,30,.25)', clod: '#7a4f30', dirt: 1 },
+  good: { top: '#93613f', bot: '#b07a51', line: 'rgba(70,40,20,.25)', clod: '#6a4128', dirt: 1, wet: 0.5 },
+  sloppy: { top: '#583926', bot: '#7a5036', line: 'rgba(255,255,255,.07)', clod: '#3f281b', dirt: 1, wet: 1 },
+  muddy: { top: '#674330', bot: '#7a5236', line: 'rgba(40,25,15,.3)', clod: '#3a2416', dirt: 1 },
+  syn: { top: '#4a3c33', bot: '#5c4b40', line: 'rgba(0,0,0,.18)', clod: '#2c231d', dirt: 1 },
+  firm: { top: '#4f9446', bot: '#66ad57', line: 'rgba(255,255,255,.06)', turf: 1 },
+  tgood: { top: '#478a3f', bot: '#5a9e4e', line: 'rgba(255,255,255,.05)', turf: 1 },
+  yielding: { top: '#3e7c37', bot: '#4f8f45', line: 'rgba(0,0,0,.08)', turf: 1, divot: '#6a5534' }
+};
+function rvSurfKey(res) { const c = res.cond; if (res.surf === 'T') return c === 'Yielding' || c === 'Soft' ? 'yielding' : c === 'Good' ? 'tgood' : 'firm'; if (res.surf === 'S') return 'syn'; return c === 'Sloppy' ? 'sloppy' : c === 'Muddy' ? 'muddy' : c === 'Good' ? 'good' : 'fast'; }
+const RV_SILK_C = ['#c8102e', '#0b3d91', '#0f766e', '#5b2a86', '#111827', '#ea580c', '#be185d', '#065f46', '#7f1d1d', '#1e40af', '#b45309', '#f8fafc', '#facc15', '#14532d', '#9d174d', '#0e7490'];
+const RV_SILK_P = ['solid', 'hoops', 'stripes', 'sash', 'diamonds', 'checks'];
+function rvHash(s) { let h = 2166136261; for (let i = 0; i < s.length; i++) { h ^= s.charCodeAt(i); h = Math.imul(h, 16777619); } return h >>> 0; }
+function rvSilk(r) {
+  if (r.mine && G.silks) return [G.silks.c1, G.silks.c2, (G.silks.pat || 'Solid').toLowerCase()];
+  const h = rvHash(r.owner || r.name); const c1 = RV_SILK_C[h % 16]; let c2 = RV_SILK_C[(h >>> 4) % 16]; if (c2 === c1) c2 = RV_SILK_C[(h % 16 + 5) % 16];
+  return [c1, c2, RV_SILK_P[(h >>> 9) % RV_SILK_P.length]];
+}
+function rvRR(x, a, b, w, h, r) { x.beginPath(); x.moveTo(a + r, b); x.arcTo(a + w, b, a + w, b + h, r); x.arcTo(a + w, b + h, a, b + h, r); x.arcTo(a, b + h, a, b, r); x.arcTo(a, b, a + w, b, r); x.closePath(); }
+function rvSilkFill(x, silk, cx, cy, w, h) {
+  x.save(); x.beginPath(); x.ellipse(cx, cy, w, h, 0.25, 0, 6.283); x.clip(); x.fillStyle = silk[0]; x.fillRect(cx - w, cy - h, w * 2, h * 2); x.fillStyle = silk[1]; const p = silk[2];
+  if (p === 'hoops') { for (let k = -2; k < 3; k += 2) x.fillRect(cx - w, cy + k * h / 3 - h / 8, w * 2, h / 4); }
+  else if (p === 'stripes') { for (let k = -2; k < 3; k += 2) x.fillRect(cx + k * w / 3 - w / 8, cy - h, w / 4, h * 2); }
+  else if (p === 'sash') { x.beginPath(); x.moveTo(cx - w, cy - h); x.lineTo(cx - w + w * 0.6, cy - h); x.lineTo(cx + w, cy + h); x.lineTo(cx + w - w * 0.6, cy + h); x.fill(); }
+  else if (p === 'diamonds') { x.beginPath(); x.moveTo(cx, cy - h * 0.7); x.lineTo(cx + w * 0.5, cy); x.lineTo(cx, cy + h * 0.7); x.lineTo(cx - w * 0.5, cy); x.fill(); }
+  else if (p === 'checks') { for (let a = -2; a < 2; a++) for (let b = -2; b < 2; b++) if ((a + b) & 1) x.fillRect(cx + a * w / 2, cy + b * h / 2, w / 2, h / 2); }
+  else if (p === 'star') { x.beginPath(); for (let i = 0; i < 10; i++) { const a = -Math.PI / 2 + i * Math.PI / 5, q = i % 2 ? h * 0.35 : h * 0.85; x.lineTo(cx + q * Math.cos(a), cy + q * Math.sin(a)); } x.fill(); }
+  x.restore();
+}
+// a galloping horse, side view, facing right; (X,Y) is the centre of the barrel. ph = stride phase
+function rvHorse(x, X, Y, s, ph, h, o) {
+  x.save(); x.translate(X, Y); x.scale(s, s); const am = o.stand ? 0.08 : 1;
+  const coat = ['#5a3a22', '#3b2414', '#6e4527', '#2a1a10', '#7a4e2c', '#4a2e1a'][h.coat], dark = '#1d130b';
+  const reach = Math.sin(ph) * am, gather = Math.cos(ph) * am; x.translate(0, Math.sin(ph * 2) * 1.2 * am); x.rotate(-reach * 0.035);
+  x.lineCap = 'round'; x.lineJoin = 'round';
+  const leg = (hx, hy, a, bend, far, hind) => {
+    x.strokeStyle = far ? dark : coat; x.lineWidth = far ? 3.4 : 4.2;
+    const k1 = [hx + Math.sin(a) * 11, hy + Math.cos(a) * 11]; const a2 = a + (hind ? -1 : 1) * bend; const f = [k1[0] + Math.sin(a2) * 12, k1[1] + Math.cos(a2) * 12];
+    x.beginPath(); x.moveTo(hx, hy); x.lineTo(k1[0], k1[1]); x.lineTo(f[0], f[1]); x.stroke(); x.fillStyle = '#111'; x.beginPath(); x.ellipse(f[0] + 1.6, f[1] + 0.6, 2.6, 1.4, 0, 0, 6.283); x.fill();
+  };
+  if (o.clod) { x.fillStyle = o.clod; for (let k = 0; k < 4; k++) { const q = ((ph / 6.283 * 2 + k / 4) % 1); x.globalAlpha = 0.65 * (1 - q); x.beginPath(); x.arc(-26 - q * 30, 14 - q * (9 + k * 2) + q * q * 14, 1.3 + k % 2 * 0.7, 0, 6.283); x.fill(); } x.globalAlpha = 1; }
+  leg(-15, 3, am * 0.55 * Math.sin(ph + 2.9), 0.15 + am * (0.35 + 0.5 * Math.max(0, Math.sin(ph + 4.1))), 1, 1);
+  leg(15, 4, am * 0.6 * Math.sin(ph + 0.6), 0.1 + am * (0.1 + 0.9 * Math.max(0, Math.cos(ph + 0.6))), 1, 0);
+  x.strokeStyle = dark; x.lineWidth = 3; x.beginPath(); x.moveTo(-24, -5); x.bezierCurveTo(-31, -6 + gather, -36, -3, -40, 1 + gather * 2); x.stroke();
+  x.lineWidth = 1.6; x.beginPath(); x.moveTo(-25, -4); x.bezierCurveTo(-31, -2, -35, 2, -38, 5 + gather); x.stroke();
+  x.fillStyle = coat;
+  x.beginPath(); x.ellipse(-14, -1, 11, 10, 0, 0, 6.283); x.fill();
+  x.beginPath(); x.ellipse(0, 0, 21, 9, 0, 0, 6.283); x.fill();
+  x.beginPath(); x.ellipse(14, 1, 10, 9.5, 0, 0, 6.283); x.fill();
+  x.beginPath(); x.moveTo(10, -7); x.bezierCurveTo(18, -11, 25, -14, 30, -15); x.lineTo(34, -9); x.bezierCurveTo(29, -5, 24, 0, 21, 6); x.closePath(); x.fill();
+  x.beginPath(); x.moveTo(28, -16); x.bezierCurveTo(33, -18, 37, -16, 43, -10); x.bezierCurveTo(45, -8, 44, -5, 41, -5); x.bezierCurveTo(37, -5, 34, -7, 31, -8); x.closePath(); x.fill();
+  x.fillStyle = dark; x.beginPath(); x.moveTo(29, -17); x.lineTo(30, -21); x.lineTo(32, -17); x.fill();
+  x.beginPath(); x.arc(35.5, -13, 0.9, 0, 6.283); x.fill();
+  x.strokeStyle = dark; x.lineWidth = 2.2; x.beginPath(); x.moveTo(11, -8); x.bezierCurveTo(18, -12, 24, -14.5, 29, -16); x.stroke();
+  leg(-14, 4, am * 0.55 * Math.sin(ph + 3.3), 0.15 + am * (0.35 + 0.5 * Math.max(0, Math.sin(ph + 4.5))), 0, 1);
+  leg(14, 5, am * 0.6 * Math.sin(ph), 0.1 + am * (0.1 + 0.9 * Math.max(0, Math.cos(ph))), 0, 0);
+  const sc = SADDLE[(h.post - 1) % SADDLE.length]; x.fillStyle = sc[0]; rvRR(x, -13, -8, 14, 11, 2); x.fill(); x.fillStyle = sc[1]; x.font = 'bold 8px system-ui,sans-serif'; x.textAlign = 'center'; x.fillText(h.post, -6, 0.5);
+  x.strokeStyle = '#ece6d8'; x.lineWidth = 3.2; x.beginPath(); x.moveTo(-2, -11); x.lineTo(3, -6); x.lineTo(0, -2); x.stroke();
+  rvSilkFill(x, h.silk, 2, -14, 8, 4.6);
+  const hx = 17 + (o.urge ? Math.sin(ph * 2) * 3 : 0), hy = -11 + reach * (o.urge ? 2.5 : 1); // in the stretch the rider pushes and pumps
+  x.strokeStyle = h.silk[0]; x.lineWidth = 2.4; x.beginPath(); x.moveTo(8, -15); x.lineTo(hx, hy); x.stroke();
+  x.strokeStyle = '#5b3b1a'; x.lineWidth = 0.9; x.beginPath(); x.moveTo(hx, hy); x.lineTo(31, -11); x.stroke();
+  if (o.urge) { x.strokeStyle = '#222'; x.lineWidth = 0.9; x.beginPath(); x.moveTo(hx, hy); x.lineTo(hx - 10, hy - 8 + Math.sin(ph * 2) * 5); x.stroke(); }
+  x.fillStyle = h.silk[1]; x.beginPath(); x.arc(11, -19, 3.7, 0, 6.283); x.fill(); x.fillStyle = h.silk[0]; x.beginPath(); x.arc(11, -19, 3.7, Math.PI * 1.05, Math.PI * 1.95); x.fill(); x.fillRect(11, -20.5, 5, 1.6);
+  if (h.mine) { x.fillStyle = '#f2c230'; x.beginPath(); x.moveTo(6, -35); x.lineTo(16, -35); x.lineTo(11, -28); x.closePath(); x.fill(); }
+  x.restore();
+}
+function rvSpeed() { try { return +localStorage.getItem('tt-rspd') || 1; } catch (e) { return 1; } }
 function playRace(host, res, onDone) {
-  host.innerHTML = `<div class="race-head"><div class="rh-title">${res.label}</div><div class="rh-sub">${TRACKS[res.trk].n} · ${distStr(res.dist)} · ${SURF_N[res.surf]} (${res.cond}) · Purse ${fmt$(res.purse)}</div>${paceOutlook(res)}</div>
-  <canvas class="race-cv"></canvas><div class="race-order"></div><div class="race-frac"></div><div class="race-call">The horses are approaching the starting gate…</div>
-  <div class="race-ctl"><button class="btn sm" data-sp="2">2×</button><button class="btn sm on" data-sp="4">4×</button><button class="btn sm" data-sp="8">8×</button><button class="btn sm ghost" data-sp="skip">Skip ▸▸</button></div><div class="race-res"></div>`;
-  const cv = host.querySelector('canvas'); const ctx = cv.getContext('2d');
-  const W = Math.min(host.clientWidth || 340, 520), dpr = window.devicePixelRatio || 1;
-  const R = W * 0.2, a = W * 0.23, H = 2 * (R + 24) + 44;
-  cv.style.width = W + 'px'; cv.style.height = H + 'px'; cv.width = W * dpr; cv.height = H * dpr; ctx.scale(dpr, dpr);
-  const cx = W / 2, cy = H / 2;
-  const turf = res.surf === 'T'; const Rbase = turf ? R - 21 : R; const band = 24; const laneW = turf ? 2.1 : 2.7;
-  const Pp = 4 * a + 2 * Math.PI * Rbase; const fpx = Pp / (turf ? 7.5 : 8);
-  const sFin = 1.55 * a;
-  function pt(s, o) {
-    s = ((s % Pp) + Pp) % Pp; const Rr = Rbase + o;
-    if (s < 2 * a) return [cx - a + s, cy + Rr];
-    s -= 2 * a; const arc = Math.PI * Rbase;
-    if (s < arc) { const th = Math.PI / 2 - s / Rbase; return [cx + a + Rr * Math.cos(th), cy + Rr * Math.sin(th)]; }
-    s -= arc; if (s < 2 * a) return [cx + a - s, cy - Rr];
-    s -= 2 * a; const ph = s / Rbase; return [cx - a - Rr * Math.sin(ph), cy - Rr * Math.cos(ph)];
+  const D = res.dist, n = res.runners.length, w0 = res.runners.find(r => r.fin === 1) || res.runners[0], sec = res.runners.find(r => r.fin === 2);
+  const LPF = 5.5 * w0.time / D; // lengths per furlong, so live margins at the wire match the official ones
+  const sm = (a, b, v) => { const u = Math.max(0, Math.min(1, (v - a) / (b - a))); return u * u * (3 - 2 * u); };
+  const rng = srng('rv' + res.rid + w0.name);
+  const R = res.runners.map((r, i) => {
+    const c = (r.comment || '').toLowerCase(); const wideN = /four wide|4w|4 wide/.test(c) ? 3 : /wide|3w/.test(c) ? 2 : 0;
+    let e = r.eF * 0.15; const fade = r.style === 'E' && r.fin > Math.max(3, n * 0.5);
+    if (fade) e = Math.max(e, 0.034); // went too fast early: leads, then tires
+    if (/slow|step slow/.test(c)) e -= 0.015;
+    const cruise = { E: 0.2, P: 1.1, S: 1.8, C: 1.2 }[r.style] + (r.post - 1) * 0.15 + rng() * 0.3 + (/both turns/.test(c) ? 2 : 0);
+    const mov = Math.max({ E: 0, P: rng() * 0.8, S: 0.6 + rng() * 1.4, C: 1.8 + rng() * 1.6 }[r.style] || 0, wideN * 1.3);
+    return { ...r, i, e, fade, cruise, mov, coat: rvHash(r.name) % 6, ph: rng() * 6.28, pa: 0, silk: rvSilk(r) };
+  });
+  const ME = R.filter(r => r.mine).map(r => r.i);
+  const maxT = Math.max(...R.map(r => r.time));
+  const photo = sec && sec.btn < 0.45 ? lenStr(sec.btn) : null;
+  const fracs = paceFractions(res, R.map(r => ({ ...r, time: r.time, e: r.e })));
+  const FN = { 2: '1/4 MILE', 4: '1/2 MILE', 6: '3/4 MILE' }, FS = { 2: '¼', 4: '½', 6: '¾' };
+  const sk = rvSurfKey(res), sf = RV_SURF[sk];
+  const turn0 = Math.max(0.8, D - 3.8), turn1 = Math.max(1.6, D - 2.2); // the far turn: closers and stalkers fan out
+  const pathAt = (r, d) => (r.post - 1) + (r.cruise - (r.post - 1)) * sm(0, 1.6, d) + r.mov * sm(turn0, turn1, d) - r.mov * 0.25 * sm(D - 1.6, D - 0.2, d);
+  const maxLane = Math.max(9, ...R.map(r => Math.max(r.post - 1, r.cruise + r.mov)));
+  function dAt(r, t) { if (t <= 0) return 0; if (t <= r.time) { const u = t / r.time; return D * (u + 2 * r.e * u * (1 - u)); } const v = D / r.time * (1 - 2 * r.e), q = Math.min(t - r.time, 9); return D + v * (q - q * q / 18); }
+  const trip = r => { const w = Math.round(r.cruise + r.mov) + 1; return w >= 4 ? `${w} wide` : ''; };
+
+  host.innerHTML = `<div class="race-head"><div class="rh-title">${esc(res.label)}</div><div class="rh-sub">${TRACKS[res.trk].n} · ${distStr(D)} · ${SURF_N[res.surf]} (${res.cond}) · Purse ${fmt$(res.purse)}</div>${paceOutlook(res)}</div>
+  <div class="rv-stage"><canvas class="rv-cv"></canvas><div class="rv-lb"></div><div class="rv-res"></div></div>
+  <div class="rv-ctl"><button class="btn sm" data-rv="follow"${ME.length ? '' : ' hidden'}>Follow my horse</button><button class="btn sm" data-rv="speed">Speed 1×</button><button class="btn sm ghost" data-rv="stretch">Skip to stretch</button><button class="btn sm ghost" data-rv="result">Skip to result</button></div>
+  <div class="race-res"></div>`;
+  const stage = host.querySelector('.rv-stage'), cv = host.querySelector('canvas'), lb = host.querySelector('.rv-lb'), resEl = host.querySelector('.rv-res');
+  const bFollow = host.querySelector('[data-rv="follow"]'), bSpeed = host.querySelector('[data-rv="speed"]'), bStretch = host.querySelector('[data-rv="stretch"]'), bResult = host.querySelector('[data-rv="result"]');
+  let W = 0, Hh = 0, S = 1, ctx, phone = false;
+  function size() {
+    const w = stage.clientWidth || 340; phone = w < 600;
+    const h = Math.round(phone ? w * 0.78 : Math.min(w * 0.56, 620, Math.max(300, innerHeight / (parseFloat(getComputedStyle(document.body).zoom) || 1) * 0.6)));
+    const dp = Math.min(2, window.devicePixelRatio || 1); cv.width = w * dp; cv.height = h * dp; cv.style.height = h + 'px'; ctx = cv.getContext('2d'); ctx.setTransform(dp, 0, 0, dp, 0, 0);
+    W = w; Hh = h; S = phone ? Math.max(0.72, w / 470) : Math.max(0.62, Math.min(1.35, w / 760)); stage.classList.toggle('phone', phone); lastLB = '';
   }
-  const D = res.dist; const sStart = sFin - D * fpx;
-  const runners = res.runners.map(r => ({ ...r, e: r.eF * 0.15, lane: r.post - 1, tl: r.post - 1 }));
-  const maxT = Math.max(...runners.map(r => r.time));
-  const fracs = paceFractions(res, runners); let fi = 0; const fracEl = host.querySelector('.race-frac');
-  const FN = { 2: '¼', 4: '½', 6: '¾' };
-  const showFrac = () => { fracEl.innerHTML = fracs.slice(0, fi).map(f => `<span class="fr ${f.lab.toLowerCase()}">${FN[f.x]} ${fmtFrac(f.t)} <b>${f.lab}</b></span>`).join(''); };
-  function dAt(r, t) { if (t <= 0) return 0; const u = t / r.time; if (u <= 1) return D * (u + 2 * r.e * u * (1 - u)); return D + (t - r.time) * (D / r.time) * 0.6; }
-  let speed = 4, t = -1.2, last = null, raf = null, done = false; const calls = [0.03, 0.25, 0.5, 0.75]; let ci = 0, finCalled = false;
-  const callEl = host.querySelector('.race-call'), ordEl = host.querySelector('.race-order');
-  host.querySelectorAll('[data-sp]').forEach(b => b.onclick = () => { if (b.dataset.sp === 'skip') { t = maxT + 2; } else { speed = +b.dataset.sp; host.querySelectorAll('[data-sp]').forEach(x => x.classList.toggle('on', x === b)); } });
-  function drawTrack() {
-    ctx.clearRect(0, 0, W, H);
-    // infield
-    ctx.fillStyle = '#2f6b3e'; roundStad(R - 26, 0); ctx.fill();
-    // dirt band
-    ctx.lineWidth = band + 2; ctx.strokeStyle = '#a8794c'; stadPath(R + band / 2); ctx.stroke();
-    // turf band
-    ctx.lineWidth = 19; ctx.strokeStyle = '#4c9a52'; stadPath(R - 11.5); ctx.stroke();
-    ctx.lineWidth = 1.2; ctx.strokeStyle = '#f8f5ec'; stadPath(R - 0.5); ctx.stroke(); stadPath(R + band + 1); ctx.stroke(); stadPath(R - 21.5); ctx.stroke();
-    // lake/tote
-    ctx.fillStyle = '#3c7fb0'; ctx.beginPath(); ctx.ellipse(cx - a * 0.3, cy, a * 0.35, R * 0.18, 0, 0, Math.PI * 2); ctx.fill();
-    ctx.fillStyle = '#e9e1cc'; ctx.fillRect(cx + a * 0.2, cy - 8, a * 0.5, 16); ctx.fillStyle = '#123'; ctx.font = '600 8px system-ui'; ctx.textAlign = 'center'; ctx.fillText(TRACKS[res.trk].n.toUpperCase(), cx + a * 0.45, cy + 3);
-    // finish line
-    const [fx, fy] = [cx - a + sFin, cy + R]; ctx.strokeStyle = '#f2c230'; ctx.lineWidth = 2; ctx.beginPath(); ctx.moveTo(fx, fy - (turf ? 22 : 2)); ctx.lineTo(fx, fy + band + 4); ctx.stroke();
-    ctx.fillStyle = '#ddd'; ctx.fillRect(cx - a * 0.6, cy + R + band + 8, a * 1.6, 9); ctx.fillStyle = '#555'; ctx.font = '7px system-ui'; ctx.fillText('GRANDSTAND', cx + a * 0.2, cy + R + band + 15);
-    // gate marker
-    const [gx, gy] = pt(sStart, 0); ctx.fillStyle = '#ccc'; ctx.fillRect(gx - 1.5, gy - 2, 3, band + 2);
+  const PX = 32 * 80, LEADX = 0.5;
+  let camX = 0, rt = -3, lastNow = null, prevT = null, spd = rvSpeed(), follow = false, freeze = null, shown = false, raf = 0, stopped = false, lastLB = '';
+  const setSpd = v => { spd = v; bSpeed.textContent = `Speed ${spd}×`; try { localStorage.setItem('tt-rspd', spd); } catch (e) {} };
+  setSpd(spd);
+  function reset() { rt = -3; lastNow = null; prevT = null; camX = 0; freeze = null; R.forEach(r => r.pa = r.ph); resEl.classList.remove('show'); lb.style.display = ''; }
+  function scene(x, cam, lead) {
+    const sky = x.createLinearGradient(0, 0, 0, Hh * 0.45); sky.addColorStop(0, '#9cc4e4'); sky.addColorStop(1, '#d8e8f2'); x.fillStyle = sky; x.fillRect(0, 0, W, Hh);
+    const stand = Math.max(0, Math.min(1, (lead / D - 0.6) / 0.12)); // the grandstand comes into view entering the stretch
+    const far = Hh * 0.30; x.fillStyle = '#7aa06a'; x.fillRect(0, far, W, Hh * 0.16);
+    const wrap = (v, p) => ((v % p) + p) % p;
+    for (let k = -1; k < 14; k++) { const bx = wrap(k * 70 - cam * 0.12, 980) - 70; x.fillStyle = '#4f7a46'; x.beginPath(); x.arc(bx, far + 4, 22, Math.PI, 0); x.fill(); x.beginPath(); x.arc(bx + 30, far + 6, 16, Math.PI, 0); x.fill(); }
+    if (stand > 0) { x.globalAlpha = stand; for (let k = -1; k < 8; k++) { const bx = wrap(k * 160 - cam * 0.25, 1280) - 160; x.fillStyle = '#c9c2b2'; x.fillRect(bx, far - 60, 150, 72); x.fillStyle = '#7b6f60'; x.fillRect(bx, far - 66, 150, 8); x.fillStyle = '#e9e3d4'; for (let r = 0; r < 4; r++) x.fillRect(bx + 8, far - 50 + r * 15, 134, 6); } x.globalAlpha = 1; }
+    const top = Hh * 0.44; x.fillStyle = '#4e8a3f'; x.fillRect(0, top - 12, W, 14);
+    if (sf.turf) { x.fillStyle = '#2f5f2a'; const p = 14 * Math.ceil(W / 14 + 2); for (let k = -1; k < W / 14 + 2; k++) { const bx = wrap(k * 14 - cam * 0.9, p) - 14; x.beginPath(); x.arc(bx, top - 8, 7, Math.PI, 0); x.fill(); } } // hedge inside the turf rail
+    const g = x.createLinearGradient(0, top, 0, Hh); g.addColorStop(0, sf.top); g.addColorStop(1, sf.bot); x.fillStyle = g; x.fillRect(0, top, W, Hh - top);
+    if (sf.turf) { const bw = 90 * S, p = bw * 2 * Math.ceil(W / bw / 2 + 1); x.fillStyle = 'rgba(255,255,255,.07)'; for (let k = -1; k < W / bw + 2; k += 2) { const bx = wrap(k * bw - cam, p) - bw; x.beginPath(); x.moveTo(bx, top); x.lineTo(bx + bw, top); x.lineTo(bx + bw * 1.25, Hh); x.lineTo(bx + bw * 0.25, Hh); x.fill(); } } // mowing stripes
+    if (sf.divot) { x.fillStyle = sf.divot; x.globalAlpha = 0.45; for (let k = 0; k < 26; k++) { const bx = wrap(k * 137 - cam, W + 200) - 100, by = top + 18 + ((k * 53) % 100) / 100 * (Hh - top - 24); x.beginPath(); x.ellipse(bx, by, 4, 1.6, 0, 0, 6.283); x.fill(); } x.globalAlpha = 1; }
+    if (sf.wet) { x.fillStyle = `rgba(220,235,245,${0.13 * sf.wet})`; for (let k = 0; k < 18; k++) { const bx = wrap(k * 211 - cam, W + 400) - 200, by = top + 14 + ((k * 37) % 100) / 100 * (Hh - top - 20); x.beginPath(); x.ellipse(bx, by, 60 + (k % 3) * 30, 3 + (k % 2) * 2, 0, 0, 6.283); x.fill(); } } // standing water catching the light
+    x.strokeStyle = sf.line; x.lineWidth = 1; for (let k = 0; k < 6; k++) { const y = top + 12 + k * (Hh - top) / 6; x.beginPath(); x.moveTo(0, y); x.lineTo(W, y); x.stroke(); }
+    x.fillStyle = '#f4f4f0'; x.fillRect(0, top - 5, W, 3.5); { const sp = 60 * S, p = sp * Math.ceil(W / sp + 2); for (let k = -1; k < W / sp + 2; k++) { const px = wrap(k * sp - cam, p) - sp; x.fillRect(px, top - 5, 2.2, 10); } }
+    for (let k = 1; k < D; k++) { const d = D - k, px = d * PX * S - cam + W * LEADX; if (px < -20 || px > W + 20) continue; x.fillStyle = k % 2 ? '#d7262e' : '#1f4fb4'; x.fillRect(px - 2, top - 30, 4, 32); x.fillStyle = '#fff'; x.fillRect(px - 2, top - 30, 4, 7); } // furlong poles count down to the wire
+    const fin = D * PX * S - cam + W * LEADX; if (fin > -20 && fin < W + 20) { x.fillStyle = '#fff'; x.fillRect(fin - 3, top - 60, 6, Hh); x.fillStyle = '#d7262e'; x.fillRect(fin - 1, top - 60, 2, Hh); x.fillStyle = '#f5d33b'; x.beginPath(); x.arc(fin, top - 64, 7, 0, 6.283); x.fill(); }
+    return top;
   }
-  function stadPath(rr) { ctx.beginPath(); ctx.moveTo(cx - a, cy + rr); ctx.lineTo(cx + a, cy + rr); ctx.arc(cx + a, cy, rr, Math.PI / 2, -Math.PI / 2, true); ctx.lineTo(cx - a, cy - rr); ctx.arc(cx - a, cy, rr, -Math.PI / 2, Math.PI / 2, true); ctx.closePath(); }
-  function roundStad(rr) { stadPath(rr); }
-  function frame(ts) {
-    if (last == null) last = ts; const dt = Math.min(0.05, (ts - last) / 1000); last = ts; t += dt * speed;
-    drawTrack();
-    const ds = runners.map(r => ({ r, d: dAt(r, t) }));
-    ds.sort((x, y) => y.d - x.d);
-    const placed = [];
-    for (const o of ds) { let l = 0; while (placed.some(p => p.l === l && Math.abs(p.d - o.d) < 0.075)) l++; placed.push({ l, d: o.d }); o.r.tl = Math.min(l, turf ? 7 : 7); }
-    for (const r of runners) r.lane += (r.tl - r.lane) * Math.min(1, dt * speed * 0.8);
-    for (const o of [...ds].reverse()) {
-      const r = o.r; const [x, y] = pt(sStart + o.d * fpx, 3.2 + r.lane * laneW * 1.15);
-      if (r.mine) { ctx.beginPath(); ctx.arc(x, y, 6.3, 0, Math.PI * 2); ctx.strokeStyle = '#f2c230'; ctx.lineWidth = 1.8; ctx.stroke(); drawSilk(ctx, x, y, 4.6, G.silks); }
-      else { const sc = SADDLE[(r.post - 1) % SADDLE.length]; ctx.beginPath(); ctx.arc(x, y, 3.4, 0, Math.PI * 2); ctx.fillStyle = sc[0]; ctx.fill(); ctx.strokeStyle = 'rgba(0,0,0,.45)'; ctx.lineWidth = 0.8; ctx.stroke(); }
+  const laneY = (top, band, L) => phone ? top + band * 0.30 + L * band * Math.min(0.062, 0.6 / maxLane) : top + band * 0.2 + L * band * Math.min(0.05, 0.42 / maxLane); // wide: keep the field above the leaderboard
+  function gate(x, top, band, t) {
+    const s = 1.15 * S, xg = W * LEADX - camX; if (xg < -80 * s || xg > W + 80) return; const open = sm(0, 0.35, t);
+    const y0 = laneY(top, band, 0) - 36 * s, y1 = laneY(top, band, n - 1) + 16 * s;
+    x.fillStyle = '#2f6b3a'; x.fillRect(xg - 58 * s, y0 - 8 * s, 6 * s, y1 - y0 + 8 * s); x.fillRect(xg + 8 * s, y0 - 8 * s, 6 * s, y1 - y0 + 8 * s); x.fillRect(xg - 58 * s, y0 - 10 * s, 72 * s, 6 * s);
+    x.fillStyle = '#e8efe6'; x.fillRect(xg - 58 * s, y0 - 6 * s, 72 * s, 1.6 * s);
+    for (let L = 0; L < n; L++) {
+      const Y = laneY(top, band, L); x.fillStyle = 'rgba(47,107,58,.85)'; x.fillRect(xg - 58 * s, Y + 11 * s, 72 * s, 2.2 * s);
+      x.fillStyle = open > 0.5 ? '#3d8a4a' : '#2f6b3a'; x.fillRect(xg + 2 * s, Y - 27 * s, 8 * s * (1 - open * 0.8), 38 * s);
+      if (open < 0.6) { x.fillStyle = '#fff'; x.font = `bold ${Math.round(8 * s)}px system-ui`; x.textAlign = 'center'; x.fillText(L + 1, xg + 6 * s, Y - 8 * s); }
     }
-    // order strip
-    ordEl.innerHTML = ds.slice(0, 6).map(o => { const sc = SADDLE[(o.r.post - 1) % SADDLE.length]; return `<span class="pn ${o.r.mine ? 'me' : ''}" style="background:${sc[0]};color:${sc[1]}">${o.r.post}</span>`; }).join('') + (ds.length > 6 ? '<span class="pn more">…</span>' : '');
-    const lead = ds[0];
-    if (ci < calls.length && lead.d >= D * calls[ci]) { callEl.innerHTML = makeCall(ds, ci); ci++; }
-    while (fi < fracs.length && lead.d >= fracs[fi].x) { fi++; showFrac(); }
-    if (!finCalled && lead.d >= D) { finCalled = true; const w = res.runners.find(x => x.fin === 1); callEl.innerHTML = `<b>${w.name}</b> wins it! ${res.runners.find(x => x.fin === 2).mrg > 0 ? '' : ''}${lenStr(res.runners[1]?.btn ?? 0) === 'nose' ? 'By a nose in a photo!' : `By ${lenStr(res.runners.find(x => x.fin === 2)?.btn ?? 0)}.`}`; }
-    if (t > maxT + 1.5) { finish(); return; }
+  }
+  // track map: counterclockwise (left-hand turns), finish at the bottom; bottom right, or up in the sky on a phone
+  function minimap(x, ds) {
+    const w = Math.max(96, Math.min(190, W * 0.2)), h = w * 0.5, ox = W - w - 8, oy = phone ? 8 : Hh - h - 8; x.fillStyle = 'rgba(18,22,40,.82)'; rvRR(x, ox, oy, w, h, 8); x.fill();
+    const cx = ox + w / 2, cy = oy + h / 2, rx = w * 0.38, ry = h * 0.3; x.strokeStyle = sf.turf ? '#5aa04f' : sf.top; x.lineWidth = Math.max(4, w * 0.05); x.beginPath(); x.ellipse(cx, cy, rx, ry, 0, 0, 6.283); x.stroke();
+    x.fillStyle = '#fff'; x.fillRect(cx - 1, cy + ry - 5, 2, 10);
+    const lap = res.surf === 'T' ? 7.5 : 8, pos = d => { const a = Math.PI * 0.5 + ((D - Math.min(d, D)) / lap) * 6.283; return [cx + Math.cos(a) * rx, cy + Math.sin(a) * ry]; };
+    R.forEach((r, i) => { if (r.mine) return; const [X, Y] = pos(ds[i]); x.fillStyle = SADDLE[(r.post - 1) % SADDLE.length][0]; x.beginPath(); x.arc(X, Y, 2.6, 0, 6.283); x.fill(); });
+    for (const i of ME) { const [mx, my] = pos(ds[i]); const pulse = 2 + Math.abs(Math.sin(performance.now() / 250)) * 3; x.strokeStyle = '#f2c230'; x.lineWidth = 2; x.beginPath(); x.arc(mx, my, 4 + pulse, 0, 6.283); x.stroke(); x.fillStyle = '#f2c230'; x.beginPath(); x.arc(mx, my, 3.4, 0, 6.283); x.fill(); }
+  }
+  const sw = s => s[2] === 'hoops' ? `repeating-linear-gradient(180deg,${s[0]} 0 3px,${s[1]} 3px 5px)` : s[2] === 'stripes' ? `repeating-linear-gradient(90deg,${s[0]} 0 3px,${s[1]} 3px 5px)` : s[2] === 'sash' ? `linear-gradient(45deg,${s[0]} 40%,${s[1]} 40% 60%,${s[0]} 60%)` : s[2] === 'checks' ? `repeating-conic-gradient(${s[0]} 0 25%,${s[1]} 0 50%) 0 0/6px 6px` : s[2] === 'diamonds' || s[2] === 'star' ? `radial-gradient(circle,${s[1]} 35%,${s[0]} 36%)` : s[0];
+  const mgStr = L => L < 0.05 ? '' : ({ nose: 'nose', head: 'hd', neck: 'nk' }[lenStr(L)] || lenStr(L));
+  const fav = R.reduce((a, r) => r.odds < a.odds ? r : a, R[0]).i;
+  function board(ds, t, lead) {
+    const order = R.map((r, i) => i).sort((a, b) => ds[b] - ds[a] || R[a].fin - R[b].fin);
+    let call = '', cs = '', pc = '';
+    for (const f of fracs) if (lead >= f.x) { call = FN[f.x]; cs = fmtFrac(f.t); pc = f.lab; }
+    if (lead >= D) { call = 'FINAL'; cs = timeStr(w0.time); pc = ''; } if (!call) { call = t <= 0 ? 'POST TIME' : 'AND'; cs = t <= 0 ? 'IN THE GATE' : "THEY'RE OFF"; }
+    const rows = phone ? 5 : Hh < 470 ? 4 : 6; const show = order.slice(0, rows);
+    const mg = i => { if (t <= 0.5) return ''; const r = R[i]; return mgStr(t >= r.time ? r.btn : (Math.min(lead, D) - ds[i]) * LPF); };
+    const row = (i, p) => { const r = R[i], sc = SADDLE[(r.post - 1) % SADDLE.length]; return `<div class="rv-row ${r.mine ? 'me' : ''}">${p ? `<span class="pos">${p}</span>` : ''}<span class="n" style="background:${sc[0]};color:${sc[1]}">${r.post}</span><span class="sk" style="background:${sw(r.silk)}"></span><span class="nm">${esc(r.name)}</span><span class="mg">${mg(i)}</span><span class="od">${oddsStr(r.odds)}</span>${i === fav ? '<span class="fav">FAV</span>' : ''}</div>`; };
+    const html = `<div class="rv-lbh"><div class="rn">${esc(res.label)}<small>${distStr(D)} · ${SURF_N[res.surf]} (${res.cond})</small></div><div class="call">${call}<small>${pc ? `<b class="pc ${pc.toLowerCase()}">${pc}</b> ` : ''}${cs}</small></div></div>${show.map(i => row(i)).join('')}${ME.filter(i => !show.includes(i)).map(i => row(i, ordinal(order.indexOf(i) + 1))).join('')}`;
+    if (html !== lastLB) { lb.innerHTML = html; lastLB = html; }
+  }
+  function drawAt(t, frozen) {
+    const ds = R.map(r => dAt(r, t)); const lead = Math.max(...ds); const x = ctx;
+    const focus = follow && ME.length ? ds[ME[0]] : Math.min(lead, D + 0.15); const target = focus * PX * S;
+    if (frozen) camX = D * PX * S; else { if (prevT != null) camX += target - prevT; camX += (target - camX) * 0.12; } // moves with the leaders at any speed
+    prevT = frozen ? null : target; if (Math.abs(target - camX) > PX * S * 3) camX = target;
+    const top = scene(x, camX, lead); const band = Hh - top;
+    const L = R.map((r, i) => pathAt(r, ds[i])); const order = R.map((r, i) => i).sort((a, b) => L[a] - L[b]);
+    for (const i of order) {
+      const r = R[i]; const X = W * LEADX + ds[i] * PX * S - camX; if (X < -60 || X > W + 60) continue;
+      rvHorse(x, X - 44 * 1.15 * S, laneY(top, band, L[i]), 1.15 * S, r.pa, r, { stand: t <= 0, urge: ds[i] > D - 2.2 && ds[i] < D && !r.fade, clod: sf.dirt && t > 0 && ds[i] < D + 0.5 ? sf.clod : null }); // a horse's position is its nose
+    }
+    if (t < 2) gate(x, top, band, t);
+    if (frozen) {
+      const el = (performance.now() - freeze.start) / 1000;
+      x.fillStyle = `rgba(255,255,255,${Math.max(0, 0.75 - el * 1.5)})`; x.fillRect(0, 0, W, Hh);
+      const fin = D * PX * S - camX + W * LEADX; x.strokeStyle = 'rgba(0,0,0,.55)'; x.lineWidth = 1; x.setLineDash([4, 4]); x.beginPath(); x.moveTo(fin, 0); x.lineTo(fin, Hh); x.stroke(); x.setLineDash([]);
+      x.fillStyle = 'rgba(18,22,40,.88)'; rvRR(x, W / 2 - 80, 12, 160, 30, 8); x.fill(); x.fillStyle = '#fff'; x.font = 'bold 15px system-ui'; x.textAlign = 'center'; x.fillText(el < 1.6 ? 'PHOTO' : `#${w0.post} WINS`, W / 2, 32);
+      if (el >= 1.6) { const t2 = `${w0.name} by a ${photo === 'dh' ? 'nose' : photo}`; x.font = '12px system-ui'; const tw = Math.max(180, x.measureText(t2).width + 24); x.fillStyle = 'rgba(18,22,40,.8)'; rvRR(x, W / 2 - tw / 2, 46, tw, 22, 6); x.fill(); x.fillStyle = '#f2c230'; x.fillText(t2, W / 2, 61); }
+    }
+    minimap(x, ds); board(ds, t, lead);
+    return lead;
+  }
+  function showResult() {
+    shown = true;
+    const rows = R.slice().sort((a, b) => a.fin - b.fin).map(r => { const sc = SADDLE[(r.post - 1) % SADDLE.length]; return `<tr class="${r.mine ? 'me' : ''}"><td class="p">${r.fin}</td><td><span class="n" style="background:${sc[0]};color:${sc[1]}">${r.post}</span><b>${esc(r.name)}</b><div class="cm">${esc(r.comment || '')}${trip(r) && !/wide|3w|4w/.test(r.comment || '') && r.style !== 'E' ? ` · ${trip(r)} turn` : ''}</div></td><td class="rv-bt">${r.fin === 1 ? timeStr(r.time) : lenStr(r.btn)}</td><td class="od">${oddsStr(r.odds)}</td><td class="fg"><b>${r.fig}</b></td></tr>`; }).join('');
+    const fr = fracs.map(f => `${FS[f.x]} ${fmtFrac(f.t)} <b class="pc ${f.lab.toLowerCase()}">${f.lab}</b>`).join(' · ') + ` · Final ${timeStr(w0.time)}`;
+    const mine = (res.mine || []).map(m => `<div><b>${esc(m.name)}</b> ran ${ordinal(m.fin)} · ${m.share ? 'earned ' + fmt$(m.share) : 'no purse money'}</div>`).join('');
+    resEl.innerHTML = `<div class="rv-rh"><div><b>OFFICIAL</b><small>${esc(res.label)} · ${distStr(D)} · ${SURF_N[res.surf]} (${res.cond})</small></div><div class="ft">${timeStr(w0.time)}</div></div>
+    <div class="rv-fr">${fr}</div>${photo ? `<div class="rv-ph">Photo: #${w0.post} ${esc(w0.name)} by a ${photo === 'dh' ? 'nose' : photo}</div>` : ''}
+    <table><tr class="hd"><td></td><td>Horse</td><td class="rv-bt">Btn</td><td class="od">Odds</td><td class="fg">Fig</td></tr>${rows}</table>
+    <div class="rv-ft"><div>${mine}</div><button class="btn sm ghost" data-rv="again">Watch again</button></div>`;
+    lb.style.display = 'none'; resEl.classList.add('show');
+    resEl.querySelector('[data-rv="again"]').onclick = () => reset();
+    if (onDone && !host._rvDone) { host._rvDone = 1; onDone(); }
+  }
+  function frame(now) {
+    if (stopped) return;
     raf = requestAnimationFrame(frame);
+    if (freeze && !freeze.over && now < freeze.until) { drawAt(freeze.t, true); return; }
+    if (freeze && !freeze.over) { freeze.over = true; lastNow = now; }
+    const dt = lastNow == null ? 0 : Math.min(0.1, (now - lastNow) / 1000); lastNow = now; // the clock advances by frame, so a speed change never jumps
+    rt += dt * 2.6 * spd; const t = rt;
+    if (t > 0) R.forEach(r => { const v = (dAt(r, t) - dAt(r, t - 0.05)) / 0.05; r.pa += dt * spd * 15 * Math.max(0.3, Math.min(1.15, v / (D / w0.time))); }); // stride follows speed: a tiring horse shortens up
+    if (!freeze && t >= w0.time) { if (photo) { freeze = { start: now, until: now + 3200, t: w0.time }; drawAt(freeze.t, true); return; } freeze = { over: true }; }
+    const lead = drawAt(t, false);
+    if (!shown && t > maxT + 1.5) showResult();
+    bStretch.disabled = shown || lead >= D - 2.2; bResult.disabled = shown;
   }
-  function makeCall(ds, i) {
-    const L = (x, y) => lenStr((x.d - y.d) * 82.5);
-    const l = ds[0], s = ds[1]; const mine = ds.filter(o => o.r.mine);
-    let txt = i === 0 ? `And they're off! <b>#${l.r.post} ${l.r.name}</b> breaks alertly.` : i === 1 ? `<b>#${l.r.post} ${l.r.name}</b> shows the way by ${L(l, s)}, #${s.r.post} ${s.r.name} second.` : i === 2 ? `At the half, <b>${l.r.name}</b> leads by ${L(l, s)}; ${ds[2] ? ds[2].r.name + ' tucked in third.' : ''}` : `Turning for home — <b>${l.r.name}</b> by ${L(l, s)}! ${s.r.name} chasing!`;
-    for (const m of mine) { const pos = ds.indexOf(m) + 1; txt += ` <span class="me-call">Your ${m.r.name}: ${ordinal(pos)}${pos > 1 ? ', ' + lenStr((l.d - m.d) * 82.5) + ' back' : ''}.</span>`; }
-    return txt;
-  }
-  function finish() {
-    if (done) return; done = true; cancelAnimationFrame(raf);
-    fi = fracs.length; showFrac(); host.querySelector('.race-res').innerHTML = resultsTable(res);
-    if (onDone) onDone();
-  }
-  drawTrack(); raf = requestAnimationFrame(frame);
-  return { stop() { done = true; cancelAnimationFrame(raf); } };
+  const toStretch = () => { const tS = Math.min(...R.map(r => tAt(r, Math.max(0.5, D - 2.2), D))); if (rt < tS && !shown) { rt = tS; prevT = null; } };
+  const toResult = () => { if (shown) return; freeze = { over: true }; rt = maxT + 1.5; prevT = null; lastNow = null; showResult(); };
+  const toggleFollow = () => { if (!ME.length) return; follow = !follow; bFollow.classList.toggle('on', follow); bFollow.textContent = follow ? 'Following my horse' : 'Follow my horse'; };
+  bFollow.onclick = toggleFollow; bStretch.onclick = toStretch; bResult.onclick = toResult;
+  bSpeed.onclick = () => setSpd(spd === 1 ? 2 : spd === 2 ? 4 : 1);
+  const onResize = () => size(); addEventListener('resize', onResize);
+  size(); reset(); raf = requestAnimationFrame(frame);
+  return {
+    stop() { stopped = true; cancelAnimationFrame(raf); removeEventListener('resize', onResize); },
+    // controller: X follow · Y skip to result · LT/RT slower/faster
+    pad(b) { if (b === 'X') { toggleFollow(); return true; } if (b === 'Y') { toResult(); return true; } if (b === 'LT') { setSpd(spd === 4 ? 2 : 1); return true; } if (b === 'RT') { setSpd(spd === 1 ? 2 : 4); return true; } return false; }
+  };
 }
 function ordinal(n) { const s = ['th', 'st', 'nd', 'rd'], v = n % 100; return n + (s[(v - 20) % 10] || s[v] || s[0]); }
-function resultsTable(res) {
-  const rows = res.runners.map(r => { const sc = SADDLE[(r.post - 1) % SADDLE.length]; return `<tr class="${r.mine ? 'me' : ''}"><td>${r.fin}</td><td><span class="pn" style="background:${sc[0]};color:${sc[1]}">${r.post}</span></td><td class="nm">${r.name}<div class="cm">${r.comment}</div></td><td>${r.fin === 1 ? timeStr(r.time) : lenStr(r.btn)}</td><td>${oddsStr(r.odds)}</td><td><b>${r.fig}</b></td></tr>`; }).join('');
-  return `<div class="official">OFFICIAL</div><table class="rtab"><thead><tr><th>Fin</th><th>#</th><th>Horse</th><th>Time/Btn</th><th>Odds</th><th>Fig</th></tr></thead><tbody>${rows}</tbody></table>`;
-}
 
 'use strict';
 // ===================== UI =====================
@@ -2436,10 +2609,10 @@ function openModal(title, html, opts = {}) {
   if (opts.push !== false && !$('#modal').classList.contains('hidden')) UI.stack.push({ t: $('.sheet-t').innerHTML, b: $('.sheet-b').innerHTML, fn: UI.curFn, sc: $('.sheet-b').scrollTop });
   else if (opts.push === false) { } else UI.stack = [];
   UI.curFn = opts.fn || null;
-  $('.sheet-t').innerHTML = title; $('.sheet-b').innerHTML = html; $('#modal').classList.remove('hidden'); $('.sheet-b').scrollTop = UI.keepSc ?? 0; UI.keepSc = null; $('#back').style.visibility = UI.stack.length ? 'visible' : 'hidden'; paintSilks($('.sheet-b'));
+  $('.sheet').classList.toggle('wide', !!opts.wide); $('.sheet-t').innerHTML = title; $('.sheet-b').innerHTML = html; $('#modal').classList.remove('hidden'); $('.sheet-b').scrollTop = UI.keepSc ?? 0; UI.keepSc = null; $('#back').style.visibility = UI.stack.length ? 'visible' : 'hidden'; paintSilks($('.sheet-b'));
 }
-function closeModal() { if (UI.anim) { UI.anim.stop(); UI.anim = null; } UI.holding = false; $('#modal').classList.add('hidden'); UI.stack = []; UI.curFn = null; render(); }
-function backModal() { if (UI.anim) { UI.anim.stop(); UI.anim = null; } const p = UI.stack.pop(); if (!p) return closeModal(); if (p.fn) { UI.curFn = p.fn; UI.keepSc = p.sc; p.fn(true); } else { $('.sheet-t').innerHTML = p.t; $('.sheet-b').innerHTML = p.b; UI.curFn = null; $('.sheet-b').scrollTop = p.sc || 0; } $('#back').style.visibility = UI.stack.length ? 'visible' : 'hidden'; paintSilks($('.sheet-b')); }
+function closeModal() { if (UI.anim) { UI.anim.stop(); UI.anim = null; } $('.sheet').classList.remove('wide'); UI.holding = false; $('#modal').classList.add('hidden'); UI.stack = []; UI.curFn = null; render(); }
+function backModal() { if (UI.anim) { UI.anim.stop(); UI.anim = null; } $('.sheet').classList.remove('wide'); const p = UI.stack.pop(); if (!p) return closeModal(); if (p.fn) { UI.curFn = p.fn; UI.keepSc = p.sc; p.fn(true); } else { $('.sheet-t').innerHTML = p.t; $('.sheet-b').innerHTML = p.b; UI.curFn = null; $('.sheet-b').scrollTop = p.sc || 0; } $('#back').style.visibility = UI.stack.length ? 'visible' : 'hidden'; paintSilks($('.sheet-b')); }
 function refreshModal() { if (UI.curFn && !$('#modal').classList.contains('hidden')) { UI.keepSc = $('.sheet-b').scrollTop; UI.curFn(true); } } // filter taps keep your place
 function confirmBox(msg, yesLabel, act, data = {}) {
   const attrs = Object.entries(data).map(([k, v]) => `data-${k}="${esc(v)}"`).join(' ');
@@ -2743,7 +2916,7 @@ function openReport(rep) {
 }
 function watchRace(i) {
   const res = UI.rep.races[i];
-  openModal('🏁 ' + TRACKS[res.trk].n, '<div class="racehost"></div>');
+  openModal('🏁 ' + TRACKS[res.trk].n, '<div class="racehost"></div>', { wide: true });
   const host = $('.racehost'); const rep = UI.rep;
   UI.anim = playRace(host, res, () => { rep.seen = [...new Set([...(rep.seen || []), i])]; scheduleSave(); const r = host.querySelector('.race-res'); if (r) r.insertAdjacentHTML('beforeend', '<button class="btn big" data-a="back">Back to the week</button>'); });
 }
@@ -3588,6 +3761,7 @@ new MutationObserver(() => { if (!GP.active || gpRestoreQ) return; gpRestoreQ = 
 const GP_BTN = { 0: 'A', 1: 'B', 2: 'X', 3: 'Y', 4: 'LB', 5: 'RB', 6: 'LT', 7: 'RT', 8: 'VIEW', 9: 'MENU', 12: 'up', 13: 'down', 14: 'left', 15: 'right' };
 function gpAction(b) {
   if (!G) { if (b === 'A') gpSelect(); else if (['up', 'down', 'left', 'right'].includes(b)) gpMove(b); return; }
+  if (UI.anim && UI.anim.pad && gpRoot() && UI.anim.pad(b)) return; // race view: X follow · Y skip to result · LT/RT speed
   switch (b) {
     case 'up': case 'down': gpMove(b); break;
     case 'left': case 'right': if (!gpCycleSelect(b === 'left' ? -1 : 1)) gpMove(b); break;
