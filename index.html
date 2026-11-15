@@ -3953,6 +3953,10 @@ addEventListener('keydown', e => {
 // Edge on Xbox: assume a controller from the start (big layout, highlight on)
 const GP_XBOX = /Xbox/i.test(navigator.userAgent || '') || (() => { try { return localStorage.getItem('tt-xbox') === '1'; } catch (e) { return false; } })();
 if (GP_XBOX) { GP.pad = true; GP.active = true; GP.navT = 1; GP.mouseT = 0; }
+// B on a TV browser is the browser's own Back: keep a spare history entry so it steps back inside the game instead
+function gpBackTrap() { try { if (!history.state || !history.state.tt) history.pushState({ tt: 1 }, ''); } catch (e) {} }
+addEventListener('popstate', () => { if (!GP_XBOX && !(GP.pad && GP.navT > 1)) return; gpBackTrap(); gpAction('B'); });
+if (GP_XBOX) setTimeout(gpBackTrap, 0);
 // ?keys shows the last few input events on screen, for checking what a TV browser actually sends
 function gpDebug(e) {
   if (!/[?&]keys/.test(location.search)) return; let d = document.getElementById('gpdbg');
@@ -3972,7 +3976,7 @@ addEventListener('click', e => {
   gpDebug(e);
   if (!gpRedirect(e)) return;
   e.preventDefault(); e.stopImmediatePropagation();
-  if (!GP.pad) { GP.pad = true; try { localStorage.setItem('tt-xbox', '1'); } catch (x) {} applyTV(); } // this is a TV browser: big layout from now on
+  if (!GP.pad) { GP.pad = true; try { localStorage.setItem('tt-xbox', '1'); } catch (x) {} applyTV(); gpBackTrap(); } // this is a TV browser: big layout from now on
   gpSelect();
 }, true);
 applyTV();
